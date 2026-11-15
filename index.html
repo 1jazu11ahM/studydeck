@@ -1409,31 +1409,86 @@ function applyEnv(){
 }
 /* ========== ambience (generated in the browser, no audio files) ========== */
 const AMB={ctx:null,on:false};
+/* sound graph, usable with a live or an offline AudioContext */
+function ambGraph(ctx,dest){
+  const G={ctx},sr=ctx.sampleRate,len=sr*6;
+  const lim=ctx.createDynamicsCompressor();lim.threshold.value=-3;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.002;lim.release.value=.25;lim.connect(dest);
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;comp.connect(lim);
+  G.out=ctx.createGain();G.out.gain.value=.75;G.out.connect(comp);
+  const mk=fn=>{const b=ctx.createBuffer(2,len,sr);for(let ch=0;ch<2;ch++)fn(b.getChannelData(ch));return b};
+  G.white=mk(d=>{for(let i=0;i<len;i++)d[i]=Math.random()*2-1});
+  G.pink=mk(d=>{let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926}});
+  G.brown=mk(d=>{let l=0;for(let i=0;i<len;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5}});
+  const loop=b=>{const n=ctx.createBufferSource();n.buffer=b;n.loop=true;n.start(0,Math.random()*4);return n};
+  const filt=(type,f,q)=>{const x=ctx.createBiquadFilter();x.type=type;x.frequency.value=f;if(q!=null)x.Q.value=q;return x};
+  const gain=v=>{const g=ctx.createGain();g.gain.value=v;return g};
+  // rain: soft wash + body + faint hiss + individual drops
+  G.rain=gain(0);G.rain.connect(G.out);
+  const washLP=filt('lowpass',1500,.4);loop(G.pink).connect(filt('highpass',220)).connect(washLP).connect(gain(.85)).connect(G.rain);
+  const lfo=ctx.createOscillator();lfo.frequency.value=.06;const lg=gain(380);lfo.connect(lg).connect(washLP.frequency);lfo.start();
+  const swell=gain(.85),lfo2=ctx.createOscillator();lfo2.frequency.value=.11;const l2g=gain(.15);lfo2.connect(l2g).connect(swell.gain);lfo2.start();
+  loop(G.brown).connect(filt('lowpass',260)).connect(swell).connect(G.rain);
+  loop(G.white).connect(filt('bandpass',4800,.8)).connect(gain(.025)).connect(G.rain);
+  G.drops=gain(1);G.drops.connect(G.rain);
+  // echo space for thunder
+  const ir=ctx.createBuffer(2,sr*4,sr);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch),n=d.length;for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)}
+  const verb=ctx.createConvolver();verb.buffer=ir;verb.connect(gain(.55)).connect(G.out);
+  G.thunder=gain(1);G.thunder.connect(G.out);G.thunder.connect(verb);
+  // computer hum
+  G.hum=gain(0);[[55,.5],[110,.2],[165,.06]].forEach(([f,g])=>{const o=ctx.createOscillator();o.frequency.value=f;o.connect(gain(g)).connect(G.hum);o.start()});
+  loop(G.pink).connect(filt('bandpass',900,1.2)).connect(gain(.06)).connect(G.hum);G.hum.connect(G.out);
+  G.next=0;
+  return G;
+}
+function rainDrop(G,t){
+  const ctx=G.ctx,pan=ctx.createStereoPanner?ctx.createStereoPanner():null,r=Math.random();
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);
+  if(pan){pan.pan.value=Math.random()*1.8-.9;g.connect(pan).connect(G.drops)}else g.connect(G.drops);
+  if(r<.28){ // "plip": a tiny bubble whose pitch rises, the sound of a drop landing in water
+    const o=ctx.createOscillator(),f0=900+Math.random()*2200,d=.018+Math.random()*.03,pk=.03+Math.random()*.05;
+    o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*(1.6+Math.random()),t+d);
+    g.gain.linearRampToValueAtTime(pk,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);o.start(t);o.stop(t+d+.01);
+  }else{ // "tap": a short soft impact on a surface
+    const heavy=r>.9,n=ctx.createBufferSource(),f=ctx.createBiquadFilter();n.buffer=G.white;
+    f.type='bandpass';f.frequency.value=heavy?450+Math.random()*700:1200+Math.random()*3000;f.Q.value=heavy?1.5+Math.random()*2:2+Math.random()*4;
+    const d=heavy?.05+Math.random()*.07:.006+Math.random()*.022,pk=(heavy?.22:.09)*(.25+Math.random()*.75);
+    g.gain.linearRampToValueAtTime(pk,t+.0012);g.gain.exponentialRampToValueAtTime(.0001,t+.0012+d);
+    n.connect(f).connect(g);n.start(t,Math.random()*5,d+.02);
+  }
+}
+function scheduleDrops(G,until,level){
+  const rate=18+level*60;if(G.next<G.ctx.currentTime)G.next=G.ctx.currentTime;
+  while(G.next<until){G.next+=-Math.log(1-Math.random())/rate;rainDrop(G,G.next)}
+}
+function thunderAt(G,t,v,dist){
+  const ctx=G.ctx;dist=dist??Math.random();
+  const pan=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain();if(pan.pan)pan.pan.value=Math.random()*1.4-.7;pan.connect(G.thunder);
+  const near=1-dist,dur=5+Math.random()*4+dist*3;
+  if(dist<.45){ // close strike: a sharp crack before the rumble
+    [0,.07+Math.random()*.06].forEach((off,k)=>{const n=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();n.buffer=G.white;f.type='highpass';f.frequency.value=500+Math.random()*500;
+      const pk=v*near*(k?.55:.9);g.gain.setValueAtTime(0,t+off);g.gain.linearRampToValueAtTime(pk,t+off+.004);g.gain.exponentialRampToValueAtTime(.0001,t+off+.25+Math.random()*.2);
+      n.connect(f).connect(g).connect(pan);n.start(t+off,Math.random()*4,.6)});
+  }
+  const n=ctx.createBufferSource();n.buffer=G.brown;n.loop=true;
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=.7;lp.frequency.setValueAtTime(260+near*500,t);lp.frequency.exponentialRampToValueAtTime(60,t+dur);
+  const sh=ctx.createWaveShaper(),cv=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/511.5-1;cv[i]=Math.tanh(x*2.2)}sh.curve=cv;
+  const g=ctx.createGain(),start=t+(dist<.45?.05:.2+dist*.5);g.gain.setValueAtTime(.0001,t);g.gain.setValueAtTime(.0001,start);
+  let tk=start;const rolls=4+Math.floor(Math.random()*4);
+  for(let k=0;k<rolls;k++){tk+=k?.35+Math.random()*1.1:.08;const pk=v*(.75+near*.95)*(.55+Math.random()*.45)*Math.pow(.84,k);g.gain.linearRampToValueAtTime(pk,tk);g.gain.linearRampToValueAtTime(pk*(.25+Math.random()*.2),tk+.3+Math.random()*.4)}
+  g.gain.exponentialRampToValueAtTime(.0001,Math.max(tk+1.5,start+dur));
+  n.connect(lp).connect(sh).connect(g).connect(pan);n.start(t,Math.random()*4);n.stop(Math.max(tk+1.6,start+dur)+.1);
+}
 function ambStart(){
   if(AMB.ctx){AMB.ctx.resume();AMB.on=true;ambVol();return}
   const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return toast('Your browser can’t play generated sound');
-  const ctx=new Ctx(),out=ctx.createGain();out.connect(ctx.destination);AMB.ctx=ctx;AMB.out=out;
-  const len=ctx.sampleRate*3,nb=ctx.createBuffer(1,len,ctx.sampleRate),d=nb.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
-  const bb=ctx.createBuffer(1,len,ctx.sampleRate),bd=bb.getChannelData(0);let last=0;for(let i=0;i<len;i++){last=(last+.02*(Math.random()*2-1))/1.02;bd[i]=last*3.5}
-  AMB.noise=nb;AMB.brown=bb;
-  const src=b=>{const n=ctx.createBufferSource();n.buffer=b;n.loop=true;n.start();return n};
-  const filt=(type,f,q)=>{const x=ctx.createBiquadFilter();x.type=type;x.frequency.value=f;if(q)x.Q.value=q;return x};
-  AMB.rain=ctx.createGain();src(nb).connect(filt('highpass',1100)).connect(filt('lowpass',7500)).connect(AMB.rain).connect(out);
-  const rumble=ctx.createGain();rumble.gain.value=.35;src(bb).connect(filt('lowpass',400)).connect(rumble).connect(AMB.rain);
-  AMB.hum=ctx.createGain();[[55,.5],[110,.22],[165,.07]].forEach(([f,g])=>{const o=ctx.createOscillator();o.frequency.value=f;const gg=ctx.createGain();gg.gain.value=g;o.connect(gg).connect(AMB.hum);o.start()});
-  const hn=ctx.createGain();hn.gain.value=.25;src(nb).connect(filt('bandpass',2400,8)).connect(hn).connect(AMB.hum);AMB.hum.connect(out);
-  AMB.on=true;ambVol();
+  const ctx=new Ctx();AMB.ctx=ctx;AMB.G=ambGraph(ctx,ctx.destination);AMB.on=true;ambVol();
+  AMB.timer=setInterval(()=>{if(AMB.on&&ctx.state==='running'&&DB.settings.amb.rain>0)scheduleDrops(AMB.G,ctx.currentTime+.2,DB.settings.amb.rain)},80);
 }
 function ambStop(){if(AMB.ctx)AMB.ctx.suspend();AMB.on=false;ambBtn()}
-function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.rain.gain.setTargetAtTime(a.rain*.5,t,.3);AMB.hum.gain.setTargetAtTime(a.hum*.12,t,.3);ambBtn()}
-function thunder(){
-  if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;
-  const ctx=AMB.ctx,t=ctx.currentTime,v=DB.settings.amb.thunder;
-  const n=ctx.createBufferSource();n.buffer=AMB.brown;const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(900,t);f.frequency.exponentialRampToValueAtTime(90,t+3);
-  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*1.4,t+.08);g.gain.exponentialRampToValueAtTime(.001,t+4.5);
-  n.connect(f).connect(g).connect(AMB.out);n.start(t,Math.random()*2);n.stop(t+5);
-}
-window.onLightning=()=>setTimeout(thunder,600+Math.random()*1800);
+function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.G.rain.gain.setTargetAtTime(a.rain*.55,t,.4);AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,.4);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
+function thunder(dist){if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;thunderAt(AMB.G,AMB.ctx.currentTime+.02,1,dist)}
+window.onLightning=()=>{const d=Math.random();setTimeout(()=>thunder(d),300+d*3500)};
 function ambBtn(){const b=$('#ambBtn');if(b){b.innerHTML=icon('head',20);b.classList.toggle('amb-on',AMB.on)}}
 function ambPanel(){
   const p=$('#ambPanel');if(!p.hidden){p.hidden=true;return}
@@ -1443,7 +1498,7 @@ function ambPanel(){
     <p class="muted sm" style="margin:6px 0 0">Thunder follows the lightning in Midnight. All sound is generated live in your browser.</p>`;
   p.hidden=false;
   $('#ambToggle').onclick=()=>{AMB.on?ambStop():ambStart();ambPanel();ambPanel()};
-  $$('[data-amb]',p).forEach(r=>r.oninput=()=>{a[r.dataset.amb]=+r.value;save();ambVol();if(r.dataset.amb==='thunder'&&AMB.on)thunder()});
+  $$('[data-amb]',p).forEach(r=>{r.oninput=()=>{a[r.dataset.amb]=+r.value;save();ambVol()};r.onchange=()=>{if(r.dataset.amb==='thunder'&&AMB.on)thunder(.3)}});
 }
 document.addEventListener('mousedown',e=>{const p=$('#ambPanel');if(!p.hidden&&!e.target.closest('#ambPanel,#ambBtn'))p.hidden=true});
 /* ========== training simulator ========== */
