@@ -41,6 +41,12 @@ Click **☁️ Sign in** to create an account. Your sets, progress, folders and 
 
 ## Design versions
 
+- **v3 (current):** Apple-style layer: system font and type scale, collapsing titles, swipe-to-rate flashcards, bottom sheets, iOS-style switches and grouped lists, redesigned set page, goal ring, and Add to Home Screen with offline support. v2 is archived at [`archive/v2/`](archive/v2/).
+
 - The current design (v2) uses four pages: **Home**, **Library**, **Progress** and **Profile**, with a minimal Charcoal theme. Midnight, Dark and Light themes are still available in Profile.
 - The classic design is archived at [`archive/v1/`](archive/v1/) and tagged `v1-classic` in git. Both designs read the same saved data, so you can switch between them freely.
 - To fully revert: `git checkout v1-classic -- index.html`.
+
+## Planned
+
+- **Haptics:** a light vibration on correct and wrong answers (Android via `navigator.vibrate`; iPhone Safari doesn't allow it from websites yet).

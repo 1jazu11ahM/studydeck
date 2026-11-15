@@ -2,19 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#141518">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="QuizCraft">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>QuizCraft — flashcards & study modes</title>
 <meta name="description" content="Free, open flashcard app: flashcards, learn, write, spell, test, match and gravity.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2040%22%3E%3Cpath%20d%3D%22M29%2020%20L14%204%20L4%209%20L9%2014%20L12%2013%20L15%2019%20L19%2018%20L22%2024%20L28%2027.5%20Q32%2031%2036%2027.5%20L42%2025%20L45%2020%20L49%2021%20L52%2015%20L55%2016%20L61%2012%20L51%206%20L35%2020%20Q35.5%2017.5%2034.4%2015.6%20L35.2%2010.6%20L32.9%2014.2%20Q32%2013.9%2031.1%2014.2%20L28.8%2010.6%20L29.6%2015.6%20Q28.5%2017.5%2029%2020%20Z%22%20fill%3D%22%2318263a%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Instrument+Sans:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e9edf2;--card:#fff;--text:#18263a;--on-ink:#fff;--muted:#5d6b7e;--line:#d6dde6;--accent:#2449c9;--accent-2:#1b39a3;--accent-soft:#e3e9fb;--ok:#14895f;--ok-soft:#e1f4ec;--bad:#d93f45;--bad-soft:#fcebeb;--warn:#e0a019;--rule:#dbe5f3;--margin:#ef8a8e;--hl:#ffe14d;--shadow:0 1px 2px rgba(24,38,58,.06),0 10px 24px -14px rgba(24,38,58,.35);--r:10px;--hand:'Kalam',ui-rounded,'Segoe Print',cursive}
+:root{--sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,"Segoe UI",Roboto,sans-serif;--t-lt:34px;--t-1:28px;--t-2:22px;--t-b:17px;--t-s:15px;--t-c:13px;--bg:#e9edf2;--card:#fff;--text:#18263a;--on-ink:#fff;--muted:#5d6b7e;--line:#d6dde6;--accent:#2449c9;--accent-2:#1b39a3;--accent-soft:#e3e9fb;--ok:#14895f;--ok-soft:#e1f4ec;--bad:#d93f45;--bad-soft:#fcebeb;--warn:#e0a019;--rule:#dbe5f3;--margin:#ef8a8e;--hl:#ffe14d;--shadow:0 1px 2px rgba(24,38,58,.06),0 10px 24px -14px rgba(24,38,58,.35);--r:10px;--hand:'Kalam',ui-rounded,'Segoe Print',cursive}
 [data-theme=dark]{--bg:#10151c;--card:#1a212b;--text:#e7ecf3;--on-ink:#10151c;--muted:#97a3b4;--line:#2a3441;--accent:#86a2ff;--accent-2:#a4b9ff;--accent-soft:#222d47;--ok:#3fd19c;--ok-soft:#14352b;--bad:#ff7378;--bad-soft:#3a1f25;--rule:#243042;--margin:#a8484d;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 28px -14px rgba(0,0,0,.6)}
 *{box-sizing:border-box}
 html{color-scheme:light}[data-theme=dark]{color-scheme:dark}
 html{background:var(--bg)}
-body{margin:0;min-height:100vh;font:16px/1.55 "Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+body{margin:0;min-height:100vh;font:16px/1.5 var(--sans);background:var(--bg);color:var(--text)}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--hl);color:#18263a}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -182,7 +188,7 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 [data-theme=midnight] h2{font-size:26px;font-weight:800}
 [data-theme=midnight] .stat b{font-size:40px;font-weight:900}
 [data-theme=midnight] .mode{font-size:21px;font-weight:800}
-[data-theme=midnight] .mode small{font-family:'Instrument Sans',system-ui,sans-serif;letter-spacing:0}
+[data-theme=midnight] .mode small{font-family:var(--sans);letter-spacing:0}
 .bats{position:absolute;inset:0}
 .bat{position:absolute;left:-60px;color:#3b4456;opacity:.9;filter:drop-shadow(0 0 6px rgba(251,244,220,.12));animation:batfly linear infinite}
 .bat svg{display:block;animation:flap .32s ease-in-out infinite alternate;transform-origin:50% 60%}
@@ -391,7 +397,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 .opt{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}
 .opt select{width:auto}
 .menu-list{display:flex;flex-direction:column;gap:6px}
-.menu-list .btn{justify-content:flex-start}
+.menu-list .btn{justify-content:flex-start;white-space:normal;text-align:left}
 .bprev{max-height:140px;overflow:auto;font-size:14px;background:var(--bg);border-radius:10px;padding:8px 12px}
 .bprev:empty{display:none}
 .radios{display:flex;flex-direction:column;gap:4px;margin:6px 0}
@@ -521,7 +527,7 @@ details.more summary::before{content:'+ '}details.more[open] summary::before{con
   #toast{bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 /* ===================== v2: Charcoal theme ===================== */
-[data-theme=charcoal]{color-scheme:dark;--bg:#141518;--card:#1b1d21;--text:#ebe9e4;--on-ink:#141518;--on-accent:#17150f;--muted:#8d8f96;--line:#2a2c31;--accent:#c6a660;--accent-2:#d4b672;--accent-soft:#29251c;--ok:#7cbf93;--ok-soft:#1a2820;--bad:#e2806f;--bad-soft:#2d1d1a;--warn:#c6a660;--rule:transparent;--margin:transparent;--hl:#c6a660;--shadow:none;--r:14px;--hand:'Instrument Sans',system-ui,sans-serif}
+[data-theme=charcoal]{color-scheme:dark;--bg:#141518;--card:#1b1d21;--text:#ebe9e4;--on-ink:#141518;--on-accent:#17150f;--muted:#8d8f96;--line:#2a2c31;--accent:#c6a660;--accent-2:#d4b672;--accent-soft:#29251c;--ok:#7cbf93;--ok-soft:#1a2820;--bad:#e2806f;--bad-soft:#2d1d1a;--warn:#c6a660;--rule:transparent;--margin:transparent;--hl:#c6a660;--shadow:none;--r:14px;--hand:var(--sans)}
 [data-theme=charcoal] body{background:radial-gradient(900px 420px at 50% -260px,rgba(198,166,96,.07),transparent 70%) no-repeat,var(--bg)}
 [data-theme=charcoal] ::selection{background:#c6a66055;color:#fff}
 [data-theme=charcoal] .top{background:rgba(20,21,24,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
@@ -564,6 +570,128 @@ details.more summary::before{content:'+ '}details.more[open] summary::before{con
 [data-theme=charcoal] #toast{background:#26282d;border:1px solid var(--line)}
 [data-theme=charcoal] .st-learn{background:#2b2618;color:var(--accent)}
 [data-theme=charcoal] .done-box .big-emoji{display:none}
+/* ===================== v3: Apple-style layer ===================== */
+/* type scale: 34 large title · 28 title · 22 section · 17 body · 15 secondary · 13 caption */
+body{font-size:var(--t-b);line-height:1.47;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-.011em;text-rendering:optimizeLegibility}
+h1,.hello h1,[data-theme=charcoal] h1{font-size:var(--t-lt);font-weight:700;letter-spacing:-.022em;line-height:1.12}
+h2,[data-theme=charcoal] h2,.sec-h h2{font-size:var(--t-2);font-weight:600;letter-spacing:-.018em}
+h3{font-size:var(--t-b);font-weight:600}
+.sm,small,.muted.sm,.briefing,.lede,.classic,.chip,.sec-h a,details.more summary{font-size:var(--t-s)}
+.eyebrow,.lm,.kpi span,.lpct,.tour-n,.goal-xp,.glabel,.gnote,.st-tag,kbd{font-size:var(--t-c)}
+.lt,.btn,.choice,.opt{font-size:var(--t-b)}
+.btn.sm,.nav a,#tabbar a span{font-size:var(--t-s)}
+#tabbar a span{font-size:11px}
+.kpi b,.start-l{font-size:var(--t-1)}.start-l{font-size:var(--t-2)}
+.kpi b{font-weight:600}
+.ftxt,.qtxt,[data-theme=charcoal] .ftxt,[data-theme=charcoal] .qtxt{font-size:var(--t-1);font-weight:500}
+.ftxt.md,.qtxt.md{font-size:var(--t-2)}.ftxt.sm,.qtxt.sm,.ftxt.xs,.qtxt.xs{font-size:var(--t-b)}
+.casestats b,[data-theme=charcoal] .casestats b{font-size:var(--t-1);font-weight:600}
+.ttl,[data-theme=charcoal] .ttl{font-size:var(--t-b)}
+/* safe areas */
+.top{height:calc(60px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
+main{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right));padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+#ambPanel{top:calc(64px + env(safe-area-inset-top))}
+#achbar{top:calc(72px + env(safe-area-inset-top))}
+.sticky-save{top:calc(60px + env(safe-area-inset-top))}
+/* collapsing large title (mobile) */
+#barTitle{display:none}
+/* press feedback */
+.btn,.start,.lrow,.resume,.mode,.choice,.chip,.mrow,.seg button,#tabbar a,.ico{transition:transform .18s cubic-bezier(.3,.7,.4,1),background-color .15s,border-color .15s,color .15s,opacity .15s}
+:is(.btn,.start,.lrow,.resume,.mode,.choice,.chip,.mrow,.seg button,#tabbar a,.ico):active:not(:disabled){transform:scale(.97);transition-duration:.06s}
+/* page transitions */
+.enter{animation:pfade .22s ease-out}
+.push{animation:ppush .34s cubic-bezier(.2,.85,.25,1)}
+.pop{animation:ppop .34s cubic-bezier(.2,.85,.25,1)}
+@keyframes pfade{from{opacity:0}}
+@keyframes ppush{from{opacity:0;transform:translateX(36px)}}
+@keyframes ppop{from{opacity:0;transform:translateX(-36px)}}
+/* frosted material */
+#modal{background:rgba(0,0,0,.42);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.modal-card,#ambPanel,#achbar,.tour-card,#ambHint,#toast{background:color-mix(in srgb,var(--card) 80%,transparent)!important;backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6)}
+.modal-card{border-radius:20px!important;animation:mpop .22s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes mpop{from{opacity:0;transform:scale(.96)}}
+/* grouped lists + switches */
+.glabel{display:block;color:var(--muted);margin:0 0 7px 18px}
+.gnote{color:var(--muted);margin:7px 18px 0}
+.group{border-radius:12px;padding:0 18px}
+.group .opt{min-height:50px;padding:10px 0}
+a.opt{color:var(--text)}a.opt:hover span{color:var(--accent)}
+.group .opt>.chev{margin-left:auto}
+.group .opt:last-child{border-bottom:0}
+.gsec{margin-top:30px}
+.opt input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:99px;background:color-mix(in srgb,var(--muted) 38%,transparent);position:relative;cursor:pointer;transition:background .22s}
+.opt input[type=checkbox]::before{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25),0 0 1px rgba(0,0,0,.2);transition:transform .25s cubic-bezier(.3,.7,.3,1.2)}
+.opt input[type=checkbox]:checked{background:var(--ok)}
+[data-theme=charcoal] .opt input[type=checkbox]:checked{background:var(--accent)}
+.opt input[type=checkbox]:checked::before{transform:translateX(20px)}
+.opt input[type=checkbox]:disabled{opacity:.4;cursor:not-allowed}
+/* hero icons replace emoji */
+.hero-ic{width:64px;height:64px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.hero-ic.ok{background:var(--ok-soft);color:var(--ok)}
+.btn .ic{flex:none}
+/* goal ring */
+.hello{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.ringg{flex:none;position:relative;width:92px;height:92px;display:block}
+.ringg svg{display:block;transform:rotate(-90deg)}
+.ringg circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ringg .bg{stroke:var(--line)}
+.ringg .fg{stroke:var(--accent);transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ringg .rt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.ringg .rt b{font-size:var(--t-b);font-variant-numeric:tabular-nums}
+.ringg .rt span{font-size:11px;color:var(--muted)}
+/* set page */
+.sethead{display:flex;flex-direction:column;gap:6px;margin:4px 0 22px}
+.settop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.sethead h1{margin:0;overflow-wrap:anywhere}
+.setmeta{color:var(--muted);font-size:var(--t-s)}
+.sbar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:10px}.sbar i{display:block;height:100%;background:var(--accent);border-radius:6px}
+.studybig{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:18px 0 6px;padding:16px;border-radius:14px;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:var(--t-b);transition:transform .18s cubic-bezier(.3,.7,.4,1),background .15s}
+.studybig:hover{background:var(--accent-2)}.studybig:active{transform:scale(.98)}
+.studysub{text-align:center;color:var(--muted);font-size:var(--t-c);margin-bottom:26px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);padding:2px;border-radius:10px;background:color-mix(in srgb,var(--muted) 16%,transparent);margin-bottom:10px}
+.seg button{font:inherit;font-size:var(--t-s);font-weight:500;padding:7px 0;border:0;border-radius:8px;background:transparent;color:var(--text);cursor:pointer}
+.seg button.on{background:var(--card);box-shadow:0 3px 8px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.06);font-weight:600}
+[data-theme=charcoal] .seg button.on{background:#34363c}
+.mlist{border-radius:12px;padding:0 0 0 16px;overflow:hidden}
+.mrow{display:flex;align-items:center;gap:14px;padding:11px 16px 11px 0;border-bottom:1px solid var(--line);min-height:56px}
+.mrow:last-child{border-bottom:0}
+.mrow .mic{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.mrow .lt{font-weight:500}
+.planrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.planrow input{width:auto}
+/* swipe-to-rate */
+.swipe{position:relative;transform-style:preserve-3d;touch-action:pan-y}
+.swipe.drag{transition:none}
+.swipe.fly{transition:transform .3s cubic-bezier(.3,.6,.4,1),opacity .3s}
+.swipe.back{transition:transform .3s cubic-bezier(.2,.9,.3,1.2)}
+.swl{position:absolute;top:18px;z-index:3;padding:4px 12px;border-radius:8px;border:2px solid;font-weight:700;font-size:var(--t-s);opacity:0;pointer-events:none}
+.swl.r{right:18px;color:var(--ok);transform:rotate(8deg)}.swl.l{left:18px;color:var(--bad);transform:rotate(-8deg)}
+.swhint{text-align:center;color:var(--muted);font-size:var(--t-c);margin-top:8px}
+@media (max-width:760px){
+  .top{height:calc(52px + env(safe-area-inset-top));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+  main{padding:14px max(16px,env(safe-area-inset-left)) calc(100px + env(safe-area-inset-bottom))}
+  body.studying main{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+  #barTitle{display:block;position:absolute;left:64px;right:64px;bottom:0;height:52px;line-height:52px;text-align:center;font-weight:600;font-size:var(--t-b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+  .top{position:sticky}
+  .logo{transition:opacity .2s}
+  body.lt-c #barTitle{opacity:1;transform:none}
+  body.lt-c .logo{opacity:0;pointer-events:none}
+  h1,.hello h1{font-size:var(--t-1)}
+  .page-h h1,.hello h1,.sethead h1{font-size:var(--t-lt)}
+  .kpi b{font-size:var(--t-2)}
+  .ringg{width:76px;height:76px}.ringg svg{width:76px;height:76px}
+  /* bottom sheets */
+  #modal{align-items:flex-end;padding:0}
+  .modal-card{max-width:none;border-radius:20px 20px 0 0!important;max-height:88vh;padding:26px 20px calc(20px + env(safe-area-inset-bottom));animation:sheetup .34s cubic-bezier(.2,.9,.25,1);border-bottom:0!important;touch-action:pan-y}
+  .modal-card::before{content:'';position:absolute;top:8px;left:50%;width:38px;height:5px;margin-left:-19px;border-radius:5px;background:color-mix(in srgb,var(--muted) 55%,transparent)}
+  .modal-card{position:relative}
+  .modal-card.dragging{transition:none}
+  .modal-card.closing{transition:transform .25s ease-in;transform:translateY(100%)!important}
+  #ambPanel{left:0;right:0;top:auto!important;bottom:0;width:auto;border-radius:20px 20px 0 0!important;padding:26px 20px calc(20px + env(safe-area-inset-bottom));animation:sheetup .34s cubic-bezier(.2,.9,.25,1);z-index:55}
+  .menu-list .btn{justify-content:flex-start;min-height:50px}
+}
+@keyframes sheetup{from{transform:translateY(100%)}}
+@media (prefers-reduced-motion:reduce){.push,.pop,.enter,.modal-card,#ambPanel{animation:none!important}.swipe.fly,.swipe.back{transition:none!important}}
 @media print{
   .top,.noprint,#toast,#tabbar{display:none!important}
   body{background:#fff;color:#000}
@@ -577,6 +705,7 @@ details.more summary::before{content:'+ '}details.more[open] summary::before{con
 <header class="top">
   <a href="#/" class="logo" aria-label="QuizCraft home"><svg class="logo-bat" width="40" height="26" viewBox="0 0 64 40" aria-hidden="true"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg><span class="word">QuizCraft</span></a>
   <nav class="nav" aria-label="Main"><a href="#/" data-nav="home">Home</a><a href="#/library" data-nav="library">Library</a><a href="#/progress" data-nav="progress">Progress</a><a href="#/profile" data-nav="profile">Profile<span class=navdot></span></a></nav>
+  <div id="barTitle" aria-hidden="true"></div>
   <div class="tools"><button class="ico" id="ambBtn" title="Study sounds" aria-label="Study sounds"></button></div>
 </header>
 <main id="app"></main>
@@ -597,7 +726,8 @@ const nl=s=>esc(s).replace(/\n/g,'<br>');
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const sample=(a,n)=>shuffle(a).slice(0,n);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const ICONS={cloud:'<path d="M7 18h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.6 9.1 4.5 4.5 0 0 0 7 18z"/>',half:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/>',gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M5.5 18.5l2.1-2.1M16.4 7.6l2.1-2.1"/>',bolt:'<path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/>',head:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',cards:'<rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/>',target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',pencil:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',sound:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',test:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 8l1.5 1.5 3-3M8.5 14l1.5 1.5 3-3"/>',match:'<rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>',comet:'<circle cx="15" cy="15" r="5"/><path d="M3 3l8 8M7.5 3l5 5M3 7.5l5 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',flame:'<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.6 3-5.6 3.6-9.3 2.2 1.3 3.4 3.4 3.5 5.3 1-.8 1.6-2 1.7-3.3 2.6 2 4.2 4.6 4.2 7.3 0 3.6-2.6 6.2-6.5 6.2z"/>',stack:'<path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 12.5l9 4 9-4M3 16.5l9 4 9-4"/>',check:'<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16 9.6"/>'};
+const ICONS={cloud:'<path d="M7 18h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.6 9.1 4.5 4.5 0 0 0 7 18z"/>',half:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/>',gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M5.5 18.5l2.1-2.1M16.4 7.6l2.1-2.1"/>',bolt:'<path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/>',head:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',cards:'<rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/>',target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',pencil:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',sound:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',test:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 8l1.5 1.5 3-3M8.5 14l1.5 1.5 3-3"/>',match:'<rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>',comet:'<circle cx="15" cy="15" r="5"/><path d="M3 3l8 8M7.5 3l5 5M3 7.5l5 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',flame:'<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.6 3-5.6 3.6-9.3 2.2 1.3 3.4 3.4 3.5 5.3 1-.8 1.6-2 1.7-3.3 2.6 2 4.2 4.6 4.2 7.3 0 3.6-2.6 6.2-6.5 6.2z"/>',stack:'<path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 12.5l9 4 9-4M3 16.5l9 4 9-4"/>',check:'<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16 9.6"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a2.5 2.5 0 0 0 3 3.5M16 6h3a2.5 2.5 0 0 1-3 3.5M12 13v4M8.5 20h7M10 17h4"/>',shuffle:'<path d="M4 7h3.5c2.2 0 3.3 1 4.5 3l1 2c1.2 2 2.3 3 4.5 3H20M4 17h3.5c1.2 0 2-.3 2.7-.9M14.3 7.9c.7-.6 1.5-.9 2.7-.9H20M17.5 4.5L20 7l-2.5 2.5M17.5 14.5L20 17l-2.5 2.5"/>',play:'<path d="M8 5.5v13l10.5-6.5z"/>',pause:'<path d="M8.5 5.5v13M15.5 5.5v13"/>',image:'<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 15.5l-5-4.5-9 8"/>',trash:'<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',doc:'<path d="M6.5 3.5h7l4 4v13h-11z"/><path d="M13.5 3.5v4h4M9 12h6M9 15.5h6"/>',save:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4.5 16v3.5h15V16"/>',more:'<circle cx="6" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="18" cy="12" r="1.3" fill="currentColor"/>',flag:'<path d="M5.5 21V4M5.5 4.5h11l-2 4 2 4h-11"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>',folder:'<path d="M3.5 7a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',print:'<path d="M7 9V4h10v5M7 17H5a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 19 17h-2M7 14h10v6H7z"/>',reset:'<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v4h4"/>',people:'<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M15.5 6.2a3 3 0 0 1 0 5.6M17.5 14.8c1.5.6 2.6 2 3 4.2"/>'};
+const heroIc=(n,ok)=>`<div class="hero-ic ${ok?'ok':''}">${icon(n,30)}</div>`;
 const icon=(n,sz=22)=>`<svg class="ic" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 const DAY=864e5;
 const L='ABCDEFGHIJ';
@@ -818,7 +948,7 @@ function speak(text,lang,rate){
   speechSynthesis.speak(u);
 }
 if(tts)speechSynthesis.getVoices();
-const sayBtn=(text,lang)=>`<button class="ico" data-say="${esc(text)}" data-lang="${esc(lang)}" title="Read aloud">🔊</button>`;
+const sayBtn=(text,lang)=>`<button class="ico" data-say="${esc(text)}" data-lang="${esc(lang)}" title="Read aloud">${icon('sound',18)}</button>`;
 const starBtn=(s,c)=>`<button class="ico star ${c.starred?'on':''}" data-star="${c.id}" data-set="${s.id}" title="Star">${c.starred?'★':'☆'}</button>`;
 
 /* ========== ui helpers ========== */
@@ -827,6 +957,15 @@ let modalClose=null;
 function modal(html,onClose){const m=$('#modal');m.innerHTML=`<div class="card modal-card">${html}</div>`;m.hidden=false;modalClose=onClose||null;const f=m.querySelector('input:not([type=file]):not([type=checkbox]):not([type=radio]),textarea');if(f)setTimeout(()=>f.focus(),30)}
 function closeModal(silent){const m=$('#modal');if(m.hidden)return;m.hidden=true;m.innerHTML='';const f=modalClose;modalClose=null;if(!silent&&f)f()}
 $('#modal').addEventListener('mousedown',e=>{if(e.target.id==='modal')closeModal()});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+(()=>{ // drag a bottom sheet down to dismiss (mobile)
+  let y0=null,dy=0,card=null;
+  const m=$('#modal');
+  m.addEventListener('touchstart',e=>{card=e.target.closest('.modal-card');if(!card||innerWidth>760)return;if(card.scrollTop>0&&e.touches[0].clientY-card.getBoundingClientRect().top>48){card=null;return}y0=e.touches[0].clientY;dy=0},{passive:true});
+  m.addEventListener('touchmove',e=>{if(y0===null||!card)return;dy=Math.max(0,e.touches[0].clientY-y0);if(dy>4){card.classList.add('dragging');card.style.transform=`translateY(${dy}px)`}},{passive:true});
+  m.addEventListener('touchend',()=>{if(y0===null||!card)return;const c=card;y0=null;card=null;c.classList.remove('dragging');
+    if(dy>110){c.classList.add('closing');setTimeout(()=>closeModal(),230)}else{c.style.transition='transform .25s cubic-bezier(.2,.9,.3,1)';c.style.transform='';setTimeout(()=>{c.style.transition=''},260)}});
+})();
 function askText(title,value='',ph=''){return new Promise(res=>{modal(`<h3>${esc(title)}</h3><form id="askF"><input id="askI" value="${esc(value)}" placeholder="${esc(ph)}"><div class="row end" style="margin-top:14px"><button type="button" class="btn" id="mC">Cancel</button><button class="btn primary">OK</button></div></form>`,()=>res(null));$('#mC').onclick=()=>closeModal();$('#askF').onsubmit=e=>{e.preventDefault();const v=$('#askI').value.trim();closeModal(true);res(v||null)}})}
 function confirmBox(msg,ok='Delete',danger=true){return new Promise(res=>{modal(`<p style="margin-top:0">${msg}</p><div class="row end"><button class="btn" id="mC">Cancel</button><button class="btn ${danger?'danger':'primary'}" id="mO">${esc(ok)}</button></div>`,()=>res(false));$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{closeModal(true);res(true)};setTimeout(()=>$('#mO')?.focus(),40)})}
 function download(name,text,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800)}
@@ -909,7 +1048,7 @@ function route(){
   if(raw.startsWith('share='))return viewShare(raw.slice(6));
   const [v,id]=raw.replace(/^\//,'').split('/');
   scrollTo(0,0);
-  app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');
+  {const d=depthOf(v||''),cls=d>lastDepth?'push':d<lastDepth?'pop':'enter';lastDepth=d;app.classList.remove('enter','push','pop');void app.offsetWidth;app.classList.add(cls)}
   const needSet={sim:viewSim,set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
   if(id==='unresolved'&&(v==='set'||v==='edit')){location.replace('#/detective');return}
   if(id==='due'&&(v==='set'||v==='edit')){location.replace('#/');return}
@@ -933,13 +1072,26 @@ function route(){
   }
 }
 addEventListener('hashchange',route);
+let lastDepth=0;
+function depthOf(v){if(['','library','progress','profile','settings'].includes(v))return 0;if(['set','folder','achievements','detective','import','search','share'].includes(v))return 1;return 2}
+/* collapsing large title: when the page's h1 scrolls under the bar, show it small in the bar */
+let ltObs=null;
+function bindLargeTitle(){
+  if(ltObs)ltObs.disconnect();document.body.classList.remove('lt-c');
+  const h=$('main h1');const bt=$('#barTitle');if(!h||!bt||!window.IntersectionObserver)return;
+  bt.textContent=h.dataset.lt||h.textContent.trim();
+  const top=$('.top').offsetHeight;
+  ltObs=new IntersectionObserver(([e])=>{document.body.classList.toggle('lt-c',!e.isIntersecting&&e.boundingClientRect.top<top)},{rootMargin:`-${top}px 0px 0px 0px`,threshold:0});
+  ltObs.observe(h);
+}
+new MutationObserver(()=>{clearTimeout(bindLargeTitle.t);bindLargeTitle.t=setTimeout(bindLargeTitle,30)}).observe(app,{childList:true});
 const STUDY_MODES={flash:'Flashcards',review:'Review',learn:'Learn',write:'Write',spell:'Spell',test:'Test',match:'Match',gravity:'Gravity',sim:'Timed exam'};
 const NAV_OF={'':'home',library:'library',folder:'library',set:'library',edit:'library',new:'library',import:'library',search:'library',progress:'progress',achievements:'progress',detective:'progress',profile:'profile',settings:'profile'};
 function markNav(v){
   const k=NAV_OF[v]||'';$$('[data-nav]').forEach(a=>{if(a.dataset.nav===k)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   document.body.classList.toggle('studying',!!STUDY_MODES[v]);
 }
-function notFound(){app.innerHTML=`<div class="card empty"><div style="font-size:48px">🔍</div><h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
+function notFound(){app.innerHTML=`<div class="card empty">${heroIc('test')}<h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
 
 /* ========== home ========== */
 function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder),cl=isClosed(s);return `<a class="card setcard" href="#/set/${s.id}">${cl?`<span class="mini-stamp">${V('Closed','Mastered')}</span>`:''}${false?`<div class="muted sm">Case #${caseNo(s)}</div>`:''}<div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} ${V('evidence','terms')}${f?' · '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
@@ -959,7 +1111,7 @@ const chev='<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="n
 function firstName(){const n=(DB.settings.name||(typeof user!=='undefined'&&user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'').trim();return n.split(/\s+/)[0]||''}
 function greeting(){const h=new Date().getHours(),g=h<5?'Good evening':h<12?'Good morning':h<18?'Good afternoon':'Good evening',n=firstName();return n?`${g}, ${n}`:g}
 const pctOf=s=>s.cards.length?Math.round(s.cards.filter(c=>status(c)==='master').length/s.cards.length*100):0;
-function setRow(s){const f=DB.folders.find(f=>f.id===s.folder),p=pctOf(s);return `<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(s.title||'Untitled')}</div><div class="lm">${s.cards.length} term${s.cards.length===1?'':'s'}${f?' · '+esc(f.name):''}${isClosed(s)?' · mastered':''}</div></div><span class="lbar"><i style="width:${p}%"></i></span><span class="lpct">${p}%</span>${chev}</a>`}
+function setRow(s){const f=DB.folders.find(f=>f.id===s.folder),p=pctOf(s),st=s.cards.some(c=>c.right+c.wrong>0);return `<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(s.title||'Untitled')}</div><div class="lm">${s.cards.length} term${s.cards.length===1?'':'s'}${f?' · '+esc(f.name):''}${!st?' · not started':isClosed(s)?' · mastered':''}</div></div>${st&&!isClosed(s)?`<span class="lbar"><i style="width:${p}%"></i></span><span class="lpct">${p}%</span>`:''}${chev}</a>`}
 const recentSets=()=>[...DB.sets].sort((a,b)=>Math.max(b.studied||0,b.updated||0)-Math.max(a.studied||0,a.updated||0));
 function trainTarget(){
   const ds=dueSet(),n=ds.cards.length;
@@ -976,6 +1128,7 @@ function continueItem(){
   if(s){const p=pctOf(s);return{href:'#/learn/'+s.id,title:s.title,meta:`Learn · ${p}% mastered`,p}}
   return null;
 }
+function ringHtml(n,m,done){const C=2*Math.PI*40,f=Math.min(1,n/m);return `<a class="ringg" href="#/progress" title="Today’s goal: ${n} of ${m} correct answers" aria-label="Today’s goal: ${n} of ${m}"><svg width="92" height="92" viewBox="0 0 92 92"><circle class="bg" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C*(1-f)}"/></svg><span class="rt">${done?icon('check',22):`<b>${n}</b><span>of ${m}</span>`}</span></a>`}
 function viewHome(){
   rollMissions();
   const total=DB.sets.reduce((n,s)=>n+s.cards.length,0),due=dueSet().cards.length,mastered=masteredTotal();
@@ -985,7 +1138,7 @@ function viewHome(){
     :(due?`You have ${due} card${due>1?'s':''} due for review. `:'Nothing is due for review. ')+(DB.daily.done?'Today’s goal is complete.':dn?`${goalLeft} more correct answer${goalLeft>1?'s':''} reaches today’s goal.`:`Answer ${MISSION.daily} correctly to reach today’s goal.`);
   const recent=recentSets().slice(0,4);
   app.innerHTML=`<div class="wrap">
-  <div class="hello"><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello">${esc(greeting())}</h1><p class="briefing">${brief}</p></div>
+  <div class="hello"><div><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello" data-lt="Home">${esc(greeting())}</h1><p class="briefing">${brief}</p></div>${DB.sets.length?ringHtml(Math.min(dn,MISSION.daily),MISSION.daily,DB.daily.done):''}</div>
   <a class="start" href="${go.href}"><span class="start-t"><span class="start-l">${esc(go.label)}</span><span class="start-s">${esc(go.sub)}</span></span><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   <div class="kpis"><div class="kpi"><b>${due}</b><span>due for review</span></div><div class="kpi"><b>${st}</b><span>day streak</span></div><div class="kpi"><b>${mp}%</b><span>mastered</span></div></div>
   ${ci?`<section class="sec"><div class="sec-h"><h2>Continue studying</h2></div><a class="resume" href="${ci.href}"><div class="lmain"><div class="lt">${esc(ci.title)}</div><div class="lm">${esc(ci.meta)}</div></div><span class="btn sm primary">Resume</span></a></section>`:''}
@@ -993,18 +1146,19 @@ function viewHome(){
   ${recent.length?`<div class="list">${recent.map(setRow).join('')}</div>`:`<p class="muted">No sets yet. <a href="#/new" style="color:var(--accent)">Create one</a> or <a href="#/import" style="color:var(--accent)">import from Quizlet</a>.</p>`}</section>
   <p class="motto"><svg width="20" height="12" viewBox="0 0 64 40" aria-hidden="true"><path d="${BAT_PATH}" fill="currentColor"/></svg><span>${esc(line)}</span></p>
   </div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const r=$('.ringg .fg');if(r)r.style.strokeDashoffset=r.dataset.off}));
 }
 function viewLibrary(q=''){
   const sets=recentSets();
   app.innerHTML=`<div class="wrap">
-  <div class="page-h"><div><h1>Library</h1><p class="lede">${sets.length} set${sets.length===1?'':'s'} · ${DB.sets.reduce((n,s)=>n+s.cards.length,0)} terms</p></div><div class="row"><a class="btn" href="#/import">Import</a><a class="btn primary" href="#/new">New set</a></div></div>
+  <div class="page-h"><div><h1 data-lt="Library">Library</h1><p class="lede">${sets.length} set${sets.length===1?'':'s'} · ${DB.sets.reduce((n,s)=>n+s.cards.length,0)} terms</p></div><div class="row"><a class="btn" href="#/import">Import</a><a class="btn primary" href="#/new">New set</a></div></div>
   <div class="lsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="libQ" type="search" placeholder="Search sets and terms" aria-label="Search sets and terms" value="${esc(q)}"></div>
   <div class="chips" id="libChips"><button class="chip on" data-f="">All</button>${DB.folders.map(f=>`<a class="chip" href="#/folder/${f.id}">${esc(f.name)} <span class="muted">${DB.sets.filter(s=>s.folder===f.id).length}</span></a>`).join('')}<button class="chip" id="newFolder">+ Folder</button></div>
   <div id="libOut"></div></div>`;
   const out=$('#libOut'),inp=$('#libQ');
   const render=()=>{
     const n=norm(inp.value);
-    if(!n){out.innerHTML=sets.length?`<div class="list">${sets.map(setRow).join('')}</div>`:`<div class="card empty"><h3 style="margin-top:0">Your library is empty</h3><p class="muted">Create a set or import one from Quizlet, Word or Excel.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">New set</a><a class="btn" href="#/import">Import</a></div></div>`;return}
+    if(!n){out.innerHTML=sets.length?`<div class="list">${sets.map(setRow).join('')}</div>`:`<div class="card empty"><h3 style="margin-top:0">Your library is empty</h3><p class="muted">Create a set, or <a href="#/import" style="color:var(--accent)">import one</a> from Quizlet, Word or Excel.</p><a class="btn primary" href="#/new">New set</a></div>`;return}
     const ss=sets.filter(s=>norm(s.title+' '+s.desc).includes(n)),hits=[];DB.sets.forEach(s=>s.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([s,c])}));
     out.innerHTML=`<div class="sec-h" style="margin-top:8px"><h2>Sets</h2><span class="muted sm">${ss.length}</span></div>${ss.length?`<div class="list">${ss.map(setRow).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
       <div class="sec-h" style="margin-top:28px"><h2>Terms</h2><span class="muted sm">${hits.length}</span></div>${hits.length?`<div class="list">${hits.slice(0,200).map(([s,c])=>`<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(c.term)}</div><div class="lm">${esc(c.def)}</div></div><span class="lm" style="max-width:35%">${esc(s.title)}</span></a>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
@@ -1024,7 +1178,7 @@ function viewProgress(){
   weakest().forEach(w=>rows.push([esc(w.s.title),`${Math.round(w.acc*100)}% accuracy`,'Train',`#/learn/${w.s.id}`]));
   DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).forEach(([x,pl])=>rows.push([`Exam: ${esc(x.title)}`,`${pl.days===0?'Today':`In ${pl.days} day${pl.days>1?'s':''}`} · ${pl.left?`${pl.done}/${pl.per} mastered today`:'ready'}`,'Study',`#/learn/${x.id}`]));
   app.innerHTML=`<div class="wrap">
-  <div class="page-h"><div><h1>Progress</h1><p class="lede">${mastered} of ${total} cards mastered</p></div></div>
+  <div class="page-h"><div><h1 data-lt="Progress">Progress</h1><p class="lede">${mastered} of ${total} cards mastered</p></div></div>
   <div class="kpis k4"><div class="kpi"><b>${streakNow()}</b><span>day streak</span></div><div class="kpi"><b>${total?Math.round(mastered/total*100):0}%</b><span>mastered</span></div><div class="kpi"><b>${R+W?Math.round(R/(R+W)*100):0}%</b><span>accuracy</span></div><div class="kpi"><b>${(DB.xp||0).toLocaleString()}</b><span>XP</span></div></div>
   <section class="sec"><div class="sec-h"><h2>Goals</h2></div><div class="goals">
     ${[['Daily goal',`Answer ${MISSION.daily} questions correctly today`,DB.daily.n,MISSION.daily,MISSION.dailyXP,DB.daily.done],['Weekly goal',`Answer ${MISSION.weekly} questions correctly this week`,DB.weekly.n,MISSION.weekly,MISSION.weeklyXP,DB.weekly.done]].map(([t,d,n,m,xp,done])=>`
@@ -1067,55 +1221,58 @@ function viewFolder(id){
 }
 
 /* ========== set page ========== */
+let setSeg='learn';
 function viewSet(s){
   const p=progress(s),due=dueCards(s).length,f=DB.folders.find(f=>f.id===s.folder);
-  const modes=[['flash','cards','Flashcards','Flip & review'],['learn','target','Learn','Adaptive rounds'],['write','pencil','Write','Type the answers'],['spell','sound','Spell','Listen & type'],['test','test','Test','Practice exam'],['match','match','Match','Beat the clock'],['gravity','comet','Gravity','Arcade typing'],['review','clock','Review',due?`${due} due now`:'Spaced repetition'],['sim','bolt','Simulator','Timed exam']];
-  const cl=isClosed(s),pct=s.cards.length?Math.round(p.master/s.cards.length*100):0,unres=s.cards.filter(isUnresolved).length,SW=STAT_WORD();
+  const MODES={learn:[['flash','cards','Flashcards','Flip through, or rate each card'],['learn','target','Learn','Adaptive rounds until you know it'],['review','clock','Review',due?`${due} due now`:'Spaced repetition']],practice:[['write','pencil','Write','Type the answers'],['spell','sound','Spell','Listen and type'],['test','test','Test','Practice exam with a score'],['sim','bolt','Timed exam','Beat the clock, no hints']],games:[['match','match','Match','Pair terms against the clock'],['gravity','comet','Gravity','Type before it lands']]};
+  const cl=isClosed(s),pct=s.cards.length?Math.round(p.master/s.cards.length*100):0,unres=s.cards.filter(isUnresolved).length,SW=STAT_WORD(),started=p.new<s.cards.length;
   const contHref=due?`#/review/${s.id}`:cl?`#/test/${s.id}`:`#/learn/${s.id}`;
-  app.innerHTML=`${overdueHtml([s])}
-  <div class="card casehead">
-    ${cl?`<div class="stamp">${V('Case closed','Mastered')}</div>`:''}
-    <div class="muted sm">${false?`${cl?'Closed case':'Active investigation'} · Case #${caseNo(s)} · Classification: ${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a>`:'unfiled'}`:`${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}created ${new Date(s.created).toLocaleDateString()}`}</div>
-    <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}
-    <div class="casestats"><div><b>${s.cards.length}</b><small>${V('evidence items','terms')}</small></div><div><b>${pct}%</b><small>${V('evidence verified','mastered')}</small></div><div><b>${unres}</b><small>${V('unresolved','to fix')}</small></div><div><b>${due}</b><small>due now</small></div></div>
-    ${(()=>{const pl=examPlan(s);return `<div class="planner noprint">${icon('cal',18)}<label for="examD">Exam date</label><input type="date" id="examD" value="${s.exam||''}" min="${ymd()}">${pl?`<span>${pl.days===0?'Exam today':`${pl.days} day${pl.days>1?'s':''} left`} · ${pl.left?`master <b>${pl.per}</b> a day · today <b>${pl.done}/${pl.per}</b>`:'everything mastered'}</span>`:'<span class="muted">Set a date and QuizCraft splits the work into daily targets.</span>'}</div>`})()}
-    <div class="row noprint"><a class="btn primary big" href="${contHref}">${due?V('Review overdue evidence','Review due cards'):cl?V('Re-examine the case','Take a test'):V('Continue investigation','Continue studying')}</a><a class="btn" href="#/edit/${s.id}">Edit</a><button class="btn" id="shareBtn">Share</button><button class="btn" id="moreBtn">⋯</button></div>
-  </div>
-  <div class="modes noprint">${modes.map(m=>`<a class="mode" href="#/${m[0]}/${s.id}">${icon(m[1])}${m[2]}<small>${m[3]}</small></a>`).join('')}</div>
-  <div class="card noprint"><div class="row between"><strong>Your progress</strong><button class="btn sm ghost" id="resetP">Reset progress</button></div>${barHtml(p,true)}${legendHtml(p)}</div>
-  <div class="row between"><h2>${V('Evidence in this case','Terms in this set')} (${s.cards.length})</h2><select id="filt" style="width:auto" class="noprint"><option value="all">All</option><option value="starred">★ Starred</option><option value="new">${SW.new[0].toUpperCase()+SW.new.slice(1)}</option><option value="learn">${SW.learn[0].toUpperCase()+SW.learn.slice(1)}</option><option value="master">${SW.master[0].toUpperCase()+SW.master.slice(1)}</option></select></div>
+  const pl=examPlan(s);
+  app.innerHTML=`<div class="wrap">
+  <div class="settop noprint"><a class="btn ghost sm" href="#/library">‹ Library</a><button class="ico" id="moreBtn" title="More" aria-label="More actions">${icon('more',24)}</button></div>
+  <div class="sethead"><div class="setmeta">${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}${s.cards.length} term${s.cards.length===1?'':'s'}</div>
+    <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:2px 0 0">${nl(s.desc)}</p>`:''}
+    ${started?`<div class="sbar"><i style="width:${pct}%"></i></div><div class="setmeta">${cl?'Every card mastered':`${pct}% mastered`}${due?` · ${due} due`:''}${unres?` · ${unres} to fix`:''}</div>`:''}</div>
+  <a class="studybig noprint" href="${s.cards.length?contHref:'#/edit/'+s.id}">${icon(s.cards.length?'play':'pencil',20)} ${!s.cards.length?'Add terms':due?'Review due cards':cl?'Take a practice test':started?'Continue studying':'Start studying'}</a>
+  <div class="studysub noprint">${!s.cards.length?'This set is empty.':due?`${due} card${due>1?'s are':' is'} ready for review`:cl?'Keep it fresh with a test':started?`Learn · ${p.learn} learning, ${p.new} new`:'Learn adapts to what you know'}</div>
+  <div class="seg noprint" role="tablist">${[['learn','Learn'],['practice','Practice'],['games','Games']].map(([k,l])=>`<button role="tab" data-seg="${k}" class="${setSeg===k?'on':''}" aria-selected="${setSeg===k}">${l}</button>`).join('')}</div>
+  <div class="card mlist noprint" id="mlist"></div>
+  <div class="gsec noprint"><span class="glabel">Plan</span><div class="card group"><label class="opt"><span>Exam date</span><input type="date" id="examD" value="${s.exam||''}" min="${ymd()}" style="width:auto"></label></div>
+  <div class="gnote">${pl?`${pl.days===0?'Exam today':`${pl.days} day${pl.days>1?'s':''} to go`}. ${pl.left?`Master ${pl.per} card${pl.per>1?'s':''} a day to be ready; ${pl.done} done today.`:'Everything is mastered.'}`:'Set a date and QuizCraft splits the work into daily targets.'}</div></div>
+  <div class="sec-h" style="margin-top:34px"><h2>Terms</h2><select id="filt" style="width:auto" class="noprint"><option value="all">All</option><option value="starred">Starred</option><option value="new">${SW.new[0].toUpperCase()+SW.new.slice(1)}</option><option value="learn">${SW.learn[0].toUpperCase()+SW.learn.slice(1)}</option><option value="master">${SW.master[0].toUpperCase()+SW.master.slice(1)}</option></select></div>
   <div class="card terms" id="terms" style="padding:0"></div>
-  ${(()=>{const cx=connections(s);return cx.length?`<h2>${V('Linked cases','Related cards in other sets')}</h2><div class="card terms" style="padding:0">${cx.map(x=>`<div class="t"><div class="tt">${nl(x.c.term)}</div><div>↔ <b>${nl(x.d.term)}</b> <span class="muted sm">${esc(String(x.d.def).slice(0,90))}</span></div><a class="pill" href="#/set/${x.o.id}">${esc(x.o.title)}</a></div>`).join('')}</div>`:''})()}
-  <div class="row noprint" style="justify-content:center;margin-top:16px"><a class="btn" href="#/edit/${s.id}">Add or remove terms</a></div>`;
-  const tag={new:`<span class="st-tag st-new">${SW.new}</span>`,learn:`<span class="st-tag st-learn">${SW.learn}</span>`,master:`<span class="st-tag st-master">${SW.master}</span>`};const vre=visionRe(s);
+  ${(()=>{const cx=connections(s);return cx.length?`<div class="sec-h" style="margin-top:34px"><h2>Related cards in other sets</h2></div><div class="card terms" style="padding:0">${cx.map(x=>`<div class="t"><div class="tt">${nl(x.c.term)}</div><div>↔ <b>${nl(x.d.term)}</b> <span class="muted sm">${esc(String(x.d.def).slice(0,90))}</span></div><a class="pill" href="#/set/${x.o.id}">${esc(x.o.title)}</a></div>`).join('')}</div>`:''})()}
+  </div>`;
+  const renderModes=()=>{$('#mlist').innerHTML=MODES[setSeg].map(([h,ic,n,d])=>`<a class="mrow" href="#/${h}/${s.id}"><span class="mic">${icon(ic,18)}</span><div class="lmain"><div class="lt">${n}</div><div class="lm">${d}</div></div>${chev}</a>`).join('');$$('[data-seg]').forEach(b=>{b.classList.toggle('on',b.dataset.seg===setSeg);b.setAttribute('aria-selected',b.dataset.seg===setSeg)})};
+  $$('[data-seg]').forEach(b=>b.onclick=()=>{setSeg=b.dataset.seg;renderModes()});renderModes();
+  const tag={new:'',learn:`<span class="st-tag st-learn">${SW.learn}</span>`,master:`<span class="st-tag st-master">${SW.master}</span>`};const vre=visionRe(s);
   const renderTerms=()=>{
     const fv=$('#filt').value;
     const cs=s.cards.filter(c=>fv==='all'||(fv==='starred'?c.starred:status(c)===fv));
     $('#terms').innerHTML=cs.length?cs.map(c=>`<div class="t"><div class="tt">${nl(c.term)}${tag[status(c)]}</div><div>${dvHtml(c.def,vre,c.term)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div class="row noprint" style="gap:0">${sayBtn(c.term,s.termLang)}${starBtn(s,c)}</div></div>`).join(''):'<div class="empty muted">No terms match this filter.</div>';
   };
-  $('#filt').onchange=renderTerms;renderTerms();bindOverdue();
+  $('#filt').onchange=renderTerms;renderTerms();
   $('#examD').onchange=e=>{s.exam=e.target.value||'';save();viewSet(s);toast(s.exam?'Exam date saved':'Exam date cleared')};
-  $('#resetP').onclick=async()=>{if(await confirmBox('Reset all progress for this set? Stars are kept.','Reset')){s.cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));save();viewSet(s)}};
-  $('#shareBtn').onclick=async()=>{
+  const shareSet=async()=>{
     const link=await shareLink(s);
     const hasUploads=s.cards.some(c=>c.img&&c.img.startsWith('data:'));
     modal(`<h3>Share “${esc(s.title)}”</h3><p class="muted sm">Anyone with this link can preview the set and save their own copy. The whole set lives inside the link, so no account or server is needed.${hasUploads?' Uploaded images aren’t included (they’re too big for a link) — image URLs are.':''}</p><input id="shL" readonly value="${esc(link)}"><p class="muted sm">${link.length.toLocaleString()} characters${link.length>8000?' — very long links may not work in some chat apps; use “Export” instead.':''}</p><div class="row end"><button class="btn" id="mC">Close</button><button class="btn primary" id="mO">Copy link</button></div>`);
     $('#shL').select();$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{copyText(link,'Link copied!');closeModal(true)};
   };
   $('#moreBtn').onclick=()=>{
+    const it=(m,ic,l,c='')=>`<button class="btn ${c}" data-m="${m}">${icon(ic,18)} ${l}</button>`;
     modal(`<h3>${esc(s.title)}</h3><div class="menu-list">
-      <button class="btn" data-m="copy">Copy as text (term ⇥ definition)</button>
-      <button class="btn" data-m="txt">Download .txt</button>
-      <button class="btn" data-m="csv">Download .csv (Excel / Sheets)</button>
-      <button class="btn" data-m="json">Download set backup (.json, keeps images)</button>
-      <button class="btn" data-m="dup">Duplicate set</button>
-      <button class="btn" data-m="folder">Move to folder</button>
-      <button class="btn" data-m="print">Print</button>
-      <button class="btn danger" data-m="del">Delete set</button></div>`);
+      ${it('edit','pencil','Edit set')}${it('share','link','Share link')}
+      ${it('copy','copy','Copy as text')}${it('csv','save','Download .csv (Excel / Sheets)')}${it('txt','save','Download .txt')}${it('json','save','Download backup (.json, keeps images)')}
+      ${it('dup','cards','Duplicate set')}${it('folder','folder','Move to folder')}${it('print','print','Print')}
+      ${it('reset','reset','Reset progress')}${it('del','trash','Delete set','danger')}</div>`);
     $('.menu-list').onclick=async e=>{
       const m=e.target.closest('[data-m]')?.dataset.m;if(!m)return;
       const text=s.cards.map(c=>`${c.term.replace(/[\t\n]+/g,' ')}\t${c.def.replace(/[\t\n]+/g,' ')}`).join('\n');
       const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+      if(m==='edit'){closeModal(true);location.hash='#/edit/'+s.id}
+      if(m==='share'){closeModal(true);shareSet()}
+      if(m==='reset'){closeModal(true);if(await confirmBox('Reset all progress for this set? Stars are kept.','Reset')){s.cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));save();viewSet(s)}}
       if(m==='copy'){closeModal(true);copyText(text)}
       if(m==='txt'){download(fileSafe(s.title)+'.txt',text);closeModal(true)}
       if(m==='csv'){download(fileSafe(s.title)+'.csv','﻿Term,Definition\n'+s.cards.map(c=>q(c.term)+','+q(c.def)).join('\n'),'text/csv');closeModal(true)}
@@ -1151,7 +1308,7 @@ function viewEdit(s,preFolder){
   <button class="btn add-row" id="addBtn">+ Add card</button>
   <div class="row end" style="margin-top:16px"><button class="btn primary big" id="saveBtn2">${isNew?'Create':'Save'}</button></div>`;
   const rows=$('#rows');
-  const rowHtml=(c,i)=>`<div class="card erow" data-i="${i}"><div class="row between"><b class="muted">${i+1}</b><div class="row" style="gap:0"><button class="ico" data-act="up" title="Move up">↑</button><button class="ico" data-act="down" title="Move down">↓</button><button class="ico" data-act="img" title="Add image">🖼️</button><button class="ico" data-act="del" title="Delete card">🗑</button></div></div>
+  const rowHtml=(c,i)=>`<div class="card erow" data-i="${i}"><div class="row between"><b class="muted">${i+1}</b><div class="row" style="gap:0"><button class="ico" data-act="up" title="Move up">↑</button><button class="ico" data-act="down" title="Move down">↓</button><button class="ico" data-act="img" title="Add image">${icon('image',18)}</button><button class="ico" data-act="del" title="Delete card">${icon('trash',18)}</button></div></div>
     <div class="egrid"><label><textarea rows="1" data-f="term" placeholder="Enter term">${esc(c.term)}</textarea><small>TERM</small></label><label><textarea rows="1" data-f="def" placeholder="Enter definition">${esc(c.def)}</textarea><small>DEFINITION</small></label>${c.img?`<div class="eimg"><img src="${esc(c.img)}" alt=""><button class="ico" data-act="rmimg" title="Remove image">✕</button></div>`:'<div></div>'}</div></div>`;
   function renderRows(focusI){rows.innerHTML=d.cards.map(rowHtml).join('');requestAnimationFrame(()=>$$('textarea',rows).forEach(autoGrow));if(focusI!=null){const t=$(`.erow[data-i="${focusI}"] textarea`,rows);if(t){t.focus();t.scrollIntoView({block:'center'})}}}
   renderRows();
@@ -1188,7 +1345,7 @@ function viewEdit(s,preFolder){
 
 /* ========== study shell ========== */
 function shell(s,title,fields,body){
-  app.innerHTML=`<div class="row between noprint"><a class="btn ghost sm" href="#/set/${s.id}">← ${esc(s.title)}</a><strong>${title}</strong><button class="btn sm" id="optBtn">⚙ Options</button></div>${body}`;
+  app.innerHTML=`<div class="row between noprint"><a class="btn ghost sm" href="#/set/${s.id}">← ${esc(s.title)}</a><strong>${title}</strong><button class="btn sm" id="optBtn">${icon('gear',16)} Options</button></div>${body}`;
   $('#optBtn').onclick=()=>{
     const nStar=s.cards.filter(c=>c.starred).length;
     modal(`<h3>${title} options</h3>
@@ -1213,7 +1370,7 @@ function viewFlash(s,review){
   if(!base.length){
     if(review){
       const seen=s.cards.filter(c=>c.right+c.wrong>0);const next=seen.length?Math.min(...seen.map(c=>c.due)):0;
-      shell(s,'Review',{front:true},`<div class="card empty"><div style="font-size:48px">🎉</div><h3>Nothing due right now</h3><p class="muted">${seen.length?`Next review: <b>${new Date(next).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</b>. Cards come back after 1, 3, 7, 16 and 35 days as you keep getting them right.`:'Review shows cards you’ve already studied when they’re due again. Start with Learn or Flashcards.'}</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/learn/${s.id}">Learn</a><a class="btn" href="#/flash/${s.id}">Flashcards</a></div></div>`);
+      shell(s,'Review',{front:true},`<div class="card empty">${heroIc('check',1)}<h3>Nothing due right now</h3><p class="muted">${seen.length?`Next review: <b>${new Date(next).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</b>. Cards come back after 1, 3, 7, 16 and 35 days as you keep getting them right.`:'Review shows cards you’ve already studied when they’re due again. Start with Learn or Flashcards.'}</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/learn/${s.id}">Learn</a><a class="btn" href="#/flash/${s.id}">Flashcards</a></div></div>`);
     }else shell(s,'Flashcards',{front:true},emptyStudy(s));
     return;
   }
@@ -1225,18 +1382,19 @@ function viewFlash(s,review){
     <div class="row between noprint" id="fctl"></div>
     <div class="prog"><i id="fprog"></i></div>
     <div class="row noprint" style="justify-content:center;margin-top:16px">
-      ${review?'':`<button class="btn sm ${track?'on':''}" id="tTrack" title="Rate each card 1–4 to schedule reviews and earn XP">🎯 Training mode</button>`}
-      <button class="btn sm" id="tShuf">🔀 Shuffle</button>
-      <button class="btn sm" id="tAuto">▶ Autoplay</button>
+      ${review?'':`<button class="btn sm ${track?'on':''}" id="tTrack" title="Rate each card 1–4 to schedule reviews and earn XP">${icon('target',16)} Training mode</button>`}
+      <button class="btn sm" id="tShuf">${icon('shuffle',16)} Shuffle</button>
+      <button class="btn sm" id="tAuto">${icon('play',16)} Autoplay</button>
     </div>
-    <p class="muted sm center noprint">${track?'Space = reveal · 1 Didn’t know · 2 Hard · 3 Knew it · 4 Easy':'Space = flip · ← → = previous / next'} · S = star</p>`);
+    <p class="muted sm center noprint">${matchMedia('(pointer:coarse)').matches?(track?'Tap to reveal. Swipe right if you knew it, left if you didn’t.':'Tap to flip. Swipe to move between cards.'):(track?'Space = reveal · 1 Didn’t know · 2 Hard · 3 Knew it · 4 Easy · or drag the card':'Space = flip · ← → = previous / next')+' · S = star'}</p>`);
   const fwrap=$('#fwrap'),ctl=$('#fctl');
   const face=(c,side,isFront)=>{const txt=sideText(c,side);return `<div class="label">${track&&isFront?V('Interrogation','Question'):sideName(side)}</div><div class="tools">${sayBtn(txt,langOf(s,side))}${starBtn(s,c)}</div><div class="ftxt ${sizeCls(txt)}">${side==='def'?dvHtml(txt,vre,c.term):nl(txt)}</div>${side==='def'&&c.img?`<img src="${esc(c.img)}" alt="">`:''}`};
   function render(){
     if(i>=deck.length)return done();
     const c=deck[i];flipped=false;
-    fwrap.innerHTML=`<div class="flash ${dir?'in-'+dir:''}" id="fc"><div class="face front ${track?'interro':''}">${face(c,front,1)}</div><div class="face back">${face(c,back)}</div></div>`;
+    fwrap.innerHTML=`<div class="swipe" id="sw"><div class="flash ${dir?'in-'+dir:''}" id="fc"><div class="face front ${track?'interro':''}">${face(c,front,1)}</div><div class="face back">${face(c,back)}</div></div></div>`;
     $('#fc').onclick=e=>{if(!e.target.closest('button'))flip()};
+    bindSwipe($('#sw'),track?{right:()=>mark(3),left:()=>mark(1),lr:'Knew it',ll:'Didn’t know'}:{left:next,right:()=>{if(i>0)prev();else snapBack()},lr:'',ll:''});
     if(track)rateBar();
     else{ctl.innerHTML=`<button class="btn" id="bPrev" ${i?'':'disabled'}>← Prev</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn" id="bNext">Next →</button>`;$('#bPrev').onclick=prev;$('#bNext').onclick=next}
     $('#fprog').style.width=(i/deck.length*100)+'%';
@@ -1263,19 +1421,19 @@ function viewFlash(s,review){
   function done(){
     stopAuto();$('#fprog').style.width='100%';ctl.innerHTML='';
     if(track){
-      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">${still.length?'💪':'🎉'}</div><h2>${still.length?V('Session logged','Keep it up!'):V('All evidence verified','You know them all!')}</h2>
+      fwrap.innerHTML=`<div class="card done-box">${heroIc(still.length?'flame':'check',!still.length)}<h2>${still.length?V('Session logged','Keep it up!'):V('All evidence verified','You know them all!')}</h2>
         <p><b style="color:var(--bad)">${rated[1]} didn’t know</b> · <b>${rated[2]} hard</b> · <b style="color:var(--ok)">${rated[3]} knew it</b> · <b style="color:var(--ok)">${rated[4]} easy</b></p>
         <div class="row" style="justify-content:center">${still.length?`<button class="btn primary" id="dAgain">Keep reviewing ${still.length} terms</button>`:''}<button class="btn" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a></div></div>`;
       if(!still.length)celebrate();
       if(still.length)$('#dAgain').onclick=()=>{deck=shuf?shuffle(still):still;still=[];known=0;rated={1:0,2:0,3:0,4:0};i=0;render()};
     }else{
-      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">🎉</div><h2>You reviewed all ${deck.length} cards</h2><div class="row" style="justify-content:center"><button class="btn primary" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;
+      fwrap.innerHTML=`<div class="card done-box">${heroIc('check',1)}<h2>You reviewed all ${deck.length} cards</h2><div class="row" style="justify-content:center"><button class="btn primary" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;
     }
     $('#dRestart').onclick=()=>{deck=shuf?shuffle(base):[...base];still=[];known=0;i=0;render()};
   }
-  const stopAuto=()=>{clearInterval(auto);auto=null;const b=$('#tAuto');if(b){b.classList.remove('on');b.textContent='▶ Autoplay'}};
+  const stopAuto=()=>{clearInterval(auto);auto=null;const b=$('#tAuto');if(b){b.classList.remove('on');b.innerHTML=icon('play',16)+' Autoplay'}};
   $('#tShuf').onclick=e=>{shuf=!shuf;e.currentTarget.classList.toggle('on',shuf);deck=shuf?shuffle(base):[...base];i=0;still=[];known=0;render();toast(shuf?'Shuffled':'Original order')};
-  $('#tAuto').onclick=e=>{if(auto)return stopAuto();e.currentTarget.classList.add('on');e.currentTarget.textContent='⏸ Pause';auto=setInterval(()=>{if(i>=deck.length)return stopAuto();if(!flipped)flip();else if(track)mark(3);else next()},3200)};
+  $('#tAuto').onclick=e=>{if(auto)return stopAuto();e.currentTarget.classList.add('on');e.currentTarget.innerHTML=icon('pause',16)+' Pause';auto=setInterval(()=>{if(i>=deck.length)return stopAuto();if(!flipped)flip();else if(track)mark(3);else next()},3200)};
   if(!review)$('#tTrack').onclick=()=>{s.opts.track=!s.opts.track;save();route()};
   onCleanup(()=>clearInterval(auto));
   setKeys(e=>{
@@ -1289,6 +1447,23 @@ function viewFlash(s,review){
   render();
 }
 
+let snapBack=()=>{};
+function bindSwipe(el,{left,right,lr,ll}){
+  if(!el)return;
+  el.insertAdjacentHTML('beforeend',(lr?`<span class="swl r">${lr}</span>`:'')+(ll?`<span class="swl l">${ll}</span>`:''));
+  let x0=null,y0=0,dx=0,moved=false,pid=null;const L=$('.swl.l',el),Rr=$('.swl.r',el);
+  const set=x=>{el.style.transform=x?`translateX(${x}px) rotate(${x/24}deg)`:'';if(Rr)Rr.style.opacity=Math.max(0,Math.min(1,x/90));if(L)L.style.opacity=Math.max(0,Math.min(1,-x/90))};
+  snapBack=()=>{el.classList.remove('drag');el.classList.add('back');set(0);setTimeout(()=>el.classList.remove('back'),320)};
+  el.addEventListener('pointerdown',e=>{if(e.target.closest('button')||e.button>0)return;x0=e.clientX;y0=e.clientY;dx=0;moved=false;pid=e.pointerId});
+  el.addEventListener('pointermove',e=>{if(x0===null||e.pointerId!==pid)return;dx=e.clientX-x0;const dy=e.clientY-y0;
+    if(!moved){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.2){moved=true;el.classList.add('drag');try{el.setPointerCapture(pid)}catch(_){}}else return}
+    set(dx)});
+  const end=()=>{if(x0===null)return;x0=null;if(!moved)return;el.classList.remove('drag');
+    const go=dx>100?right:dx<-100?left:null;
+    if(go){el.classList.add('fly');set(dx>0?innerWidth:-innerWidth);el.style.opacity='0';setTimeout(go,170)}else snapBack()};
+  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+  el.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+}
 /* ========== shared question renderer ========== */
 function presentQ(stage,s,c,q,type,next,label='',onAnswer){
   let st='ask',finalOk=false,undo=null,opts=null;
@@ -1354,7 +1529,7 @@ function viewLearn(s){
   function roundEnd(){
     if(cards.every(c=>lvl.get(c.id)===2))return finish();
     const ok=results.filter(r=>r.ok).length;
-    stage.innerHTML=`<div class="card qcard center"><div class="big-emoji" style="font-size:44px">${ok===results.length?'🔥':'👏'}</div><h2 style="margin-top:6px">Round ${roundN} done — ${ok}/${results.length} correct</h2>
+    stage.innerHTML=`<div class="card qcard center">${heroIc(ok===results.length?'flame':'check',ok===results.length)}<h2 style="margin-top:6px">Round ${roundN} done — ${ok}/${results.length} correct</h2>
       <div class="rlist">${results.map(r=>`<div class="ritem ${r.ok?'ok':'bad'}"><span>${r.ok?'✓':'✗'}</span><b>${nl(r.q.prompt)}</b><span>${nl(r.q.answer)}</span></div>`).join('')}</div>
       <button class="btn primary big" id="nr">Continue to round ${roundN+1} <kbd>Enter</kbd></button></div>`;
     $('#nr').onclick=nextRound;
@@ -1362,7 +1537,7 @@ function viewLearn(s){
   }
   function finish(){
     prog();
-    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏆</div><h2>You’ve mastered all ${cards.length} terms!</h2><p class="muted">Lock it in with a practice test, or come back for spaced review.</p>
+    stage.innerHTML=`<div class="card qcard center">${heroIc('trophy',1)}<h2>You’ve mastered all ${cards.length} terms!</h2><p class="muted">Lock it in with a practice test, or come back for spaced review.</p>
       <div class="row" style="justify-content:center"><button class="btn primary" id="again">Study again</button><a class="btn" href="#/test/${s.id}">Take a test</a><a class="btn" href="#/match/${s.id}">Play Match</a></div></div>`;
     celebrate();
     $('#again').onclick=()=>{cards.forEach(c=>lvl.set(c.id,0));order=shuffle(cards);roundN=0;nextRound()};
@@ -1386,7 +1561,7 @@ function viewWrite(s){
   }
   function roundEnd(){
     const pct=Math.round(right/roundSize*100);if(firstScore===null)firstScore=pct;
-    if(!missed.length){celebrate();stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏁</div><h2>All ${cards.length} terms answered correctly!</h2><p class="muted">First-round score: <b>${firstScore}%</b> · finished in ${round} round${round>1?'s':''}</p><div class="row" style="justify-content:center"><button class="btn primary" id="again">Start over</button><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;$('#again').onclick=()=>route();setKeys(null);return}
+    if(!missed.length){celebrate();stage.innerHTML=`<div class="card qcard center">${heroIc('flag',1)}<h2>All ${cards.length} terms answered correctly!</h2><p class="muted">First-round score: <b>${firstScore}%</b> · finished in ${round} round${round>1?'s':''}</p><div class="row" style="justify-content:center"><button class="btn primary" id="again">Start over</button><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;$('#again').onclick=()=>route();setKeys(null);return}
     stage.innerHTML=`<div class="card qcard center"><h2>Round ${round}: ${pct}%</h2><p>${right} correct · ${missed.length} to review</p><button class="btn primary big" id="nr">Retry the ${missed.length} missed <kbd>Enter</kbd></button></div>`;
     const go=()=>{queue=shuffle(missed);missed=[];right=0;round++;roundSize=queue.length;ask()};
     $('#nr').onclick=go;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();go()}});
@@ -1408,7 +1583,7 @@ function viewSpell(s){
     const c=queue.shift(),q=qa(s,c),lang=langOf(s,q.aSide);
     let st='ask';
     stage.innerHTML=`<div class="card qcard center">
-      <div class="row" style="justify-content:center"><button class="btn big" id="say">🔊 Play</button><button class="btn" id="slow">🐢 Slow</button></div>
+      <div class="row" style="justify-content:center"><button class="btn big" id="say">${icon('sound',18)} Play</button><button class="btn" id="slow">Slow</button></div>
       <p class="muted sm" style="margin-top:18px">Hint (${sideName(q.pSide).toLowerCase()}): ${nl(q.prompt)}</p>
       <form class="row wform" style="max-width:520px;margin:0 auto"><input class="wa" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear"><button class="btn primary">Check</button></form>
       <div class="fb"></div></div>`;
@@ -1430,7 +1605,7 @@ function viewSpell(s){
     };
     setKeys(e=>{if(st==='fb'&&e.key==='Enter'){e.preventDefault();cont()}});
   }
-  function finish(){celebrate();stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🐝</div><h2>Spelling complete!</h2><p>${firstTry} / ${total} spelled right on the first try (${Math.round(firstTry/total*100)}%)</p><button class="btn primary" id="again">Start over</button></div>`;$('#again').onclick=()=>route();setKeys(null)}
+  function finish(){celebrate();stage.innerHTML=`<div class="card qcard center">${heroIc('trophy',1)}<h2>Spelling complete!</h2><p>${firstTry} / ${total} spelled right on the first try (${Math.round(firstTry/total*100)}%)</p><button class="btn primary" id="again">Start over</button></div>`;$('#again').onclick=()=>route();setKeys(null)}
   ask();
 }
 
@@ -1506,7 +1681,7 @@ function viewTest(s){
     });
     touch(s);
     const pct=Math.round(right/total*100);if(pct>=80)celebrate();if(pct===100&&total>=10){DB.stats.perfect++;save()}queueProgress();
-    $('#scoreBox').innerHTML=`<div class="card score"><div class="ring" style="--p:${pct}">${pct}%</div><div><h2 style="margin:0 0 4px">${pct>=90?'Outstanding! 🎉':pct>=70?'Nice work! 👏':pct>=50?'Getting there 💪':'Keep practicing 📚'}</h2><p style="margin:0 0 12px"><b style="color:var(--ok)">${right} correct</b> · <b style="color:var(--bad)">${total-right} incorrect</b></p><div class="row"><button class="btn primary" id="retake">New test, same settings</button><button class="btn" id="reset">Change settings</button><a class="btn" href="#/learn/${s.id}">Study with Learn</a></div></div></div>`;
+    $('#scoreBox').innerHTML=`<div class="card score"><div class="ring" style="--p:${pct}">${pct}%</div><div><h2 style="margin:0 0 4px">${pct>=90?'Outstanding':pct>=70?'Nice work':pct>=50?'Getting there':'Keep practising'}</h2><p style="margin:0 0 12px"><b style="color:var(--ok)">${right} correct</b> · <b style="color:var(--bad)">${total-right} incorrect</b></p><div class="row"><button class="btn primary" id="retake">New test, same settings</button><button class="btn" id="reset">Change settings</button><a class="btn" href="#/learn/${s.id}">Study with Learn</a></div></div></div>`;
     $('#submitT').remove();
     $('#retake').onclick=build;$('#reset').onclick=setup;
     scrollTo({top:0,behavior:'smooth'});
@@ -1525,7 +1700,7 @@ function viewMatch(s){
   const fmt=t=>t.toFixed(1)+'s';
   function intro(){
     const best=DB.best[key];
-    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🧩</div><h2>Ready to play?</h2><p class="muted">Match every term with its definition as fast as you can.<br>Wrong matches add a 1-second penalty.</p>${best?`<p>Your best: <b>${fmt(best)}</b></p>`:''}<button class="btn primary big" id="start">Start game</button></div>`;
+    stage.innerHTML=`<div class="card qcard center">${heroIc('match')}<h2>Ready to play?</h2><p class="muted">Match every term with its definition as fast as you can.<br>Wrong matches add a 1-second penalty.</p>${best?`<p>Your best: <b>${fmt(best)}</b></p>`:''}<button class="btn primary big" id="start">Start game</button></div>`;
     $('#start').onclick=play;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();play()}});
   }
   function play(){
@@ -1549,7 +1724,7 @@ function viewMatch(s){
   function end(t){
     clearInterval(timer);touch(s);
     const best=DB.best[key],rec=!best||t<best;if(rec){DB.best[key]=t;save();celebrate()}queueProgress();
-    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">${rec?'🏆':'⏱️'}</div><h2>${rec?'New personal record!':'Nice job!'}</h2><p style="font-size:34px;font-weight:800;margin:6px 0">${fmt(t)}</p><p class="muted">${rec&&best?`Previous best: ${fmt(best)}`:best?`Your best: ${fmt(best)}`:''}</p><button class="btn primary big" id="again">Play again <kbd>Enter</kbd></button></div>`;
+    stage.innerHTML=`<div class="card qcard center">${heroIc(rec?'trophy':'clock',rec)}<h2>${rec?'New personal record!':'Nice job!'}</h2><p style="font-size:34px;font-weight:800;margin:6px 0">${fmt(t)}</p><p class="muted">${rec&&best?`Previous best: ${fmt(best)}`:best?`Your best: ${fmt(best)}`:''}</p><button class="btn primary big" id="again">Play again <kbd>Enter</kbd></button></div>`;
     $('#again').onclick=play;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();play()}});
   }
   intro();
@@ -1565,7 +1740,7 @@ function viewGravity(s){
   onCleanup(()=>cancelAnimationFrame(raf));
   function intro(){
     const best=DB.best[key];
-    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">☄️</div><h2>Gravity</h2><p class="muted">Asteroids show a ${sideName(s.opts.answer==='def'?'term':'def').toLowerCase()}. Type the answer before they hit the ground.<br>Miss one and you lose a life — then retype the right answer to keep going.</p>${best?`<p>High score: <b>${best}</b></p>`:''}
+    stage.innerHTML=`<div class="card qcard center">${heroIc('comet')}<h2>Gravity</h2><p class="muted">Asteroids show a ${sideName(s.opts.answer==='def'?'term':'def').toLowerCase()}. Type the answer before they hit the ground.<br>Miss one and you lose a life — then retype the right answer to keep going.</p>${best?`<p>High score: <b>${best}</b></p>`:''}
       <div class="row" style="justify-content:center">${['easy','medium','hard'].map(d=>`<button class="btn ${d==='medium'?'primary':''} big" data-d="${d}">${d[0].toUpperCase()+d.slice(1)}</button>`).join('')}</div></div>`;
     $$('[data-d]',stage).forEach(b=>b.onclick=()=>play(b.dataset.d));
   }
@@ -1573,7 +1748,7 @@ function viewGravity(s){
     let lives=3,score=0,level=1,hits=0,speed={easy:20,medium:32,hard:48}[diff],queue=shuffle(cards),cur=null,q=null,y=0,last=0,st='fall';
     stage.innerHTML=`<div class="grav" id="gf"><div class="ghud"><span id="gl"></span><span id="glv"></span><span id="gs"></span></div><div class="ast" id="ast"></div><div class="ground"></div></div><form class="row wform" id="gform" style="margin-top:12px"><input class="wa" id="gin" autocomplete="off" spellcheck="false" placeholder="Type the answer and press Enter"><button class="btn primary">Enter</button></form>`;
     const gf=$('#gf'),ast=$('#ast'),gin=$('#gin');
-    const hud=()=>{$('#gl').textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);$('#glv').textContent='Level '+level;$('#gs').textContent='Score '+score};
+    const hud=()=>{$('#gl').textContent='♥'.repeat(lives)+'♡'.repeat(3-lives);$('#glv').textContent='Level '+level;$('#gs').textContent='Score '+score};
     function spawn(){
       $('.gmsg',gf)?.remove();
       if(!queue.length)queue=shuffle(cards);
@@ -1592,7 +1767,7 @@ function viewGravity(s){
     function miss(){
       st='miss';lives--;record(cur,false);touch(s);ast.style.display='none';queue.splice(Math.min(2,queue.length),0,cur);hud();
       if(lives<=0)return over();
-      gf.insertAdjacentHTML('beforeend',`<div class="gmsg"><div>💥 It hit the ground! The answer was:</div><div class="okc">${nl(q.answer)}</div><div class="sm">Type it below to continue</div></div>`);
+      gf.insertAdjacentHTML('beforeend',`<div class="gmsg"><div>It hit the ground! The answer was:</div><div class="okc">${nl(q.answer)}</div><div class="sm">Type it below to continue</div></div>`);
       gin.value='';gin.focus();
     }
     $('#gform').onsubmit=e=>{
@@ -1609,7 +1784,7 @@ function viewGravity(s){
     };
     function over(){
       cancelAnimationFrame(raf);const best=DB.best[key]||0,rec=score>best;if(rec){DB.best[key]=score;save()}queueProgress();
-      gf.insertAdjacentHTML('beforeend',`<div class="gmsg"><div style="font-size:44px">${rec?'🏆':'🪐'}</div><h2 style="margin:4px 0">Game over</h2><div>The last answer was:</div><div class="okc">${nl(q.answer)}</div><div>Score <b>${score}</b> · Level ${level}${rec?' · <b>New high score!</b>':` · Best ${best}`}</div><div class="row" style="margin-top:16px;justify-content:center"><button class="btn primary" id="gAgain">Play again</button><button class="btn" id="gMenu">Change difficulty</button></div></div>`);
+      gf.insertAdjacentHTML('beforeend',`<div class="gmsg">${heroIc(rec?'trophy':'comet',rec)}<h2 style="margin:4px 0">Game over</h2><div>The last answer was:</div><div class="okc">${nl(q.answer)}</div><div>Score <b>${score}</b> · Level ${level}${rec?' · <b>New high score!</b>':` · Best ${best}`}</div><div class="row" style="margin-top:16px;justify-content:center"><button class="btn primary" id="gAgain">Play again</button><button class="btn" id="gMenu">Change difficulty</button></div></div>`);
       $('#gform').remove();
       $('#gAgain').onclick=()=>play(diff);$('#gMenu').onclick=intro;
     }
@@ -1866,13 +2041,13 @@ function viewDetective(){
 /* ========== import page ========== */
 function viewImport(){
   app.innerHTML=`<h1>Import</h1>
-  <div class="card col"><h3 style="margin:0">📋 Paste text to create a set</h3><p class="muted sm" style="margin:0">Works with Quizlet exports (in Quizlet: ⋯ → Export → copy), Word, Excel and Google Sheets.</p>
+  <div class="card col"><h3 style="margin:0">Paste text to create a set</h3><p class="muted sm" style="margin:0">Works with Quizlet exports (in Quizlet: ⋯ → Export → copy), Word, Excel and Google Sheets.</p>
     <input id="iTitle" placeholder="Set title">
     <div id="bulkHost">${bulkUI()}</div>
-    <div class="row between"><label class="btn sm">📄 Load a .txt / .csv / .tsv file<input type="file" id="iFile" accept=".txt,.csv,.tsv,text/plain" hidden></label><button class="btn primary" id="iGo">Create set</button></div>
+    <div class="row between"><label class="btn sm">${icon('doc',16)} Load a .txt / .csv / .tsv file<input type="file" id="iFile" accept=".txt,.csv,.tsv,text/plain" hidden></label><button class="btn primary" id="iGo">Create set</button></div>
   </div>
-  <div class="card col" style="margin-top:16px"><h3 style="margin:0">🔗 Open a shared link</h3><div class="row"><input id="iLink" placeholder="Paste a QuizCraft share link" style="flex:1"><button class="btn" id="iLinkGo">Open</button></div></div>
-  <div class="card col" style="margin-top:16px"><h3 style="margin:0">💾 Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
+  <div class="card col" style="margin-top:16px"><h3 style="margin:0">Open a shared link</h3><div class="row"><input id="iLink" placeholder="Paste a QuizCraft share link" style="flex:1"><button class="btn" id="iLinkGo">Open</button></div></div>
+  <div class="card col" style="margin-top:16px"><h3 style="margin:0">Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
   const b=bindBulk($('#bulkHost'));
   $('#iFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const t=await f.text();$('#bText').value=t;if(/\.csv$/i.test(f.name))$('input[name=tsep][value=comma]').checked=true;if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.\w+$/,'');b.upd()};
   $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});s.cards=r;DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
@@ -1907,36 +2082,40 @@ function syncLineText(){return (user?user.email+' · ':'')+(user?({ok:'Synced ac
 function viewSettings(){
   const size=new Blob([JSON.stringify(DB)]).size,nm=firstName()||'You';
   app.innerHTML=`<div class="wrap">
-  <div class="page-h"><div class="prof"><span class="avatar">${firstName()?esc(nm[0].toUpperCase()):`<svg width="28" height="18" viewBox="0 0 64 40" aria-hidden="true"><path d="${BAT_PATH}" fill="currentColor"/></svg>`}</span><div><h1 style="font-size:24px">${esc(DB.settings.name||(user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'Your profile')}</h1><div class="muted sm" id="syncStat">${esc(syncLineText())}</div></div></div>${sb?`<button class="btn ${user?'':'primary'}" id="acctBtn">${user?'Account & sync':'Sign in to sync'}</button>`:''}</div>
-  <section class="sec" style="margin-top:8px"><div class="sec-h"><h2>General</h2></div><div class="card plist">
-    <label class="opt"><span>Name <span class="muted sm">(used in your greeting)</span></span><input id="sName" style="max-width:200px" placeholder="${esc(firstName()||'Your name')}" value="${esc(DB.settings.name||'')}"></label>
-    <label class="opt"><span>Theme</span><select id="sTheme" style="max-width:240px"><option value="charcoal">Charcoal</option><option value="midnight">Midnight city (animated)</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Match my device</option></select></label>
-    <div class="opt"><span>Study sounds <span class="muted sm">(rain, thunder, hum)</span></span><button class="btn sm" id="sAmb">${DB.settings.amb.on?'On':'Off'} · Adjust</button></div>
-  </div></section>
-  <section class="sec"><div class="sec-h"><h2>Studying</h2></div><div class="card plist">
-    <label class="opt"><span>Highlight key terms <span class="muted sm">(underline other terms from the set inside definitions)</span></span><input type="checkbox" id="sVision"></label>
-    <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
-    <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:160px"></label>
-    <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">Play</button></div>
-  </div></section>
-  <section class="sec"><div class="sec-h"><h2>Backgrounds</h2><a href="#/achievements">Ranks & achievements</a></div>
-    <details class="more"><summary>Animated city backgrounds you unlock by ranking up (Midnight theme)</summary><div style="margin-top:10px">${envPicker()}</div></details></section>
-  <section class="sec"><div class="sec-h"><h2>Your data</h2></div><div class="card plist">
-    <div class="opt"><span class="sm muted">${user?'Saved in this browser and synced to your account':'Saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net.</span></div>
-    <div class="opt"><span>Back up everything</span><button class="btn sm" id="sExport">Export .json</button></div>
-    <div class="opt"><span>Restore a backup</span><label class="btn sm">Choose file<input type="file" id="sImport" accept=".json,application/json" hidden></label></div>
-    <div class="opt"><span>Import sets from Quizlet, Word or Excel</span><a class="btn sm" href="#/import">Import</a></div>
-    <div class="opt"><span>Delete all data</span><button class="btn sm danger" id="sWipe">Delete</button></div>
-  </div></section>
-  <section class="sec"><div class="sec-h"><h2>Help</h2></div><div class="card plist">
-    <div class="opt"><span>Take the quick tour again</span><button class="btn sm" id="sTour">Replay tour</button></div>
-    <div class="opt"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add starter sets</button></div>
+  <div class="page-h"><div class="prof"><span class="avatar">${firstName()?esc(nm[0].toUpperCase()):`<svg width="28" height="18" viewBox="0 0 64 40" aria-hidden="true"><path d="${BAT_PATH}" fill="currentColor"/></svg>`}</span><div><h1 data-lt="Profile" style="font-size:var(--t-2)">${esc(DB.settings.name||(user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'Profile')}</h1><div class="muted sm" id="syncStat">${esc(syncLineText())}</div></div></div>${sb?`<button class="btn ${user?'':'primary'}" id="acctBtn">${user?'Account & sync':'Sign in to sync'}</button>`:''}</div>
+  <div class="gsec" style="margin-top:6px"><span class="glabel">General</span><div class="card group">
+    <label class="opt"><span>Name</span><input id="sName" style="max-width:200px;text-align:right" placeholder="${esc(firstName()||'Your name')}" value="${esc(DB.settings.name||'')}"></label>
+    <label class="opt"><span>Theme</span><select id="sTheme" style="max-width:220px"><option value="charcoal">Charcoal</option><option value="midnight">Midnight city (animated)</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Match my device</option></select></label>
+    <div class="opt"><span>Study sounds</span><button class="btn sm" id="sAmb">${DB.settings.amb.on?'On':'Off'} ›</button></div>
+  </div><div class="gnote">Your name is used in the Home greeting. Study sounds are generated rain, thunder and a soft hum.</div></div>
+  <div class="gsec"><span class="glabel">Studying</span><div class="card group">
+    <label class="opt"><span>Highlight key terms</span><input type="checkbox" id="sVision"></label>
+    <label class="opt"><span>Read aloud automatically</span><input type="checkbox" id="sSpeak"></label>
+    <label class="opt"><span>Speech speed <span class="muted" id="sRateV"></span></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:150px"></label>
+    <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">${icon('sound',16)} Play</button></div>
+  </div><div class="gnote">Highlighting underlines other terms from the same set when they appear inside a definition.</div></div>
+  <div class="gsec"><span class="glabel">Progress</span><div class="card group">
+    <a class="opt" href="#/achievements"><span>Ranks & achievements</span>${chev}</a>
+    <a class="opt" href="#/detective"><span>Weak spots report</span>${chev}</a>
   </div>
-  <details class="more" style="margin-top:14px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
+  <details class="more" style="margin:10px 0 0 18px"><summary>Animated backgrounds you unlock by ranking up</summary><div style="margin-top:10px">${envPicker()}</div></details></div>
+  <div class="gsec"><span class="glabel">Your data</span><div class="card group">
+    <div class="opt"><span>Back up everything</span><button class="btn sm" id="sExport">Export</button></div>
+    <div class="opt"><span>Restore a backup</span><label class="btn sm">Choose file<input type="file" id="sImport" accept=".json,application/json" hidden></label></div>
+    <a class="opt" href="#/import"><span>Import from Quizlet, Word or Excel</span>${chev}</a>
+    <div class="opt"><span style="color:var(--bad)">Delete all data</span><button class="btn sm danger" id="sWipe">Delete</button></div>
+  </div><div class="gnote">${user?'Saved in this browser and synced to your account':'Saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net.</div></div>
+  <div class="gsec"><span class="glabel">Help</span><div class="card group">
+    <div class="opt"><span>Take the tour again</span><button class="btn sm" id="sTour">Start</button></div>
+    <div class="opt"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add</button></div>
+    <div class="opt"><span>Install on your phone</span><button class="btn sm" id="sInstall">How</button></div>
+  </div>
+  <details class="more" style="margin:10px 0 0 18px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
     <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick an answer or rate a card</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
   </div></details>
-  <p style="margin-top:28px"><a class="classic" href="archive/v1/">Open the classic QuizCraft design</a></p></section>
+  <p style="margin:30px 0 0 18px"><a class="classic" href="archive/v2/">Previous design</a> · <a class="classic" href="archive/v1/">Classic design</a></p></div>
   </div>`;
+  $('#sInstall').onclick=()=>modal(`<h3>Install QuizCraft</h3><p><b>iPhone:</b> open this site in Safari, tap the Share button, then <b>Add to Home Screen</b>.</p><p><b>Android:</b> in Chrome, tap ⋮ then <b>Install app</b>.</p><p class="muted sm">It opens full screen with its own icon and keeps working offline.</p><div class="row end"><button class="btn primary" id="mC">Done</button></div>`)||($('#mC').onclick=()=>closeModal());
   if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};
   bindEnvPicker(app);
   $('#sAmb').onclick=e=>{e.stopPropagation();hideAmbHint();ambPanel()};
@@ -2042,7 +2221,7 @@ function refreshView(){
 function authModal(){
   if(!sb)return toast('Cloud sync isn’t available right now — check your internet connection.');
   if(user)return accountModal();
-  modal(`<h3>☁️ Sign in to sync</h3><p class="muted sm" style="margin-top:-6px">Save your sets to your account and keep them in sync on every device. The sets on this device will be uploaded.</p>
+  modal(`<h3>Sign in to sync</h3><p class="muted sm" style="margin-top:-6px">Save your sets to your account and keep them in sync on every device. The sets on this device will be uploaded.</p>
     <button class="btn" id="aGoogle" style="width:100%;padding:11px"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google</button>
     <div class="row muted sm" style="justify-content:center;margin:10px 0">or use email</div>
     <form id="authF" class="col"><input type="email" id="aE" placeholder="Email" autocomplete="email" required><input type="password" id="aP" placeholder="Password (at least 6 characters)" autocomplete="current-password" minlength="6" required>
@@ -2058,7 +2237,7 @@ function authModal(){
 }
 function accountModal(){
   const st={ok:'✓ Everything is saved to the cloud',busy:'⟳ Syncing…',offline:'You’re offline — changes are saved on this device and will upload when you reconnect.',error:'⚠ The last sync failed — it will retry automatically.'}[syncState]||'';
-  modal(`<h3>☁️ Cloud sync</h3><p style="margin-top:0">Signed in as <b>${esc(user.email)}</b></p><p class="muted sm">${st}${lastSync?` · last synced at ${new Date(lastSync).toLocaleTimeString([],{timeStyle:'short'})}`:''}</p>
+  modal(`<h3>Cloud sync</h3><p style="margin-top:0">Signed in as <b>${esc(user.email)}</b></p><p class="muted sm">${st}${lastSync?` · last synced at ${new Date(lastSync).toLocaleTimeString([],{timeStyle:'short'})}`:''}</p>
     <div class="row end"><button class="btn danger" id="aOut">Sign out</button><button class="btn" id="aClose">Close</button><button class="btn primary" id="aSync">Sync now</button></div>`);
   $('#aClose').onclick=()=>closeModal();
   $('#aSync').onclick=async()=>{closeModal(true);await sync();toast(syncState==='ok'?'Synced!':'Sync failed — it will retry automatically')};
@@ -2161,6 +2340,7 @@ applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPane
 const firstVisit=!DB.settings.tourDone&&DB.settings.newUser;if(firstVisit){const sh=showAmbHint;showAmbHint=()=>{};ambAutostart();showAmbHint=sh;setTimeout(startTour,700)}else ambAutostart();
 route();
 setTimeout(checkProgress,1200);
+if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 (()=>{ // parallax + lightning (midnight only)
   let pend=false;addEventListener('scroll',()=>{if(pend||document.documentElement.dataset.theme!=='midnight')return;pend=true;requestAnimationFrame(()=>{const y=Math.min(scrollY,1500);$('#cityFar').style.transform=`translateY(${y*-.015}px)`;$('#city').style.transform=`translateY(${y*-.05}px)`;pend=false})},{passive:true});
   const strike=()=>{const sc=$('#scene');if(document.visibilityState==='visible'){if(document.documentElement.dataset.theme==='midnight'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sc.dataset.env!=='cave'){sc.classList.remove('strike');void sc.offsetWidth;sc.classList.add('strike')}if(window.onLightning)onLightning()}setTimeout(strike,18000+Math.random()*30000)};
