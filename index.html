@@ -300,10 +300,11 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 [data-theme=midnight] .simhud{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-size:20px;letter-spacing:.03em}
 .simbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}.simbar i{display:block;height:100%;width:100%;background:var(--accent)}
 #ambBtn.amb-on{color:var(--accent);background:var(--accent-soft)}
+#ambBtn.amb-wait{color:var(--accent);animation:waitpulse 1.6s ease-in-out infinite}@keyframes waitpulse{50%{opacity:.4}}
 #ambHint{position:fixed;z-index:45;width:min(330px,calc(100vw - 16px));padding:14px 16px;border:2px solid var(--accent);opacity:0;transform:translateY(-8px);transition:opacity .3s,transform .3s}
 #ambHint.show{opacity:1;transform:none}
 #ambHint .ic{color:var(--accent);flex:none}
-#ambHint::before{content:'';position:absolute;top:-9px;right:22px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--accent);border-top:2px solid var(--accent);transform:rotate(45deg)}
+#ambHint::before{content:'';position:absolute;top:-9px;left:var(--ax,280px);width:14px;height:14px;background:var(--card);border-left:2px solid var(--accent);border-top:2px solid var(--accent);transform:rotate(45deg)}
 #ambPanel{position:fixed;top:64px;right:16px;z-index:40;width:300px;padding:16px}
 #ambPanel input[type=range]{width:140px}
 .envl{display:none;position:absolute;inset:0}
@@ -1491,30 +1492,52 @@ function ambStart(){
   const ctx=new Ctx();AMB.ctx=ctx;AMB.G=ambGraph(ctx,ctx.destination);AMB.on=true;ambVol();
   AMB.timer=setInterval(()=>{if(AMB.on&&ctx.state==='running'&&DB.settings.amb.rain>0)scheduleDrops(AMB.G,ctx.currentTime+.2,DB.settings.amb.rain)},80);
 }
-function ambStop(){if(AMB.ctx)AMB.ctx.suspend();AMB.on=false;DB.settings.amb.on=false;save();ambBtn();hideAmbHint()}
+function ambStop(){if(AMB.ctx)AMB.ctx.suspend();if(AMB.el)AMB.el.pause();AMB.on=false;DB.settings.amb.on=false;save();ambBtn();hideAmbHint()}
 /* default-on sound: browsers only allow audio after the visitor's first click, tap or key press */
+/* iPhone: play as media (like music/video) so the silent switch doesn't mute it */
+function mediaSession(){try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}}
+function silentWav(){const sr=8000,n=sr,b=new ArrayBuffer(44+n*2),d=new DataView(b);let o=0;const w=t=>{for(const ch of t)d.setUint8(o++,ch.charCodeAt(0))};w('RIFF');d.setUint32(o,36+n*2,true);o+=4;w('WAVEfmt ');d.setUint32(o,16,true);o+=4;d.setUint16(o,1,true);o+=2;d.setUint16(o,1,true);o+=2;d.setUint32(o,sr,true);o+=4;d.setUint32(o,sr*2,true);o+=4;d.setUint16(o,2,true);o+=2;d.setUint16(o,16,true);o+=2;w('data');d.setUint32(o,n*2,true);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function mediaUnlock(){
+  mediaSession();
+  if(!AMB.el){const a=document.createElement('audio');a.src=silentWav();a.loop=true;a.setAttribute('playsinline','');a.preload='auto';AMB.el=a}
+  const pr=AMB.el.play();if(pr&&pr.catch)pr.catch(()=>{});
+}
+const GESTURES=['pointerdown','pointerup','touchend','click','keydown'];
 function ambAutostart(){
   if(!DB.settings.amb.on)return;
-  ambStart();
-  const go=()=>{if(DB.settings.amb.on&&AMB.ctx&&AMB.ctx.state!=='running')AMB.ctx.resume();['pointerdown','keydown','touchstart'].forEach(ev=>document.removeEventListener(ev,go,true))};
-  ['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,go,true));
+  mediaSession();ambStart();
+  const go=()=>{
+    if(!DB.settings.amb.on){done();return}
+    mediaUnlock();
+    if(AMB.ctx&&AMB.ctx.state!=='running')AMB.ctx.resume().then(()=>{if(AMB.ctx.state==='running'){done();ambHintText()}}).catch(()=>{});
+    else{done();ambHintText()}
+  };
+  const done=()=>GESTURES.forEach(ev=>document.removeEventListener(ev,go,true));
+  GESTURES.forEach(ev=>document.addEventListener(ev,go,true));
+  if(AMB.ctx)AMB.ctx.onstatechange=()=>{ambBtn();ambHintText()};
   showAmbHint();
+}
+function ambHintText(){
+  const h=$('#ambHint');if(!h||h.hidden)return;const on=AMB.ctx&&AMB.ctx.state==='running';
+  const t=$('#hintT',h),d=$('#hintD',h);if(!t)return;
+  t.textContent=on?'Rain and thunder are on':'Tap anywhere to start the rain and thunder';
+  d.textContent=on?'If you don’t like the sound, you can turn it off here anytime.':'Browsers wait for your first tap before playing sound. If you don’t like it, turn it off here.';
 }
 function showAmbHint(){
   try{if(sessionStorage.getItem('ambHint'))return;sessionStorage.setItem('ambHint','1')}catch(e){}
   const h=$('#ambHint'),b=$('#ambBtn');if(!h||!b)return;
-  h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b>Rain and thunder are on</b><div class="sm muted">If you don’t like the sound, you can turn it off here anytime.</div></div></div><div class="row end" style="margin-top:10px"><button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button></div>`;
-  const place=()=>{const r=b.getBoundingClientRect();h.style.top=(r.bottom+12)+'px';h.style.right=Math.max(8,innerWidth-r.right-14)+'px';h.style.setProperty('--ax',(r.left+r.width/2)+'px')};
-  place();h.hidden=false;requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
+  h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b id="hintT"></b><div class="sm muted" id="hintD"></div></div></div><div class="row end" style="margin-top:10px"><button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button></div>`;
+  const place=()=>{const r=b.getBoundingClientRect(),w=h.offsetWidth||330,left=Math.max(8,Math.min(r.right+14-w,innerWidth-w-8));h.style.top=(r.bottom+12)+'px';h.style.left=left+'px';h.style.right='auto';h.style.setProperty('--ax',(r.left+r.width/2-left-7)+'px')};
+  h.hidden=false;place();ambHintText();requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
   $('#hintOff').onclick=()=>{ambStop();toast('Sound off. Turn it back on with the headphones button.')};
-  $('#hintOk').onclick=()=>{if(AMB.ctx)AMB.ctx.resume();hideAmbHint()};
+  $('#hintOk').onclick=()=>{mediaUnlock();if(AMB.ctx)AMB.ctx.resume();hideAmbHint()};
   setTimeout(hideAmbHint,12000);
 }
 function hideAmbHint(){const h=$('#ambHint');if(!h||h.hidden)return;h.classList.remove('show');setTimeout(()=>{h.hidden=true},300)}
 function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.G.rain.gain.setTargetAtTime(a.rain*.55,t,.4);AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,.4);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
 function thunder(dist){if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;thunderAt(AMB.G,AMB.ctx.currentTime+.02,1,dist)}
 window.onLightning=()=>{const d=Math.random();setTimeout(()=>thunder(d),300+d*3500)};
-function ambBtn(){const b=$('#ambBtn');if(b){b.innerHTML=icon('head',20);b.classList.toggle('amb-on',AMB.on)}}
+function ambBtn(){const b=$('#ambBtn');if(b){b.innerHTML=icon('head',20);b.classList.toggle('amb-on',AMB.on&&!!AMB.ctx&&AMB.ctx.state==='running');b.classList.toggle('amb-wait',AMB.on&&(!AMB.ctx||AMB.ctx.state!=='running'))}}
 function ambPanel(){
   const p=$('#ambPanel');if(!p.hidden){p.hidden=true;return}
   const a=DB.settings.amb;
@@ -1522,7 +1545,7 @@ function ambPanel(){
     ${[['rain','Rain'],['thunder','Thunder'],['hum','Computer hum']].map(([k,l])=>`<label class="opt"><span>${l}</span><input type="range" min="0" max="1" step="0.05" value="${a[k]}" data-amb="${k}"></label>`).join('')}
     <p class="muted sm" style="margin:6px 0 0">Thunder follows the lightning in Midnight. All sound is generated live in your browser.</p>`;
   p.hidden=false;
-  $('#ambToggle').onclick=()=>{AMB.on?ambStop():ambStart();ambPanel();ambPanel()};
+  $('#ambToggle').onclick=()=>{if(AMB.on)ambStop();else{mediaUnlock();ambStart()}ambPanel();ambPanel()};
   $$('[data-amb]',p).forEach(r=>{r.oninput=()=>{a[r.dataset.amb]=+r.value;save();ambVol()};r.onchange=()=>{if(r.dataset.amb==='thunder'&&AMB.on)thunder(.3)}});
 }
 document.addEventListener('mousedown',e=>{const p=$('#ambPanel');if(!p.hidden&&!e.target.closest('#ambPanel,#ambBtn'))p.hidden=true});
