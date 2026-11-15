@@ -222,6 +222,10 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .rankcard{display:flex;gap:14px;align-items:center;min-width:300px;max-width:420px;flex:1;padding:14px 18px}
 .rankcard .badge{color:var(--accent);flex:none}
 .rank-name{font-weight:700;font-size:20px;line-height:1.1}
+.rk{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.rk-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rk-xp{font-weight:700;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rk .bar{margin-top:0}
 .cc-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px}
 .brief{display:flex;flex-direction:column;gap:14px}
 .go{display:flex;flex-direction:column;gap:2px;padding:18px 22px;border-radius:10px;background:var(--text);color:var(--on-ink);transition:transform .15s,box-shadow .15s}
@@ -255,7 +259,7 @@ a.stat:hover{border-color:var(--accent)}
 #scene.strike .strike-l{animation:strike .9s ease-out}
 @keyframes strike{0%{background:rgba(220,230,255,0)}8%{background:rgba(220,230,255,.35)}16%{background:rgba(220,230,255,.04)}24%{background:rgba(220,230,255,.22)}100%{background:rgba(220,230,255,0)}}
 .city2{position:absolute;left:0;right:0;bottom:0;width:100%;height:42vh;min-height:220px;will-change:transform}
-@media (max-width:760px){.cc-grid{grid-template-columns:1fr}.rankcard{min-width:0;max-width:none}}
+@media (max-width:760px){.cc-grid{grid-template-columns:1fr}.rankcard{min-width:0;max-width:none}.moon,.libmoon{display:none}.cc-head{align-items:stretch}}
 
 .casehead{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:22px;border-top:3px solid var(--margin)}
 .casehead h1{margin:0}
@@ -361,13 +365,15 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 #toast.show{visibility:visible;transform:translateX(-50%) translateY(0)}
 .empty{padding:40px;text-align:center}
 .kbd-list{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px}
-@media (max-width:700px){
+@media (max-width:860px){
   .top{padding:8px 12px;gap:6px;flex-wrap:wrap}.top .hide-sm{display:none}
   .top .desk{display:none!important}.top .mob{display:inline-flex}
   .top nav{gap:2px}.top .ico{width:40px;height:40px;display:inline-grid;place-items:center;font-size:20px}
   .logo .word{font-size:23px}.logo-bat{width:34px;height:22px}
   .searchwrap{display:none;order:3;flex-basis:100%;max-width:none}
   .top.searching .searchwrap{display:block;padding-bottom:4px}
+}
+@media (max-width:700px){
   .sticky-save{top:56px}
   [data-theme=midnight] h1{font-size:34px}
   main{padding:16px 12px 60px}
@@ -539,7 +545,7 @@ function countMission(){
 const RANKS=[['Civilian',0],['Recruit',0],['Vigilante',50],['Detective',200],['Night Warden',500],['Master Detective',1000]];
 const masteredTotal=()=>DB.sets.reduce((n,s)=>n+s.cards.filter(c=>status(c)==='master').length,0);
 function rankIndex(){if(!DB.stats.answers)return 0;const m=masteredTotal();let r=1;RANKS.forEach(([,t],i)=>{if(i>1&&m>=t)r=i});return r}
-function rankBadge(r,sz=46){const n=Math.max(0,Math.min(r,5));let p='';for(let i=0;i<Math.min(n,4);i++)p+=`<path d="M10 ${34-i*7}l14-8 14 8" />`;if(n>=5)p+=`<path d="M24 4l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="currentColor" stroke="none"/>`;return `<svg class="badge" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 2l19 7v14c0 11-8 19-19 23C13 42 5 34 5 23V9z" stroke-width="2" opacity=".45"/>${p}</svg>`}
+function rankBadge(r,sz=46){const n=Math.max(0,Math.min(r,5));if(n===0)return `<svg class="badge" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M24 2l19 7v14c0 11-8 19-19 23C13 42 5 34 5 23V9z" stroke-dasharray="4 4" opacity=".7"/><circle cx="24" cy="23" r="3.5" fill="currentColor" stroke="none"/></svg>`;let p='';for(let i=0;i<Math.min(n,4);i++)p+=`<path d="M10 ${34-i*7}l14-8 14 8" />`;if(n>=5)p+=`<path d="M24 4l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="currentColor" stroke="none"/>`;return `<svg class="badge" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 2l19 7v14c0 11-8 19-19 23C13 42 5 34 5 23V9z" stroke-width="2" opacity=".45"/>${p}</svg>`}
 const ACH=[
  ['first','First Case','Answer your first question',()=>DB.stats.answers>0],
  ['streak3','On the Beat','Study 3 days in a row',()=>streakNow()>=3],
@@ -772,7 +778,7 @@ function viewHome(){
   app.innerHTML=`${overdueHtml(DB.sets)}
   <div class="cc-head">
     <div><h1 class="cc-title">Command Center</h1><div class="clock" id="ccClock"></div></div>
-    <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div style="flex:1;min-width:0"><div class="rank-name">${RANKS[r][0]}</div><div class="muted sm">${(DB.xp||0).toLocaleString()} XP${r===0?' · answer your first question to become a Recruit':nxt?` · ${Math.max(0,nxt[1]-mastered)} more mastered cards to ${nxt[0]}`:' · highest rank'}</div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div></div></a>
+    <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div class="rk"><div class="rk-top"><span class="rank-name">${RANKS[r][0]}</span><span class="rk-xp">${(DB.xp||0).toLocaleString()} XP</span></div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div><div class="muted sm">${r===0?'Next: Recruit · answer your first question':nxt?`Next: ${nxt[0]} · master ${Math.max(0,nxt[1]-mastered)} more card${nxt[1]-mastered===1?'':'s'}`:'Highest rank reached'}</div></div></a>
   </div>
   <div class="cc-grid">
     <div class="card brief">
