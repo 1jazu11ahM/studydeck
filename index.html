@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QuizCraft — flashcards & study modes</title>
 <meta name="description" content="Free, open flashcard app: flashcards, learn, write, spell, test, match and gravity.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2220%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%234255ff%22/><rect x=%2222%22 y=%2230%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%23ffcd1f%22/></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2040%22%3E%3Cpath%20d%3D%22M29%2020%20L14%204%20L4%209%20L9%2014%20L12%2013%20L15%2019%20L19%2018%20L22%2024%20L28%2027.5%20Q32%2031%2036%2027.5%20L42%2025%20L45%2020%20L49%2021%20L52%2015%20L55%2016%20L61%2012%20L51%206%20L35%2020%20Q35.5%2017.5%2034.4%2015.6%20L35.2%2010.6%20L32.9%2014.2%20Q32%2013.9%2031.1%2014.2%20L28.8%2010.6%20L29.6%2015.6%20Q28.5%2017.5%2029%2020%20Z%22%20fill%3D%22%2318263a%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Instrument+Sans:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#e9edf2;--card:#fff;--text:#18263a;--on-ink:#fff;--muted:#5d6b7e;--line:#d6dde6;--accent:#2449c9;--accent-2:#1b39a3;--accent-soft:#e3e9fb;--ok:#14895f;--ok-soft:#e1f4ec;--bad:#d93f45;--bad-soft:#fcebeb;--warn:#e0a019;--rule:#dbe5f3;--margin:#ef8a8e;--hl:#ffe14d;--shadow:0 1px 2px rgba(24,38,58,.06),0 10px 24px -14px rgba(24,38,58,.35);--r:10px;--hand:'Kalam',ui-rounded,'Segoe Print',cursive}
 [data-theme=dark]{--bg:#10151c;--card:#1a212b;--text:#e7ecf3;--on-ink:#10151c;--muted:#97a3b4;--line:#2a3441;--accent:#86a2ff;--accent-2:#a4b9ff;--accent-soft:#222d47;--ok:#3fd19c;--ok-soft:#14352b;--bad:#ff7378;--bad-soft:#3a1f25;--rule:#243042;--margin:#a8484d;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 28px -14px rgba(0,0,0,.6)}
@@ -20,8 +20,11 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 kbd{font:600 11px/1 ui-monospace,monospace;padding:3px 5px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
 .top{position:sticky;top:0;z-index:10;display:flex;gap:12px;align-items:center;padding:10px 20px;background:var(--card);border-bottom:1px solid var(--line)}
-.logo{font-weight:700;font-size:19px;letter-spacing:-.01em;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:9px}
-.logo-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:7px;background:var(--hl);color:#18263a}
+.logo{color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.logo-bat{transform:rotate(-8deg);transition:transform .3s}
+.logo:hover .logo-bat{transform:rotate(-8deg) translateY(-3px) scaleY(.8)}
+.logo .word{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-weight:900;font-size:27px;line-height:1;letter-spacing:.03em;text-transform:uppercase}
+[data-theme=midnight] .logo-bat{color:var(--text)}
 .top input{flex:1;max-width:460px}
 .top nav{display:flex;gap:8px;margin-left:auto;align-items:center}
 main{max-width:980px;margin:0 auto;padding:24px 20px 80px}
@@ -171,6 +174,18 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 [data-theme=midnight] .prog i{background:var(--accent)}
 [data-theme=midnight] .ftxt{color:#f3efe2}
 [data-theme=midnight] .st-learn{background:#3a2f0e;color:#f2c230}
+
+[data-theme=midnight] h1,[data-theme=midnight] h2,[data-theme=midnight] .stat b,[data-theme=midnight] .mode,[data-theme=midnight] .timer,[data-theme=midnight] .ring,[data-theme=midnight] .ghud,[data-theme=midnight] .done-box h2,[data-theme=midnight] .qcard h2{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;letter-spacing:.02em}
+[data-theme=midnight] h1{font-size:44px;font-weight:900;text-transform:uppercase;line-height:1}
+[data-theme=midnight] h2{font-size:26px;font-weight:800}
+[data-theme=midnight] .stat b{font-size:40px;font-weight:900}
+[data-theme=midnight] .mode{font-size:21px;font-weight:800}
+[data-theme=midnight] .mode small{font-family:'Instrument Sans',system-ui,sans-serif;letter-spacing:0}
+.bats{position:absolute;inset:0}
+.bat{position:absolute;left:-60px;color:#3b4456;opacity:.9;filter:drop-shadow(0 0 6px rgba(251,244,220,.12));animation:batfly linear infinite}
+.bat svg{display:block;animation:flap .32s ease-in-out infinite alternate;transform-origin:50% 60%}
+@keyframes batfly{0%{transform:translate(0,0)}25%{transform:translate(28vw,-3vh)}50%{transform:translate(56vw,2vh)}75%{transform:translate(84vw,-2vh)}100%{transform:translate(calc(100vw + 120px),1vh)}}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
 #scene{display:none}
 [data-theme=midnight] #scene{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 120% 70% at 50% 110%,#1d2638 0%,#0f131c 45%,#07090d 100%)}
 .moon{position:absolute;top:17vh;right:3vw;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fbf4dc,#d8cda6 58%,#a39874);box-shadow:0 0 90px 24px rgba(251,244,220,.10);opacity:.8}
@@ -238,9 +253,9 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 </style>
 </head>
 <body>
-<div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="rain"></div></div>
+<div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="bats"><div class="bat" style="top:8vh;animation-duration:26s;animation-delay:-3s"><svg width="30" height="18" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:14vh;animation-duration:34s;animation-delay:-17s"><svg width="22" height="13" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:22vh;animation-duration:29s;animation-delay:-11s"><svg width="26" height="16" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:5vh;animation-duration:41s;animation-delay:-27s"><svg width="18" height="11" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:30vh;animation-duration:37s;animation-delay:-6s"><svg width="20" height="12" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="rain"></div></div>
 <header class="top">
-  <a href="#/" class="logo"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/></svg></span><span class="hide-sm">QuizCraft</span></a>
+  <a href="#/" class="logo" aria-label="QuizCraft home"><svg class="logo-bat" width="40" height="26" viewBox="0 0 64 40" aria-hidden="true"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg><span class="word hide-sm">QuizCraft</span></a>
   <input id="globalSearch" type="search" placeholder="Search your sets and terms…" aria-label="Search">
   <nav>
     <a href="#/new" class="btn primary sm">+ Create</a>
@@ -1265,10 +1280,11 @@ function celebrate(){
   const c=document.createElement('canvas');c.id='fx';c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;document.body.appendChild(c);
   const x=c.getContext('2d'),dpr=devicePixelRatio,mid=document.documentElement.dataset.theme==='midnight';
   const cols=mid?['#f2c230','#ffe9a3','#ffffff','#8d95a3']:['#2449c9','#ffe14d','#14895f','#d93f45','#18263a'];
-  const ps=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*6+4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:pick(cols)}));
+  const BATP=new Path2D('M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z');
+  const ps=mid?Array.from({length:46},()=>({x:innerWidth/2+(Math.random()-.5)*160,y:innerHeight*.6,vx:(Math.random()-.5)*9,vy:-Math.random()*5-3,s:Math.random()*.5+.45,r:(Math.random()-.5)*.6,vr:0,c:pick(['#04060a','#2a3140','#ece8dc']),bat:1,ph:Math.random()*6})):Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*6+4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:pick(cols)}));
   const t0=performance.now();
   (function f(t){const k=(t-t0)/1000;x.clearRect(0,0,c.width,c.height);
-    ps.forEach(p=>{p.vy+=.38;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x*dpr,p.y*dpr);x.rotate(p.r);x.globalAlpha=Math.max(0,1-k/2.4);x.fillStyle=p.c;x.fillRect(-p.s*dpr/2,-p.s*dpr/4,p.s*dpr,p.s*dpr/2);x.restore()});
+    ps.forEach(p=>{if(p.bat){p.vy-=.06;p.x+=p.vx;p.y+=p.vy;x.save();x.translate(p.x*dpr,p.y*dpr);x.rotate(p.r);x.scale(p.s*dpr,p.s*dpr*(.45+.55*Math.abs(Math.sin(k*18+p.ph))));x.translate(-32,-22);x.globalAlpha=Math.max(0,1-k/2.4);x.fillStyle=p.c;x.fill(BATP);x.restore();return}p.vy+=.38;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x*dpr,p.y*dpr);x.rotate(p.r);x.globalAlpha=Math.max(0,1-k/2.4);x.fillStyle=p.c;x.fillRect(-p.s*dpr/2,-p.s*dpr/4,p.s*dpr,p.s*dpr/2);x.restore()});
     if(k<2.4)requestAnimationFrame(f);else c.remove()})(t0);
 }
 /* ========== theme & boot ========== */
