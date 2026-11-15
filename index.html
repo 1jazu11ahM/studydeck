@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyDeck — free flashcards & study modes</title>
+<meta name="description" content="Free, open flashcard app: flashcards, learn, write, spell, test, match and gravity.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2220%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%234255ff%22/><rect x=%2222%22 y=%2230%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%23ffcd1f%22/></svg>">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1a1d28;--muted:#646f86;--line:#e3e6ef;--accent:#4255ff;--accent-2:#3343e6;--accent-soft:#eef0ff;--ok:#18ae79;--ok-soft:#e3f7ef;--bad:#e5484d;--bad-soft:#fdecec;--warn:#f5a524;--shadow:0 2px 10px rgba(20,30,70,.07);--r:14px}
+[data-theme=dark]{--bg:#0f1220;--card:#1a1e32;--text:#eef0f8;--muted:#9aa3bd;--line:#2d3354;--accent:#6c7bff;--accent-2:#8290ff;--accent-soft:#232a4d;--ok:#2fd39a;--ok-soft:#153a2f;--bad:#ff6b6f;--bad-soft:#3d1e24;--shadow:0 2px 12px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html{color-scheme:light}[data-theme=dark]{color-scheme:dark}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+a{color:inherit;text-decoration:none}
+kbd{font:600 11px/1 ui-monospace,monospace;padding:3px 5px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.top{position:sticky;top:0;z-index:10;display:flex;gap:12px;align-items:center;padding:10px 20px;background:var(--card);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:20px;color:var(--accent);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.top input{flex:1;max-width:460px}
+.top nav{display:flex;gap:8px;margin-left:auto;align-items:center}
+main{max-width:980px;margin:0 auto;padding:24px 20px 80px}
+input,textarea,select{font:inherit;color:inherit;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:9px 12px;outline:none;width:100%}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;accent-color:var(--accent)}
+input[type=range]{padding:0;border:0;accent-color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:6px;justify-content:center;font:inherit;font-weight:600;font-size:15px;padding:9px 16px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;white-space:nowrap;transition:border-color .12s,background .12s}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.primary kbd{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:14px}
+.btn.big{padding:14px 26px;font-size:17px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.okb{border-color:var(--ok);color:var(--ok)} .btn.okb:hover{background:var(--ok-soft)}
+.btn.badb{border-color:var(--bad);color:var(--bad)} .btn.badb:hover{background:var(--bad-soft)}
+.btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ico{border:0;background:transparent;cursor:pointer;font-size:17px;padding:4px 6px;border-radius:8px;color:var(--muted);line-height:1}
+.ico:hover{background:var(--accent-soft);color:var(--accent)}
+.star.on{color:#f5b400}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line)}
+.col{display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.setcard{display:flex;flex-direction:column;gap:6px;transition:transform .12s,border-color .12s}
+.setcard:hover{transform:translateY(-2px);border-color:var(--accent)}
+.ttl{font-weight:700;font-size:17px;overflow-wrap:anywhere}
+.muted{color:var(--muted)} .sm{font-size:14px} .center{text-align:center}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between} .end{justify-content:flex-end}
+h1{font-size:30px;line-height:1.2;margin:0 0 6px;overflow-wrap:anywhere} h2{font-size:20px;margin:28px 0 12px} h3{margin:0 0 12px}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600}
+.bar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--line);margin-top:6px}
+.bar.big{height:12px}
+.bar i{display:block;height:100%;transition:width .3s}
+.b-new{background:var(--line)} .b-learn{background:var(--warn)} .b-master{background:var(--ok)}
+.legend{gap:18px;font-size:14px;color:var(--muted);margin-top:8px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.dot.b-new{background:#b8bfd3}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.stat span{font-size:22px} .stat b{font-size:28px;line-height:1.1} .stat small{color:var(--muted)}
+.modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:18px 0}
+.mode{display:flex;flex-direction:column;gap:2px;padding:14px;border-radius:12px;background:var(--card);border:2px solid var(--line);font-weight:700;transition:border-color .12s,transform .12s}
+.mode span{font-size:24px}
+.mode small{font-weight:400;color:var(--muted);font-size:13px}
+.mode:hover{border-color:var(--accent);transform:translateY(-2px)}
+.terms .t{display:grid;grid-template-columns:1fr 2fr auto;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line);align-items:start}
+.terms .t:last-child{border-bottom:0}
+.terms .tt{font-weight:600}
+.terms .t > div{overflow-wrap:anywhere}
+.thumb{display:block;max-height:90px;max-width:160px;border-radius:8px;margin-top:6px}
+.st-tag{font-size:12px;font-weight:600;padding:1px 8px;border-radius:99px;margin-left:6px}
+.st-new{background:var(--line);color:var(--muted)} .st-learn{background:#fff1d6;color:#a86b00} .st-master{background:var(--ok-soft);color:var(--ok)}
+[data-theme=dark] .st-learn{background:#3b2f12;color:#f5c050}
+/* editor */
+.erow{padding:12px 16px}
+.egrid{display:grid;grid-template-columns:1fr 1fr auto;gap:18px;align-items:start;margin-top:4px}
+.egrid label{display:flex;flex-direction:column;gap:2px}
+.egrid textarea{border-width:0 0 2px;border-radius:0;background:transparent;padding:6px 0;min-height:38px;resize:none;overflow:hidden}
+.egrid small{font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.eimg{position:relative}.eimg img{max-width:110px;max-height:80px;border-radius:8px;display:block}
+.eimg .ico{position:absolute;top:-8px;right:-8px;background:var(--card);border:1px solid var(--line)}
+.add-row{width:100%;margin-top:12px;padding:18px;border-style:dashed}
+.sticky-save{position:sticky;top:58px;z-index:5;background:var(--bg);padding:8px 0}
+/* flashcards */
+.flash-wrap{perspective:1600px;margin:16px 0}
+.flash{position:relative;height:380px;cursor:pointer;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,.2,.2,1)}
+.flash.flipped{transform:rotateX(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border-radius:18px;box-shadow:0 4px 22px rgba(20,30,70,.1);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 30px 30px;text-align:center;overflow:auto}
+.face.back{transform:rotateX(180deg)}
+.face img{max-height:170px;max-width:100%;border-radius:10px;margin-top:14px}
+.face .tools{position:absolute;top:10px;right:10px;display:flex;gap:2px}
+.face .label{position:absolute;top:14px;left:18px;font-size:13px;color:var(--muted);font-weight:600}
+.ftxt,.qtxt{font-size:28px;overflow-wrap:anywhere;white-space:normal}
+.ftxt.md,.qtxt.md{font-size:22px}.ftxt.sm,.qtxt.sm{font-size:19px}.ftxt.xs,.qtxt.xs{font-size:16px}
+.prog{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:14px}.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.done-box{padding:40px 24px;text-align:center}
+.done-box .big-emoji{font-size:54px}
+/* questions */
+.qcard{padding:28px;margin-top:16px}
+.qimg{max-height:200px;max-width:100%;border-radius:10px;margin-top:10px}
+.qhint{margin:26px 0 10px;font-weight:600}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:14px 16px;border:2px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;font:inherit;color:inherit;overflow-wrap:anywhere;transition:border-color .12s}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice.sel{border-color:var(--accent);background:var(--accent-soft)}
+.choice.ok{border-color:var(--ok);background:var(--ok-soft)}
+.choice.bad{border-color:var(--bad);background:var(--bad-soft)}
+.choice:disabled{cursor:default}
+.wform input{flex:1;min-width:200px;font-size:18px}
+.fbx{margin-top:16px;font-weight:700;padding:10px 14px;border-radius:10px}
+.fbx.ok{color:var(--ok);background:var(--ok-soft)} .fbx.bad{color:var(--bad);background:var(--bad-soft)}
+.ans{margin-top:12px}.ans small{display:block;color:var(--muted);font-weight:600}
+.ans .okc{border:2px solid var(--ok);border-radius:10px;padding:8px 12px;margin-top:4px}
+.ans .strike{border:2px dashed var(--bad);border-radius:10px;padding:8px 12px;margin-top:4px;color:var(--bad)}
+.rlist{display:flex;flex-direction:column;gap:6px;text-align:left;margin:16px 0 20px}
+.ritem{display:grid;grid-template-columns:24px 1fr 2fr;gap:10px;padding:8px 12px;border-radius:10px;background:var(--bg)}
+.ritem.ok span:first-child{color:var(--ok)} .ritem.bad span:first-child{color:var(--bad)}
+.spell-diff{font-size:24px;letter-spacing:2px;font-family:ui-monospace,monospace;margin-top:8px}
+.spell-diff .g{color:var(--ok)} .spell-diff .r{color:var(--bad);text-decoration:underline}
+/* test */
+.tq{margin-top:14px;padding:22px}
+.tq.ok{border-left:5px solid var(--ok)} .tq.bad{border-left:5px solid var(--bad)}
+.tqh{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.tf{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:16px}
+.tfeq{color:var(--muted);font-size:20px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.mi{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.mi select{padding:6px}
+.mi.ok .mres{color:var(--ok);font-weight:700}.mi.bad .mres{color:var(--bad);font-weight:700}
+.ma{padding:6px 0;border-bottom:1px solid var(--line)}
+.score{display:flex;gap:26px;align-items:center;margin-top:16px}
+.ring{--p:0;width:120px;height:120px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:28px;font-weight:800;background:radial-gradient(closest-side,var(--card) 76%,transparent 77%),conic-gradient(var(--ok) calc(var(--p)*1%),var(--bad-soft) 0)}
+/* match */
+.match-hud{display:flex;justify-content:space-between;align-items:center;margin:16px 0}
+.timer{font:700 28px ui-monospace,monospace}
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tile{min-height:120px;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--card);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font:inherit;color:inherit;overflow-wrap:anywhere;font-size:15px;transition:opacity .25s,transform .25s,border-color .1s}
+.tile img{max-height:60px;max-width:100%;border-radius:6px;margin-top:6px}
+.tile:hover{border-color:var(--accent)}
+.tile.sel{border-color:var(--accent);background:var(--accent-soft)}
+.tile.wrong{border-color:var(--bad);background:var(--bad-soft);animation:shake .35s}
+.tile.gone{opacity:0;transform:scale(.85);pointer-events:none}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* gravity */
+.grav{position:relative;height:460px;overflow:hidden;border-radius:16px;margin-top:16px;background:radial-gradient(1px 1px at 20% 30%,#fff9,transparent),radial-gradient(1px 1px at 70% 20%,#fff8,transparent),radial-gradient(1.5px 1.5px at 40% 70%,#fff7,transparent),radial-gradient(1px 1px at 85% 60%,#fff9,transparent),radial-gradient(1px 1px at 10% 85%,#fff8,transparent),linear-gradient(#080c26,#1d2366)}
+.ghud{position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;color:#fff;font-weight:700;z-index:2}
+.ast{position:absolute;max-width:46%;padding:16px 22px;border-radius:44px;color:#fff;text-align:center;font-weight:600;background:radial-gradient(circle at 30% 30%,#8a7bff,#4a3bc4 60%,#2b2380);box-shadow:0 0 24px #7a6bff88;overflow-wrap:anywhere}
+.ast.boom{animation:boom .35s forwards}
+@keyframes boom{to{transform:scale(1.6);opacity:0;filter:blur(4px)}}
+.ground{position:absolute;bottom:0;left:0;right:0;height:26px;background:linear-gradient(#3dd6a0,#178a64);box-shadow:0 -4px 20px #3dd6a055}
+.gmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:30px;z-index:3;background:rgba(8,12,38,.7)}
+.gmsg .okc{font-size:24px;font-weight:700;color:#7fffc8;margin:8px 0 14px}
+.shake{animation:shake .35s}
+/* modal & toast */
+#modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+#modal[hidden]{display:none}
+.modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}
+.opt select{width:auto}
+.menu-list{display:flex;flex-direction:column;gap:6px}
+.menu-list .btn{justify-content:flex-start}
+.bprev{max-height:140px;overflow:auto;font-size:14px;background:var(--bg);border-radius:10px;padding:8px 12px}
+.bprev:empty{display:none}
+.radios{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.radios label{display:flex;gap:8px;align-items:center;font-size:14px}
+#toast{visibility:hidden;position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#1a1d28;color:#fff;padding:12px 20px;border-radius:12px;z-index:60;transition:transform .25s;max-width:90vw;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#toast.show{visibility:visible;transform:translateX(-50%) translateY(0)}
+.empty{padding:40px;text-align:center}
+.kbd-list{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px}
+@media (max-width:700px){
+  .top{padding:10px 12px;gap:8px}.top .hide-sm{display:none}
+  main{padding:16px 12px 60px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .terms .t{grid-template-columns:1fr;gap:4px}
+  .egrid{grid-template-columns:1fr}
+  .choices,.mgrid{grid-template-columns:1fr}
+  .match-grid{grid-template-columns:repeat(3,1fr)}
+  .tile{min-height:90px;font-size:13px}
+  .flash{height:320px}
+  .ftxt,.qtxt{font-size:22px}
+  h1{font-size:24px}
+  .tf{grid-template-columns:1fr}.tfeq{display:none}
+  .score{flex-direction:column;align-items:flex-start}
+}
+@media print{
+  .top,.noprint,#toast{display:none!important}
+  body{background:#fff;color:#000}
+  .card{box-shadow:none;border:1px solid #ccc}
+  .terms .t{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="#/" class="logo"><span>🗂️</span><span class="hide-sm">StudyDeck</span></a>
+  <input id="globalSearch" type="search" placeholder="Search your sets and terms…" aria-label="Search">
+  <nav>
+    <a href="#/new" class="btn primary sm">+ Create</a>
+    <a href="#/import" class="btn sm hide-sm">Import</a>
+    <button class="ico" id="themeBtn" title="Toggle dark mode">🌓</button>
+    <a href="#/settings" class="ico" title="Settings">⚙️</a>
+  </nav>
+</header>
+<main id="app"></main>
+<div id="modal" hidden></div>
+<div id="toast" role="status"></div>
+<script>
+'use strict';
+/* ========== helpers ========== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const app=$('#app');
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl=s=>esc(s).replace(/\n/g,'<br>');
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sample=(a,n)=>shuffle(a).slice(0,n);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const DAY=864e5;
+const L='ABCDEFGHIJ';
+const PRAISE=['Nice work!','Great job!','You got it!','Correct!','Awesome!','Nailed it!','Way to go!'];
+const LANGS=[['en-US','English (US)'],['en-GB','English (UK)'],['fr-FR','French'],['es-ES','Spanish'],['de-DE','German'],['it-IT','Italian'],['pt-BR','Portuguese'],['nl-NL','Dutch'],['ru-RU','Russian'],['tr-TR','Turkish'],['ar-SA','Arabic'],['fa-IR','Persian (Dari/Farsi)'],['ps-AF','Pashto'],['ur-PK','Urdu'],['hi-IN','Hindi'],['zh-CN','Chinese'],['ja-JP','Japanese'],['ko-KR','Korean']];
+const sizeCls=t=>{const n=String(t||'').length;return n>220?'xs':n>110?'sm':n>40?'md':''};
+const sideName=s=>s==='term'?'Term':'Definition';
+const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+
+/* ========== storage ========== */
+const KEY='studydeck.v1';
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'system',autoSpeak:false,rate:1},streak:{last:'',count:0},best:{}}}
+function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
+function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
+function sampleSet(){
+  const s=newSet({title:'Sample: OSI Model & Common Ports',desc:'An example set to try every study mode. Edit or delete it anytime.'});
+  [['Layer 7 – Application','Network services used directly by apps (HTTP, DNS, SMTP)'],['Layer 6 – Presentation','Formats, encrypts and compresses data'],['Layer 5 – Session','Opens, manages and closes conversations between hosts'],['Layer 4 – Transport','End-to-end delivery using ports (TCP / UDP)'],['Layer 3 – Network','Logical addressing (IP) and routing between networks'],['Layer 2 – Data Link','MAC addresses, frames and switches'],['Layer 1 – Physical','Raw bits over cables, fiber or radio'],['Port 22','SSH'],['Port 53','DNS'],['Port 443','HTTPS']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
+  return s;
+}
+function load(){
+  try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);const b=blank();return Object.assign(b,d,{settings:Object.assign(b.settings,d.settings||{}),streak:d.streak||b.streak,best:d.best||{}})}}catch(e){}
+  const d=blank();d.sets.push(sampleSet());return d;
+}
+let DB=load();
+let saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
+function saveNow(){clearTimeout(saveT);try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast('Could not save — browser storage may be full. Export a backup in Settings.')}}
+addEventListener('pagehide',saveNow);
+const getSet=id=>DB.sets.find(s=>s.id===id);
+function fixSet(s){s.opts=Object.assign({answer:'term',starred:false,front:'term',written:true,track:false},s.opts||{});s.cards=(s.cards||[]).map(c=>Object.assign(newCard(),c));return s}
+DB.sets.forEach(fixSet);
+
+/* ========== progress / spaced repetition ========== */
+const status=c=>c.box>=3?'master':(c.right+c.wrong===0?'new':'learn');
+const INTERVALS=[0,0,1,3,7,16,35]; // days, indexed by box
+function record(c,ok){
+  if(ok){c.right++;c.box=Math.min(c.box+1,6)}else{c.wrong++;c.box=1}
+  c.due=Date.now()+INTERVALS[c.box]*DAY;save();
+}
+function recordUndoable(c,ok){const snap={box:c.box,due:c.due,right:c.right,wrong:c.wrong};record(c,ok);return()=>{Object.assign(c,snap);save()}}
+const dueCards=s=>{const n=Date.now();return s.cards.filter(c=>c.right+c.wrong>0&&c.due<=n)};
+function progress(s){const p={new:0,learn:0,master:0};s.cards.forEach(c=>p[status(c)]++);return p}
+function barHtml(p,big){const t=(p.new+p.learn+p.master)||1;return `<div class="bar ${big?'big':''}" title="${p.master} mastered · ${p.learn} learning · ${p.new} not studied"><i class="b-master" style="width:${p.master/t*100}%"></i><i class="b-learn" style="width:${p.learn/t*100}%"></i></div>`}
+function legendHtml(p){return `<div class="row legend"><span><i class="dot b-new"></i>Not studied ${p.new}</span><span><i class="dot b-learn"></i>Still learning ${p.learn}</span><span><i class="dot b-master"></i>Mastered ${p.master}</span></div>`}
+function ymd(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function touch(s){
+  s.studied=Date.now();
+  const t=ymd(),y=ymd(new Date(Date.now()-DAY)),st=DB.streak;
+  if(st.last!==t){st.count=st.last===y?st.count+1:1;st.last=t}
+  save();
+}
+const streakNow=()=>{const s=DB.streak;return(s.last===ymd()||s.last===ymd(new Date(Date.now()-DAY)))?s.count:0};
+
+/* ========== answers ========== */
+const sideText=(c,side)=>side==='term'?c.term:c.def;
+const langOf=(s,side)=>side==='term'?s.termLang:s.defLang;
+function qa(s,c){
+  let a=s.opts.answer;if(a==='both')a=Math.random()<.5?'term':'def';
+  const p=a==='term'?'def':'term';
+  return{prompt:sideText(c,p),answer:sideText(c,a),pSide:p,aSide:a,img:p==='def'?c.img:''};
+}
+function pool(s){
+  const cs=s.cards.filter(c=>(c.term||'').trim()||(c.def||'').trim()||c.img);
+  if(s.opts.starred){const st=cs.filter(c=>c.starred);if(st.length)return st}
+  return cs;
+}
+const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+function lev(a,b){if(a===b)return 0;let p=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){const q=[i];for(let j=1;j<=b.length;j++)q[j]=Math.min(p[j]+1,q[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=q}return p[b.length]}
+function grade(input,answer){
+  const n=norm(input);if(!n)return 'wrong';
+  const alts=[answer,...String(answer).split(/\s\/\s|;/)].map(norm).filter(Boolean);
+  if(alts.includes(n))return 'correct';
+  for(const a of alts)if(a.length>=4&&lev(n,a)<=Math.max(1,Math.floor(a.length*.12)))return 'close';
+  return 'wrong';
+}
+function distinctOthers(s,c,q){return[...new Map(s.cards.filter(x=>x.id!==c.id).map(x=>sideText(x,q.aSide)).filter(t=>t&&t.trim()&&norm(t)!==norm(q.answer)).map(t=>[norm(t),t])).values()]}
+function mcOptions(s,c,q){return shuffle([q.answer,...sample(distinctOthers(s,c,q),3)])}
+
+/* ========== speech ========== */
+const tts='speechSynthesis' in window;
+function speak(text,lang,rate){
+  if(!tts||!text)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang=lang||'en-US';u.rate=rate??DB.settings.rate;
+  const vs=speechSynthesis.getVoices();const v=vs.find(v=>v.lang===u.lang)||vs.find(v=>v.lang.slice(0,2)===u.lang.slice(0,2));if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+if(tts)speechSynthesis.getVoices();
+const sayBtn=(text,lang)=>`<button class="ico" data-say="${esc(text)}" data-lang="${esc(lang)}" title="Read aloud">🔊</button>`;
+const starBtn=(s,c)=>`<button class="ico star ${c.starred?'on':''}" data-star="${c.id}" data-set="${s.id}" title="Star">${c.starred?'★':'☆'}</button>`;
+
+/* ========== ui helpers ========== */
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2800)}
+let modalClose=null;
+function modal(html,onClose){const m=$('#modal');m.innerHTML=`<div class="card modal-card">${html}</div>`;m.hidden=false;modalClose=onClose||null;const f=m.querySelector('input:not([type=file]):not([type=checkbox]):not([type=radio]),textarea');if(f)setTimeout(()=>f.focus(),30)}
+function closeModal(silent){const m=$('#modal');if(m.hidden)return;m.hidden=true;m.innerHTML='';const f=modalClose;modalClose=null;if(!silent&&f)f()}
+$('#modal').addEventListener('mousedown',e=>{if(e.target.id==='modal')closeModal()});
+function askText(title,value='',ph=''){return new Promise(res=>{modal(`<h3>${esc(title)}</h3><form id="askF"><input id="askI" value="${esc(value)}" placeholder="${esc(ph)}"><div class="row end" style="margin-top:14px"><button type="button" class="btn" id="mC">Cancel</button><button class="btn primary">OK</button></div></form>`,()=>res(null));$('#mC').onclick=()=>closeModal();$('#askF').onsubmit=e=>{e.preventDefault();const v=$('#askI').value.trim();closeModal(true);res(v||null)}})}
+function confirmBox(msg,ok='Delete',danger=true){return new Promise(res=>{modal(`<p style="margin-top:0">${msg}</p><div class="row end"><button class="btn" id="mC">Cancel</button><button class="btn ${danger?'danger':'primary'}" id="mO">${esc(ok)}</button></div>`,()=>res(false));$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{closeModal(true);res(true)};setTimeout(()=>$('#mO')?.focus(),40)})}
+function download(name,text,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800)}
+async function copyText(t,msg='Copied to clipboard'){try{await navigator.clipboard.writeText(t);toast(msg)}catch(e){modal(`<h3>Copy this</h3><textarea rows="5" id="cpT">${esc(t)}</textarea><div class="row end" style="margin-top:12px"><button class="btn primary" id="mC">Done</button></div>`);$('#cpT').select();$('#mC').onclick=()=>closeModal()}}
+const autoGrow=t=>{t.style.height='auto';t.style.height=t.scrollHeight+'px'};
+const fileSafe=s=>(s||'set').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')||'set';
+function resizeImg(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.onerror=()=>res(null);im.src=r.result};r.readAsDataURL(f)})}
+function pickImage(){return new Promise(res=>{
+  modal(`<h3>Add an image</h3><p><input type="file" accept="image/*" id="imgFile"></p><p class="muted sm">…or paste an image URL</p><input id="imgUrl" placeholder="https://…"><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Add</button></div>`,()=>res(null));
+  $('#imgFile').onchange=async e=>{const f=e.target.files[0];if(f){const u=await resizeImg(f);closeModal(true);res(u)}};
+  $('#mO').onclick=()=>{const u=$('#imgUrl').value.trim();closeModal(true);res(u||null)};
+  $('#mC').onclick=()=>closeModal();
+})}
+
+/* ========== bulk import ========== */
+const SEPS={tab:'\t',comma:',',dash:' - ',colon:':',nl:'\n',semi:';',blank:'\n\n'};
+function parseBulk(text,ts,cs){
+  ts=ts||'\t';cs=cs||'\n';
+  const parts=cs==='\n'?text.split(/\r?\n/):cs==='\n\n'?text.split(/\r?\n\s*\r?\n/):text.split(cs);
+  return parts.map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf(ts);return i<0?newCard(l,''):newCard(l.slice(0,i).trim(),l.slice(i+ts.length).trim())});
+}
+function bulkUI(){return `<textarea id="bText" rows="8" placeholder="Word 1&#9;Definition 1&#10;Word 2&#9;Definition 2&#10;Word 3&#9;Definition 3"></textarea>
+  <div class="row" style="align-items:flex-start;gap:30px;margin-top:10px">
+   <div><b class="sm">Between term and definition</b><div class="radios">${[['tab','Tab'],['comma','Comma'],['dash','Dash ( - )'],['colon','Colon ( : )'],['custom','Custom']].map(([v,l],i)=>`<label><input type="radio" name="tsep" value="${v}" ${i?'':'checked'}>${l}</label>`).join('')}</div><input id="tsepC" placeholder="Custom separator" style="max-width:180px;padding:5px 8px"></div>
+   <div><b class="sm">Between cards</b><div class="radios">${[['nl','New line'],['semi','Semicolon'],['blank','Blank line'],['custom','Custom']].map(([v,l],i)=>`<label><input type="radio" name="csep" value="${v}" ${i?'':'checked'}>${l}</label>`).join('')}</div><input id="csepC" placeholder="Custom separator" style="max-width:180px;padding:5px 8px"></div>
+  </div>
+  <p class="sm" style="margin-bottom:6px"><b id="bCount">0</b> cards detected <span class="muted">(preview)</span></p><div id="bPrev" class="bprev"></div>`}
+function bindBulk(root){
+  let touched=false;
+  const get=()=>{const tv=$('input[name=tsep]:checked',root).value,cv=$('input[name=csep]:checked',root).value;return parseBulk($('#bText',root).value,tv==='custom'?$('#tsepC',root).value:SEPS[tv],cv==='custom'?$('#csepC',root).value:SEPS[cv])};
+  const upd=()=>{
+    const txt=$('#bText',root).value;
+    if(!touched&&txt){const g=v=>{$(`input[name=tsep][value=${v}]`,root).checked=true};if(txt.includes('\t'))g('tab');else if(txt.includes(' - '))g('dash');else if(/^[^,\n]+,/m.test(txt))g('comma')}
+    const r=get();$('#bCount',root).textContent=r.length;$('#bPrev',root).innerHTML=r.slice(0,6).map(c=>`<div><b>${esc(c.term)}</b> — ${esc(c.def)||'<i class="muted">no definition</i>'}</div>`).join('')+(r.length>6?`<div class="muted">…and ${r.length-6} more</div>`:'')};
+  root.addEventListener('input',e=>{if(e.target.name==='tsep'||e.target.name==='csep')touched=true;upd()});
+  root.addEventListener('change',upd);
+  return{get,upd};
+}
+function bulkModal(){return new Promise(res=>{
+  modal(`<h3>Import your data</h3><p class="muted sm" style="margin-top:-6px">Copy and paste from Word, Excel, Google Docs, or a Quizlet export.</p>${bulkUI()}<div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Import</button></div>`,()=>res(null));
+  const b=bindBulk($('.modal-card'));
+  $('#mC').onclick=()=>closeModal();
+  $('#mO').onclick=()=>{const r=b.get();if(!r.length)return toast('Nothing to import yet');closeModal(true);res(r)};
+})}
+
+/* ========== share links ========== */
+const b64=u8=>{let s='';for(let i=0;i<u8.length;i+=8192)s+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const unb64=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');const b=atob(s);return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function packStr(str){
+  if(window.CompressionStream){const st=new Blob([str]).stream().pipeThrough(new CompressionStream('deflate-raw'));return 'z'+b64(new Uint8Array(await new Response(st).arrayBuffer()))}
+  return 'u'+b64(new TextEncoder().encode(str));
+}
+async function unpackStr(s){const bytes=unb64(s.slice(1));if(s[0]==='u')return new TextDecoder().decode(bytes);const st=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));return await new Response(st).text()}
+async function shareLink(s){
+  const data={t:s.title,d:s.desc,tl:s.termLang,dl:s.defLang,c:s.cards.map(c=>c.img&&!c.img.startsWith('data:')?[c.term,c.def,c.img]:[c.term,c.def])};
+  return location.href.split('#')[0]+'#share='+await packStr(JSON.stringify(data));
+}
+
+/* ========== router ========== */
+let cleanups=[],keyFn=null,qTimer=null;
+const onCleanup=f=>cleanups.push(f);
+const setKeys=f=>{keyFn=f};
+document.addEventListener('keydown',e=>{
+  if(!$('#modal').hidden){if(e.key==='Escape')closeModal();return}
+  if(keyFn)keyFn(e);
+});
+document.addEventListener('click',e=>{
+  const say=e.target.closest('[data-say]');
+  if(say){e.preventDefault();speak(say.dataset.say,say.dataset.lang);return}
+  const st=e.target.closest('[data-star]');
+  if(st){e.preventDefault();const s=getSet(st.dataset.set),c=s&&s.cards.find(c=>c.id===st.dataset.star);if(c){c.starred=!c.starred;save();$$(`[data-star="${c.id}"]`).forEach(b=>{b.classList.toggle('on',c.starred);b.textContent=c.starred?'★':'☆'})}}
+});
+function route(){
+  cleanups.forEach(f=>{try{f()}catch(e){}});cleanups=[];keyFn=null;clearTimeout(qTimer);
+  if(tts)speechSynthesis.cancel();
+  closeModal();
+  const raw=location.hash.slice(1);
+  if(raw.startsWith('share='))return viewShare(raw.slice(6));
+  const [v,id]=raw.replace(/^\//,'').split('/');
+  scrollTo(0,0);
+  if(v!=='search')$('#globalSearch').value='';
+  const needSet={set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
+  if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · StudyDeck';return needSet[v](s)}
+  document.title='StudyDeck';
+  switch(v||''){
+    case '':return viewHome();
+    case 'new':return viewEdit(null,id);
+    case 'folder':return viewFolder(id);
+    case 'import':return viewImport();
+    case 'settings':return viewSettings();
+    case 'search':return viewSearch(decodeURIComponent(id||''));
+    default:return notFound();
+  }
+}
+addEventListener('hashchange',route);
+function notFound(){app.innerHTML=`<div class="card empty"><div style="font-size:48px">🔍</div><h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
+
+/* ========== home ========== */
+function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder);return `<a class="card setcard" href="#/set/${s.id}"><div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} terms${f?' · 📁 '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
+function viewHome(){
+  const sets=[...DB.sets].sort((a,b)=>Math.max(b.studied,b.updated)-Math.max(a.studied,a.updated));
+  const total=DB.sets.reduce((n,s)=>n+s.cards.length,0),due=DB.sets.reduce((n,s)=>n+dueCards(s).length,0),mastered=DB.sets.reduce((n,s)=>n+progress(s).master,0);
+  app.innerHTML=`
+  <div class="stats">
+    <div class="card stat"><span>🔥</span><b>${streakNow()}</b><small>day streak</small></div>
+    <div class="card stat"><span>📚</span><b>${DB.sets.length}</b><small>study sets</small></div>
+    <div class="card stat"><span>✅</span><b>${mastered}<span class="muted sm">/${total}</span></b><small>terms mastered</small></div>
+    <div class="card stat"><span>⏰</span><b>${due}</b><small>due for review</small></div>
+  </div>
+  ${due?`<h2>Due for review</h2><div class="grid">${DB.sets.filter(s=>dueCards(s).length).map(s=>`<a class="card setcard" href="#/review/${s.id}"><div class="ttl">⏰ ${esc(s.title)}</div><div class="muted sm">${dueCards(s).length} cards ready to review</div></a>`).join('')}</div>`:''}
+  <div class="row between"><h2>Folders</h2><button class="btn sm" id="newFolder">+ New folder</button></div>
+  ${DB.folders.length?`<div class="grid">${DB.folders.map(f=>`<a class="card setcard" href="#/folder/${f.id}"><div class="ttl">📁 ${esc(f.name)}</div><div class="muted sm">${DB.sets.filter(s=>s.folder===f.id).length} sets</div></a>`).join('')}</div>`:'<p class="muted">Folders help you group sets by class or topic.</p>'}
+  <div class="row between"><h2>Your sets</h2><a class="btn sm primary" href="#/new">+ Create set</a></div>
+  ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:`<div class="card empty"><div style="font-size:48px">🗂️</div><h3>No sets yet</h3><p class="muted">Create your first study set or import one.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">Create a set</a><a class="btn" href="#/import">Import</a></div></div>`}`;
+  $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewHome()}};
+}
+
+/* ========== folder ========== */
+function viewFolder(id){
+  const f=DB.folders.find(f=>f.id===id);if(!f)return notFound();
+  const sets=DB.sets.filter(s=>s.folder===id);
+  app.innerHTML=`<a class="btn ghost sm" href="#/">← Home</a>
+  <div class="row between" style="margin-top:8px"><h1>📁 ${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
+  <p class="muted">${sets.length} sets · ${sets.reduce((n,s)=>n+s.cards.length,0)} terms</p>
+  ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<div class="card empty muted">This folder is empty.</div>'}`;
+  $('#ren').onclick=async()=>{const n=await askText('Rename folder',f.name);if(n){f.name=n;save();viewFolder(id)}};
+  $('#del').onclick=async()=>{if(await confirmBox(`Delete the folder “${esc(f.name)}”? The sets inside will be kept.`)){DB.sets.forEach(s=>{if(s.folder===id)s.folder=''});DB.folders=DB.folders.filter(x=>x.id!==id);save();location.hash='#/'}};
+  $('#addTo').onclick=()=>{
+    const others=DB.sets.filter(s=>s.folder!==id);
+    if(!others.length)return toast('All your sets are already in this folder');
+    modal(`<h3>Add sets to “${esc(f.name)}”</h3><div class="col">${others.map(s=>`<label class="opt"><span>${esc(s.title)} <span class="muted sm">(${s.cards.length})</span></span><input type="checkbox" value="${s.id}"></label>`).join('')}</div><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Add</button></div>`);
+    $('#mC').onclick=()=>closeModal();
+    $('#mO').onclick=()=>{$$('.modal-card input:checked').forEach(i=>{getSet(i.value).folder=id});save();closeModal(true);viewFolder(id)};
+  };
+}
+
+/* ========== search ========== */
+function viewSearch(q){
+  const inp=$('#globalSearch');if(document.activeElement!==inp)inp.value=q;
+  const n=norm(q);
+  if(!n){app.innerHTML='<p class="muted">Type to search your sets and terms.</p>';return}
+  const sets=DB.sets.filter(s=>norm(s.title+' '+s.desc).includes(n));
+  const hits=[];DB.sets.forEach(s=>s.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([s,c])}));
+  app.innerHTML=`<h1>Results for “${esc(q)}”</h1>
+  <h2>Sets (${sets.length})</h2>${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
+  <h2>Terms (${hits.length})</h2>${hits.length?`<div class="card terms" style="padding:0">${hits.slice(0,200).map(([s,c])=>`<div class="t"><div class="tt">${nl(c.term)}</div><div>${nl(c.def)}</div><a class="pill" href="#/set/${s.id}">${esc(s.title)}</a></div>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
+}
+let searchT;
+$('#globalSearch').addEventListener('input',e=>{clearTimeout(searchT);const v=e.target.value;searchT=setTimeout(()=>{if(v.trim())location.hash='#/search/'+encodeURIComponent(v.trim());else if(location.hash.startsWith('#/search'))location.hash='#/'},250)});
+
+/* ========== set page ========== */
+function viewSet(s){
+  const p=progress(s),due=dueCards(s).length,f=DB.folders.find(f=>f.id===s.folder);
+  const modes=[['flash','🃏','Flashcards','Flip & review'],['learn','🎯','Learn','Adaptive rounds'],['write','✍️','Write','Type the answers'],['spell','🔊','Spell','Listen & type'],['test','📝','Test','Practice exam'],['match','🧩','Match','Beat the clock'],['gravity','☄️','Gravity','Arcade typing'],['review','⏰','Review',due?`${due} due now`:'Spaced repetition']];
+  app.innerHTML=`
+  <div class="row between" style="align-items:flex-start">
+    <div style="flex:1;min-width:240px"><h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}<div class="muted sm">${s.cards.length} terms${f?` · <a href="#/folder/${f.id}">📁 ${esc(f.name)}</a>`:''} · created ${new Date(s.created).toLocaleDateString()}</div></div>
+    <div class="row noprint"><a class="btn" href="#/edit/${s.id}">✏️ Edit</a><button class="btn" id="shareBtn">🔗 Share</button><button class="btn" id="moreBtn">⋯</button></div>
+  </div>
+  <div class="modes noprint">${modes.map(m=>`<a class="mode" href="#/${m[0]}/${s.id}"><span>${m[1]}</span>${m[2]}<small>${m[3]}</small></a>`).join('')}</div>
+  <div class="card noprint"><div class="row between"><strong>Your progress</strong><button class="btn sm ghost" id="resetP">Reset progress</button></div>${barHtml(p,true)}${legendHtml(p)}</div>
+  <div class="row between"><h2>Terms in this set (${s.cards.length})</h2><select id="filt" style="width:auto" class="noprint"><option value="all">All terms</option><option value="starred">★ Starred</option><option value="new">Not studied</option><option value="learn">Still learning</option><option value="master">Mastered</option></select></div>
+  <div class="card terms" id="terms" style="padding:0"></div>
+  <div class="row noprint" style="justify-content:center;margin-top:16px"><a class="btn" href="#/edit/${s.id}">Add or remove terms</a></div>`;
+  const tag={new:'<span class="st-tag st-new">new</span>',learn:'<span class="st-tag st-learn">learning</span>',master:'<span class="st-tag st-master">mastered</span>'};
+  const renderTerms=()=>{
+    const fv=$('#filt').value;
+    const cs=s.cards.filter(c=>fv==='all'||(fv==='starred'?c.starred:status(c)===fv));
+    $('#terms').innerHTML=cs.length?cs.map(c=>`<div class="t"><div class="tt">${nl(c.term)}${tag[status(c)]}</div><div>${nl(c.def)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div class="row noprint" style="gap:0">${sayBtn(c.term,s.termLang)}${starBtn(s,c)}</div></div>`).join(''):'<div class="empty muted">No terms match this filter.</div>';
+  };
+  $('#filt').onchange=renderTerms;renderTerms();
+  $('#resetP').onclick=async()=>{if(await confirmBox('Reset all progress for this set? Stars are kept.','Reset')){s.cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));save();viewSet(s)}};
+  $('#shareBtn').onclick=async()=>{
+    const link=await shareLink(s);
+    const hasUploads=s.cards.some(c=>c.img&&c.img.startsWith('data:'));
+    modal(`<h3>Share “${esc(s.title)}”</h3><p class="muted sm">Anyone with this link can preview the set and save their own copy. The whole set lives inside the link, so no account or server is needed.${hasUploads?' Uploaded images aren’t included (they’re too big for a link) — image URLs are.':''}</p><input id="shL" readonly value="${esc(link)}"><p class="muted sm">${link.length.toLocaleString()} characters${link.length>8000?' — very long links may not work in some chat apps; use “Export” instead.':''}</p><div class="row end"><button class="btn" id="mC">Close</button><button class="btn primary" id="mO">Copy link</button></div>`);
+    $('#shL').select();$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{copyText(link,'Link copied!');closeModal(true)};
+  };
+  $('#moreBtn').onclick=()=>{
+    modal(`<h3>${esc(s.title)}</h3><div class="menu-list">
+      <button class="btn" data-m="copy">📋 Copy as text (term ⇥ definition)</button>
+      <button class="btn" data-m="txt">⬇ Download .txt</button>
+      <button class="btn" data-m="csv">⬇ Download .csv (Excel / Sheets)</button>
+      <button class="btn" data-m="json">⬇ Download set backup (.json, keeps images)</button>
+      <button class="btn" data-m="dup">🧬 Duplicate set</button>
+      <button class="btn" data-m="folder">📁 Move to folder</button>
+      <button class="btn" data-m="print">🖨 Print</button>
+      <button class="btn danger" data-m="del">🗑 Delete set</button></div>`);
+    $('.menu-list').onclick=async e=>{
+      const m=e.target.closest('[data-m]')?.dataset.m;if(!m)return;
+      const text=s.cards.map(c=>`${c.term.replace(/[\t\n]+/g,' ')}\t${c.def.replace(/[\t\n]+/g,' ')}`).join('\n');
+      const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+      if(m==='copy'){closeModal(true);copyText(text)}
+      if(m==='txt'){download(fileSafe(s.title)+'.txt',text);closeModal(true)}
+      if(m==='csv'){download(fileSafe(s.title)+'.csv','﻿Term,Definition\n'+s.cards.map(c=>q(c.term)+','+q(c.def)).join('\n'),'text/csv');closeModal(true)}
+      if(m==='json'){download(fileSafe(s.title)+'.studydeck.json',JSON.stringify({studydeck:1,sets:[s]},null,1),'application/json');closeModal(true)}
+      if(m==='dup'){const d=fixSet(structuredClone(s));d.id=uid();d.title=s.title+' (copy)';d.created=d.updated=Date.now();d.cards.forEach(c=>c.id=uid());DB.sets.push(d);save();closeModal(true);location.hash='#/set/'+d.id;toast('Set duplicated')}
+      if(m==='print'){closeModal(true);$('#filt').value='all';renderTerms();setTimeout(()=>print(),100)}
+      if(m==='folder'){modal(`<h3>Move to folder</h3><select id="mvF"><option value="">No folder</option>${DB.folders.map(f=>`<option value="${f.id}" ${s.folder===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Move</button></div>`);$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{s.folder=$('#mvF').value;save();closeModal(true);viewSet(s)}}
+      if(m==='del'){if(await confirmBox(`Delete “${esc(s.title)}” and all its progress? This can’t be undone.`)){DB.sets=DB.sets.filter(x=>x.id!==s.id);saveNow();location.hash='#/';toast('Set deleted')}}
+    };
+  };
+}
+
+/* ========== editor ========== */
+function viewEdit(s,preFolder){
+  const isNew=!s;
+  const d=isNew?newSet({folder:DB.folders.some(f=>f.id===preFolder)?preFolder:''}):fixSet(structuredClone(s));
+  if(isNew)d.cards=[newCard(),newCard(),newCard()];
+  let dirty=false;
+  const langOpts=v=>LANGS.map(([c,n])=>`<option value="${c}" ${c===v?'selected':''}>${n}</option>`).join('');
+  app.innerHTML=`
+  <div class="row between sticky-save"><h1 style="margin:0">${isNew?'Create a new study set':'Edit set'}</h1><div class="row"><a class="btn" href="${isNew?'#/':'#/set/'+s.id}">Cancel</a><button class="btn primary" id="saveBtn">${isNew?'Create':'Save'}</button></div></div>
+  <div class="card col">
+    <input id="eTitle" placeholder='Title, e.g. "Biology – Chapter 22"' value="${esc(d.title)}" style="font-size:18px;font-weight:600">
+    <textarea id="eDesc" rows="2" placeholder="Add a description…">${esc(d.desc)}</textarea>
+    <div class="row">
+      <label class="col" style="gap:2px;flex:1;min-width:160px"><small class="muted">Folder</small><select id="eFolder"><option value="">No folder</option>${DB.folders.map(f=>`<option value="${f.id}" ${d.folder===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select></label>
+      <label class="col" style="gap:2px;flex:1;min-width:160px"><small class="muted">Term language (for read-aloud)</small><select id="eTL">${langOpts(d.termLang)}</select></label>
+      <label class="col" style="gap:2px;flex:1;min-width:160px"><small class="muted">Definition language</small><select id="eDL">${langOpts(d.defLang)}</select></label>
+    </div>
+  </div>
+  <div class="row" style="margin:16px 0"><button class="btn" id="bulkBtn">⬇ Import (paste)</button><button class="btn" id="swapBtn">⇄ Swap terms & definitions</button><span class="muted sm hide-sm">Tab in the last box adds a card · Ctrl+S saves</span></div>
+  <div id="rows" class="col"></div>
+  <button class="btn add-row" id="addBtn">+ Add card</button>
+  <div class="row end" style="margin-top:16px"><button class="btn primary big" id="saveBtn2">${isNew?'Create':'Save'}</button></div>`;
+  const rows=$('#rows');
+  const rowHtml=(c,i)=>`<div class="card erow" data-i="${i}"><div class="row between"><b class="muted">${i+1}</b><div class="row" style="gap:0"><button class="ico" data-act="up" title="Move up">↑</button><button class="ico" data-act="down" title="Move down">↓</button><button class="ico" data-act="img" title="Add image">🖼️</button><button class="ico" data-act="del" title="Delete card">🗑</button></div></div>
+    <div class="egrid"><label><textarea rows="1" data-f="term" placeholder="Enter term">${esc(c.term)}</textarea><small>TERM</small></label><label><textarea rows="1" data-f="def" placeholder="Enter definition">${esc(c.def)}</textarea><small>DEFINITION</small></label>${c.img?`<div class="eimg"><img src="${esc(c.img)}" alt=""><button class="ico" data-act="rmimg" title="Remove image">✕</button></div>`:'<div></div>'}</div></div>`;
+  function renderRows(focusI){rows.innerHTML=d.cards.map(rowHtml).join('');requestAnimationFrame(()=>$$('textarea',rows).forEach(autoGrow));if(focusI!=null){const t=$(`.erow[data-i="${focusI}"] textarea`,rows);if(t){t.focus();t.scrollIntoView({block:'center'})}}}
+  renderRows();
+  app.addEventListener('input',()=>{dirty=true},{once:false});
+  rows.addEventListener('input',e=>{const t=e.target;if(t.dataset.f){d.cards[+t.closest('.erow').dataset.i][t.dataset.f]=t.value;autoGrow(t)}});
+  rows.addEventListener('keydown',e=>{if(e.key==='Tab'&&!e.shiftKey&&e.target.dataset.f==='def'){const i=+e.target.closest('.erow').dataset.i;if(i===d.cards.length-1){e.preventDefault();d.cards.push(newCard());renderRows(i+1)}}});
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('[data-act]');if(!b)return;
+    const i=+b.closest('.erow').dataset.i,a=b.dataset.act;dirty=true;
+    if(a==='del'){d.cards.splice(i,1);if(!d.cards.length)d.cards.push(newCard());renderRows()}
+    if(a==='up'&&i>0){[d.cards[i-1],d.cards[i]]=[d.cards[i],d.cards[i-1]];renderRows()}
+    if(a==='down'&&i<d.cards.length-1){[d.cards[i+1],d.cards[i]]=[d.cards[i],d.cards[i+1]];renderRows()}
+    if(a==='rmimg'){d.cards[i].img='';renderRows()}
+    if(a==='img'){const u=await pickImage();if(u){d.cards[i].img=u;renderRows()}}
+  });
+  $('#addBtn').onclick=()=>{d.cards.push(newCard());renderRows(d.cards.length-1)};
+  $('#swapBtn').onclick=()=>{d.cards.forEach(c=>{[c.term,c.def]=[c.def,c.term]});const tl=$('#eTL').value;$('#eTL').value=$('#eDL').value;$('#eDL').value=tl;dirty=true;renderRows();toast('Swapped terms and definitions')};
+  $('#bulkBtn').onclick=async()=>{const r=await bulkModal();if(r){d.cards=d.cards.filter(c=>c.term.trim()||c.def.trim()||c.img).concat(r);dirty=true;renderRows();toast(`Imported ${r.length} cards`)}};
+  const doSave=()=>{
+    d.title=$('#eTitle').value.trim();d.desc=$('#eDesc').value.trim();d.folder=$('#eFolder').value;d.termLang=$('#eTL').value;d.defLang=$('#eDL').value;
+    const cards=d.cards.filter(c=>c.term.trim()||c.def.trim()||c.img);
+    if(!d.title){toast('Give your set a title first');$('#eTitle').focus();return}
+    if(!cards.length){toast('Add at least one card');return}
+    d.cards=cards;d.updated=Date.now();
+    if(isNew)DB.sets.push(d);else DB.sets[DB.sets.findIndex(x=>x.id===s.id)]=d;
+    dirty=false;saveNow();location.hash='#/set/'+d.id;toast(isNew?'Set created!':'Saved');
+  };
+  $('#saveBtn').onclick=doSave;$('#saveBtn2').onclick=doSave;
+  setKeys(e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();doSave()}});
+  const warn=e=>{if(dirty){e.preventDefault();e.returnValue=''}};
+  addEventListener('beforeunload',warn);onCleanup(()=>removeEventListener('beforeunload',warn));
+  if(isNew)$('#eTitle').focus();
+}
+
+/* ========== study shell ========== */
+function shell(s,title,fields,body){
+  app.innerHTML=`<div class="row between noprint"><a class="btn ghost sm" href="#/set/${s.id}">← ${esc(s.title)}</a><strong>${title}</strong><button class="btn sm" id="optBtn">⚙ Options</button></div>${body}`;
+  $('#optBtn').onclick=()=>{
+    const nStar=s.cards.filter(c=>c.starred).length;
+    modal(`<h3>${title} options</h3>
+      ${fields.front?`<label class="opt"><span>Front of card</span><select id="oF"><option value="term">Term</option><option value="def">Definition</option></select></label>`:''}
+      ${fields.front?'':`<label class="opt"><span>Answer with</span><select id="oA"><option value="term">Term</option><option value="def">Definition</option><option value="both">Both</option></select></label>`}
+      ${fields.written?`<label class="opt"><span>Include written questions</span><input type="checkbox" id="oW"></label>`:''}
+      <label class="opt"><span>Study starred terms only <span class="muted sm">(${nStar} starred)</span></span><input type="checkbox" id="oS" ${nStar?'':'disabled'}></label>
+      <label class="opt"><span>Read aloud automatically</span><input type="checkbox" id="oT"></label>
+      <div class="row end" style="margin-top:16px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Apply & restart</button></div>`);
+    const o=s.opts;
+    if($('#oF'))$('#oF').value=o.front;if($('#oA'))$('#oA').value=o.answer;if($('#oW'))$('#oW').checked=o.written;
+    $('#oS').checked=o.starred&&nStar>0;$('#oT').checked=DB.settings.autoSpeak;
+    $('#mC').onclick=()=>closeModal();
+    $('#mO').onclick=()=>{if($('#oF'))o.front=$('#oF').value;if($('#oA'))o.answer=$('#oA').value;if($('#oW'))o.written=$('#oW').checked;o.starred=$('#oS').checked;DB.settings.autoSpeak=$('#oT').checked;save();closeModal(true);route()};
+  };
+}
+const emptyStudy=s=>`<div class="card empty"><div style="font-size:48px">🃏</div><h3>Not enough cards to study</h3><p class="muted">Add some terms to this set first.</p><a class="btn primary" href="#/edit/${s.id}">Edit set</a></div>`;
+
+/* ========== flashcards / review ========== */
+function viewFlash(s,review){
+  const base=review?dueCards(s):pool(s);
+  if(!base.length){
+    if(review){
+      const seen=s.cards.filter(c=>c.right+c.wrong>0);const next=seen.length?Math.min(...seen.map(c=>c.due)):0;
+      shell(s,'Review',{front:true},`<div class="card empty"><div style="font-size:48px">🎉</div><h3>Nothing due right now</h3><p class="muted">${seen.length?`Next review: <b>${new Date(next).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</b>. Cards come back after 1, 3, 7, 16 and 35 days as you keep getting them right.`:'Review shows cards you’ve already studied when they’re due again. Start with Learn or Flashcards.'}</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/learn/${s.id}">Learn</a><a class="btn" href="#/flash/${s.id}">Flashcards</a></div></div>`);
+    }else shell(s,'Flashcards',{front:true},emptyStudy(s));
+    return;
+  }
+  const track=review||s.opts.track;
+  let deck=[...base],i=0,flipped=false,shuf=false,known=0,still=[],auto=null;
+  const front=s.opts.front==='def'?'def':'term',back=front==='term'?'def':'term';
+  shell(s,review?'Review · spaced repetition':'Flashcards',{front:true},`
+    <div class="flash-wrap" id="fwrap"></div>
+    <div class="row between noprint" id="fctl"></div>
+    <div class="prog"><i id="fprog"></i></div>
+    <div class="row noprint" style="justify-content:center;margin-top:16px">
+      ${review?'':`<button class="btn sm ${track?'on':''}" id="tTrack" title="Sort cards into Know / Still learning">📊 Track progress</button>`}
+      <button class="btn sm" id="tShuf">🔀 Shuffle</button>
+      <button class="btn sm" id="tAuto">▶ Autoplay</button>
+    </div>
+    <p class="muted sm center noprint">Space = flip · ← → = ${track?'still learning / know':'previous / next'} · S = star</p>`);
+  const fwrap=$('#fwrap'),ctl=$('#fctl');
+  const face=(c,side)=>{const txt=sideText(c,side);return `<div class="label">${sideName(side)}</div><div class="tools">${sayBtn(txt,langOf(s,side))}${starBtn(s,c)}</div><div class="ftxt ${sizeCls(txt)}">${nl(txt)}</div>${side==='def'&&c.img?`<img src="${esc(c.img)}" alt="">`:''}`};
+  function render(){
+    if(i>=deck.length)return done();
+    const c=deck[i];flipped=false;
+    fwrap.innerHTML=`<div class="flash" id="fc"><div class="face front">${face(c,front)}</div><div class="face back">${face(c,back)}</div></div>`;
+    $('#fc').onclick=e=>{if(!e.target.closest('button'))flip()};
+    ctl.innerHTML=track?`<button class="btn badb" id="bStill">✗ Still learning</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn okb" id="bKnow">✓ Know</button>`:`<button class="btn" id="bPrev" ${i?'':'disabled'}>← Prev</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn" id="bNext">Next →</button>`;
+    if(track){$('#bStill').onclick=()=>mark(false);$('#bKnow').onclick=()=>mark(true)}else{$('#bPrev').onclick=prev;$('#bNext').onclick=next}
+    $('#fprog').style.width=(i/deck.length*100)+'%';
+    if(DB.settings.autoSpeak)speak(sideText(c,front),langOf(s,front));
+  }
+  function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;fc.classList.toggle('flipped',flipped);if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
+  const next=()=>{if(i<deck.length){i++;render()}};
+  const prev=()=>{if(i>0){i--;render()}};
+  function mark(ok){if(i>=deck.length)return;const c=deck[i];record(c,ok);touch(s);if(ok)known++;else still.push(c);i++;render()}
+  function done(){
+    stopAuto();$('#fprog').style.width='100%';ctl.innerHTML='';
+    if(track){
+      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">${still.length?'💪':'🎉'}</div><h2>${still.length?'Keep it up!':'You know them all!'}</h2>
+        <p><b style="color:var(--ok)">${known} know</b> · <b style="color:var(--bad)">${still.length} still learning</b></p>
+        <div class="row" style="justify-content:center">${still.length?`<button class="btn primary" id="dAgain">Keep reviewing ${still.length} terms</button>`:''}<button class="btn" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a></div></div>`;
+      if(still.length)$('#dAgain').onclick=()=>{deck=shuf?shuffle(still):still;still=[];known=0;i=0;render()};
+    }else{
+      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">🎉</div><h2>You reviewed all ${deck.length} cards</h2><div class="row" style="justify-content:center"><button class="btn primary" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;
+    }
+    $('#dRestart').onclick=()=>{deck=shuf?shuffle(base):[...base];still=[];known=0;i=0;render()};
+  }
+  const stopAuto=()=>{clearInterval(auto);auto=null;const b=$('#tAuto');if(b){b.classList.remove('on');b.textContent='▶ Autoplay'}};
+  $('#tShuf').onclick=e=>{shuf=!shuf;e.currentTarget.classList.toggle('on',shuf);deck=shuf?shuffle(base):[...base];i=0;still=[];known=0;render();toast(shuf?'Shuffled':'Original order')};
+  $('#tAuto').onclick=e=>{if(auto)return stopAuto();e.currentTarget.classList.add('on');e.currentTarget.textContent='⏸ Pause';auto=setInterval(()=>{if(i>=deck.length)return stopAuto();if(!flipped)flip();else if(track)mark(true);else next()},3200)};
+  if(!review)$('#tTrack').onclick=()=>{s.opts.track=!s.opts.track;save();route()};
+  onCleanup(()=>clearInterval(auto));
+  setKeys(e=>{
+    if(isTyping(e)||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.key===' '||e.key==='Enter'||e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();flip()}
+    else if(e.key==='ArrowRight'){e.preventDefault();track?mark(true):next()}
+    else if(e.key==='ArrowLeft'){e.preventDefault();track?mark(false):prev()}
+    else if(e.key.toLowerCase()==='s'&&deck[i]){$('#fc .face.front [data-star]')?.click()}
+  });
+  render();
+}
+
+/* ========== shared question renderer ========== */
+function presentQ(stage,s,c,q,type,next,label=''){
+  let st='ask',finalOk=false,undo=null,opts=null;
+  if(type==='mc'){opts=mcOptions(s,c,q);if(opts.length<2)type='written'}
+  stage.innerHTML=`<div class="card qcard">
+    <div class="row between"><span class="muted sm">${sideName(q.pSide)} ${sayBtn(q.prompt,langOf(s,q.pSide))}</span>${label?`<span class="pill">${label}</span>`:''}</div>
+    <div class="qtxt ${sizeCls(q.prompt)}">${nl(q.prompt)||'<span class="muted">(image)</span>'}</div>${q.img?`<img class="qimg" src="${esc(q.img)}" alt="">`:''}
+    <div class="muted sm qhint">${type==='mc'?'Choose the matching '+sideName(q.aSide).toLowerCase():'Type the '+sideName(q.aSide).toLowerCase()}</div>
+    ${type==='mc'?`<div class="choices">${opts.map((o,k)=>`<button class="choice" data-k="${k}"><kbd>${k+1}</kbd><span>${nl(o)}</span></button>`).join('')}</div>`
+      :`<form class="row wform"><input class="wa" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the answer"><button class="btn primary">Answer</button></form>`}
+    <div class="row end" style="margin-top:10px"><button class="btn ghost sm dk">Don’t know?</button></div>
+    <div class="fb"></div></div>`;
+  const fb=$('.fb',stage),inp=$('.wa',stage);
+  if(inp)inp.focus();
+  if(DB.settings.autoSpeak)speak(q.prompt,langOf(s,q.pSide));
+  const go=()=>{if(st==='gone')return;st='gone';clearTimeout(qTimer);next(finalOk)};
+  function answer(ok,{close=false,given=''}={}){
+    if(st!=='ask')return;st='fb';finalOk=ok;undo=recordUndoable(c,ok);touch(s);
+    $('.dk',stage)?.remove();
+    if(inp)inp.readOnly=true;
+    if(opts)$$('.choice',stage).forEach(b=>{if(opts[+b.dataset.k]===q.answer)b.classList.add('ok');b.disabled=true});
+    if(ok&&!close){fb.innerHTML=`<div class="fbx ok">✓ ${pick(PRAISE)}</div>`;qTimer=setTimeout(go,950);return}
+    fb.innerHTML=`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct — just check your spelling':given?'✗ Not quite, you’re still learning!':'Let’s look at the answer'}</div>
+      ${given?`<div class="ans"><small>You said</small><div class="${ok?'okc':'strike'}">${nl(given)}</div></div>`:''}
+      ${ok&&given?'':`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`}
+      ${ok&&given?`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`:''}
+      <div class="row end" style="margin-top:14px">${!ok&&given?'<button class="btn ghost sm ovr">Override: I was correct</button>':''}<button class="btn primary cont">Continue <kbd>Enter</kbd></button></div>`;
+    $('.cont',fb).onclick=go;
+    const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;go()};
+    if(!ok&&DB.settings.autoSpeak)speak(q.answer,langOf(s,q.aSide));
+  }
+  if(opts)$$('.choice',stage).forEach(b=>b.onclick=()=>{if(st!=='ask')return;const ok=opts[+b.dataset.k]===q.answer;if(!ok)b.classList.add('bad');answer(ok)});
+  else $('.wform',stage).onsubmit=e=>{e.preventDefault();const v=inp.value;if(!v.trim())return;const g=grade(v,q.answer);answer(g!=='wrong',{close:g==='close',given:v})};
+  $('.dk',stage).onclick=()=>answer(false);
+  setKeys(e=>{
+    if(st==='fb'&&e.key==='Enter'){e.preventDefault();go();return}
+    if(st==='ask'&&opts&&/^[1-9]$/.test(e.key)&&!isTyping(e)){$$('.choice',stage)[+e.key-1]?.click()}
+  });
+}
+
+/* ========== learn ========== */
+function viewLearn(s){
+  const cards=pool(s);
+  if(!cards.length)return shell(s,'Learn',{written:true},emptyStudy(s));
+  const written=s.opts.written!==false;
+  const lvl=new Map(cards.map(c=>[c.id,0]));
+  let order=shuffle(cards),roundN=0,queue=[],results=[];
+  shell(s,'Learn',{written:true},`<div class="card" style="margin-top:12px" id="lp"></div><div id="stage"></div>`);
+  const stage=$('#stage');
+  function prog(){const n=[0,0,0];cards.forEach(c=>n[lvl.get(c.id)]++);const p={new:n[0],learn:n[1],master:n[2]};$('#lp').innerHTML=`<div class="row between sm"><b>Round ${roundN||1}</b><span class="muted">${n[2]} / ${cards.length} mastered</span></div>${barHtml(p,true)}<div class="row legend"><span><i class="dot b-new"></i>Not studied ${n[0]}</span><span><i class="dot b-learn"></i>Familiar ${n[1]}</span><span><i class="dot b-master"></i>Mastered ${n[2]}</span></div>`}
+  function nextRound(){
+    const left=order.filter(c=>lvl.get(c.id)<2);if(!left.length)return finish();
+    left.sort((a,b)=>lvl.get(b.id)-lvl.get(a.id));
+    queue=left.slice(0,7);roundN++;results=[];ask();
+  }
+  function ask(){
+    prog();if(!queue.length)return roundEnd();
+    const c=queue.shift(),q=qa(s,c),l=lvl.get(c.id);
+    presentQ(stage,s,c,q,(l===0||!written)?'mc':'written',ok=>{lvl.set(c.id,ok?Math.min(2,l+1):0);results.push({c,ok,q});ask()},l===0?'New':'Familiar');
+  }
+  function roundEnd(){
+    if(cards.every(c=>lvl.get(c.id)===2))return finish();
+    const ok=results.filter(r=>r.ok).length;
+    stage.innerHTML=`<div class="card qcard center"><div class="big-emoji" style="font-size:44px">${ok===results.length?'🔥':'👏'}</div><h2 style="margin-top:6px">Round ${roundN} done — ${ok}/${results.length} correct</h2>
+      <div class="rlist">${results.map(r=>`<div class="ritem ${r.ok?'ok':'bad'}"><span>${r.ok?'✓':'✗'}</span><b>${nl(r.q.prompt)}</b><span>${nl(r.q.answer)}</span></div>`).join('')}</div>
+      <button class="btn primary big" id="nr">Continue to round ${roundN+1} <kbd>Enter</kbd></button></div>`;
+    $('#nr').onclick=nextRound;
+    setKeys(e=>{if(e.key==='Enter'){e.preventDefault();nextRound()}});
+  }
+  function finish(){
+    prog();
+    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏆</div><h2>You’ve mastered all ${cards.length} terms!</h2><p class="muted">Lock it in with a practice test, or come back for spaced review.</p>
+      <div class="row" style="justify-content:center"><button class="btn primary" id="again">Study again</button><a class="btn" href="#/test/${s.id}">Take a test</a><a class="btn" href="#/match/${s.id}">Play Match</a></div></div>`;
+    $('#again').onclick=()=>{cards.forEach(c=>lvl.set(c.id,0));order=shuffle(cards);roundN=0;nextRound()};
+    setKeys(null);
+  }
+  nextRound();
+}
+
+/* ========== write ========== */
+function viewWrite(s){
+  const cards=pool(s);
+  if(!cards.length)return shell(s,'Write',{},emptyStudy(s));
+  let queue=shuffle(cards),missed=[],round=1,right=0,firstScore=null,roundSize=queue.length;
+  shell(s,'Write',{},`<div class="card" style="margin-top:12px" id="wp"></div><div id="stage"></div>`);
+  const stage=$('#stage');
+  const hud=()=>{const done=roundSize-queue.length;$('#wp').innerHTML=`<div class="row between sm"><b>Round ${round}</b><span><span style="color:var(--ok)">✓ ${right}</span> · <span style="color:var(--bad)">✗ ${missed.length}</span> · ${Math.min(done+1,roundSize)} / ${roundSize}</span></div><div class="prog"><i style="width:${done/roundSize*100}%"></i></div>`};
+  function ask(){
+    hud();if(!queue.length)return roundEnd();
+    const c=queue.shift();
+    presentQ(stage,s,c,qa(s,c),'written',ok=>{if(ok)right++;else missed.push(c);ask()});
+  }
+  function roundEnd(){
+    const pct=Math.round(right/roundSize*100);if(firstScore===null)firstScore=pct;
+    if(!missed.length){stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏁</div><h2>All ${cards.length} terms answered correctly!</h2><p class="muted">First-round score: <b>${firstScore}%</b> · finished in ${round} round${round>1?'s':''}</p><div class="row" style="justify-content:center"><button class="btn primary" id="again">Start over</button><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;$('#again').onclick=()=>route();setKeys(null);return}
+    stage.innerHTML=`<div class="card qcard center"><h2>Round ${round}: ${pct}%</h2><p>${right} correct · ${missed.length} to review</p><button class="btn primary big" id="nr">Retry the ${missed.length} missed <kbd>Enter</kbd></button></div>`;
+    const go=()=>{queue=shuffle(missed);missed=[];right=0;round++;roundSize=queue.length;ask()};
+    $('#nr').onclick=go;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();go()}});
+  }
+  ask();
+}
+
+/* ========== spell ========== */
+function viewSpell(s){
+  const cards=pool(s).filter(c=>sideText(c,s.opts.answer==='def'?'def':'term').trim());
+  if(!tts)return shell(s,'Spell',{},`<div class="card empty"><h3>Your browser can’t read text aloud</h3><p class="muted">Spell needs speech synthesis. Try Chrome, Edge or Safari.</p></div>`);
+  if(!cards.length)return shell(s,'Spell',{},emptyStudy(s));
+  let queue=shuffle(cards),firstTry=0,doneN=0;const missedOnce=new Set(),total=cards.length;
+  shell(s,'Spell',{},`<div class="card" style="margin-top:12px" id="sp"></div><div id="stage"></div>`);
+  const stage=$('#stage');
+  function ask(){
+    $('#sp').innerHTML=`<div class="row between sm"><b>Listen and type what you hear</b><span>${doneN} / ${total} spelled</span></div><div class="prog"><i style="width:${doneN/total*100}%"></i></div>`;
+    if(!queue.length)return finish();
+    const c=queue.shift(),q=qa(s,c),lang=langOf(s,q.aSide);
+    let st='ask';
+    stage.innerHTML=`<div class="card qcard center">
+      <div class="row" style="justify-content:center"><button class="btn big" id="say">🔊 Play</button><button class="btn" id="slow">🐢 Slow</button></div>
+      <p class="muted sm" style="margin-top:18px">Hint (${sideName(q.pSide).toLowerCase()}): ${nl(q.prompt)}</p>
+      <form class="row wform" style="max-width:520px;margin:0 auto"><input class="wa" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear"><button class="btn primary">Check</button></form>
+      <div class="fb"></div></div>`;
+    const inp=$('.wa',stage),fb=$('.fb',stage);
+    const play=r=>{speak(q.answer,lang,r);inp.focus()};
+    $('#say').onclick=()=>play();$('#slow').onclick=()=>play(.55);
+    setTimeout(()=>play(),250);
+    const cont=()=>{if(st==='gone')return;st='gone';clearTimeout(qTimer);ask()};
+    $('.wform',stage).onsubmit=e=>{
+      e.preventDefault();if(st!=='ask'||!inp.value.trim())return;
+      const ok=norm(inp.value)===norm(q.answer);st='fb';inp.readOnly=true;
+      if(ok){const first=!missedOnce.has(c.id);if(first)firstTry++;record(c,first);touch(s);doneN++;fb.innerHTML=`<div class="fbx ok">✓ ${pick(PRAISE)}</div>`;qTimer=setTimeout(cont,800);return}
+      missedOnce.add(c.id);record(c,false);touch(s);
+      const u=[...inp.value],a=[...q.answer];
+      fb.innerHTML=`<div class="fbx bad">✗ Not quite — the correct spelling is:</div><div class="spell-diff">${a.map((ch,k)=>`<span class="${(u[k]||'').toLowerCase()===ch.toLowerCase()?'g':'r'}">${esc(ch)}</span>`).join('')}</div><p class="muted sm">You typed: ${esc(inp.value)}</p><div class="row end"><button class="btn primary cont">Continue <kbd>Enter</kbd></button></div>`;
+      speak(q.answer,lang,.6);
+      queue.splice(Math.min(3,queue.length),0,c);
+      $('.cont',fb).onclick=cont;
+    };
+    setKeys(e=>{if(st==='fb'&&e.key==='Enter'){e.preventDefault();cont()}});
+  }
+  function finish(){stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🐝</div><h2>Spelling complete!</h2><p>${firstTry} / ${total} spelled right on the first try (${Math.round(firstTry/total*100)}%)</p><button class="btn primary" id="again">Start over</button></div>`;$('#again').onclick=()=>route();setKeys(null)}
+  ask();
+}
+
+/* ========== test ========== */
+function viewTest(s){
+  const cards=pool(s);
+  if(!cards.length)return shell(s,'Test',{},emptyStudy(s));
+  const cfg=s.opts.test||{n:Math.min(20,cards.length),types:['tf','mc','written'].concat(cards.length>=4?['match']:[])};
+  shell(s,'Test',{},`<div id="stage"></div>`);
+  const stage=$('#stage');
+  let qs=[],graded=false,total=0;
+  function setup(){
+    graded=false;setKeys(null);
+    stage.innerHTML=`<div class="card qcard" style="max-width:560px;margin:16px auto"><h2 style="margin-top:0">Set up your test</h2>
+      <label class="opt"><span>Questions <span class="muted sm">(max ${cards.length})</span></span><input type="number" id="tN" min="1" max="${cards.length}" value="${Math.min(cfg.n,cards.length)}" style="width:100px"></label>
+      <label class="opt"><span>Answer with</span><select id="tA"><option value="term">Term</option><option value="def">Definition</option><option value="both">Both</option></select></label>
+      ${[['tf','True / False'],['mc','Multiple choice'],['match','Matching'],['written','Written']].map(([k,l])=>`<label class="opt"><span>${l}</span><input type="checkbox" data-type="${k}" ${cfg.types.includes(k)?'checked':''}></label>`).join('')}
+      <div class="row end" style="margin-top:16px"><button class="btn primary big" id="tGo">Create test</button></div></div>`;
+    $('#tA').value=s.opts.answer;
+    $('#tGo').onclick=()=>{
+      const n=Math.max(1,Math.min(cards.length,parseInt($('#tN').value)||1));
+      const types=$$('[data-type]',stage).filter(x=>x.checked).map(x=>x.dataset.type);
+      if(!types.length)return toast('Pick at least one question type');
+      s.opts.answer=$('#tA').value;cfg.n=n;cfg.types=types;s.opts.test={n,types};save();build();
+    };
+  }
+  function build(){
+    const chosen=sample(cards,cfg.n),by={tf:[],mc:[],match:[],written:[]};
+    chosen.forEach((c,i)=>by[cfg.types[i%cfg.types.length]].push(c));
+    qs=[];
+    by.tf.forEach(c=>{const q=qa(s,c),others=distinctOthers(s,c,q),fake=others.length&&Math.random()<.5;qs.push({type:'tf',c,q,shown:fake?pick(others):q.answer,truth:!fake,user:null})});
+    const mcQ=c=>{const q=qa(s,c);return{type:'mc',c,q,opts:mcOptions(s,c,q),user:null}};
+    by.mc.forEach(c=>qs.push(mcQ(c)));
+    for(let i=0;i<by.match.length;i+=6){const g=by.match.slice(i,i+6);if(g.length<2){qs.push(mcQ(g[0]));continue}const items=g.map(c=>({c,q:qa(s,c),user:''}));qs.push({type:'match',items,order:shuffle(items.map((_,k)=>k))})}
+    by.written.forEach(c=>qs.push({type:'written',c,q:qa(s,c),user:''}));
+    render();
+  }
+  const label={tf:'True or false',mc:'Multiple choice',written:'Written'};
+  function render(){
+    graded=false;let num=0;total=qs.reduce((n,Q)=>n+(Q.type==='match'?Q.items.length:1),0);
+    stage.innerHTML=`<div id="scoreBox"></div><p class="muted center" style="margin:14px 0 0">${total} questions</p>`+qs.map((Q,qi)=>{
+      if(Q.type==='match'){const a=num+1;num+=Q.items.length;return `<div class="card tq" data-qi="${qi}"><div class="tqh">${a}–${num} of ${total} · Matching</div><p class="muted sm" style="margin-top:0">Pick the letter of the matching answer for each item.</p><div class="mgrid"><div>${Q.items.map((it,k)=>`<div class="mi"><select data-mk="${k}"><option value="">–</option>${Q.order.map((_,j)=>`<option>${L[j]}</option>`).join('')}</select><span>${nl(it.q.prompt)}</span><span class="mres"></span></div>`).join('')}</div><div>${Q.order.map((k,j)=>`<div class="ma"><b>${L[j]}.</b> ${nl(Q.items[k].q.answer)}</div>`).join('')}</div></div></div>`}
+      num++;
+      const head=`<div class="tqh">${num} of ${total} · ${label[Q.type]}</div>`;
+      if(Q.type==='tf')return `<div class="card tq" data-qi="${qi}">${head}<div class="tf"><div class="qtxt ${sizeCls(Q.q.prompt)}">${nl(Q.q.prompt)}</div><div class="tfeq">↔</div><div class="qtxt ${sizeCls(Q.shown)}">${nl(Q.shown)}</div></div><div class="choices"><button class="choice" data-v="true">True</button><button class="choice" data-v="false">False</button></div></div>`;
+      if(Q.type==='mc')return `<div class="card tq" data-qi="${qi}">${head}<div class="qtxt ${sizeCls(Q.q.prompt)}">${nl(Q.q.prompt)}</div>${Q.q.img?`<img class="qimg" src="${esc(Q.q.img)}" alt="">`:''}<div class="muted sm qhint">Choose the matching ${sideName(Q.q.aSide).toLowerCase()}</div><div class="choices">${Q.opts.map((o,k)=>`<button class="choice" data-v="${k}">${nl(o)}</button>`).join('')}</div></div>`;
+      return `<div class="card tq" data-qi="${qi}">${head}<div class="qtxt ${sizeCls(Q.q.prompt)}">${nl(Q.q.prompt)}</div>${Q.q.img?`<img class="qimg" src="${esc(Q.q.img)}" alt="">`:''}<div class="muted sm qhint">Type the ${sideName(Q.q.aSide).toLowerCase()}</div><input data-w autocomplete="off" spellcheck="false" placeholder="Type the answer"></div>`;
+    }).join('')+`<div class="row" style="justify-content:center;margin-top:24px"><button class="btn primary big" id="submitT">Submit test</button></div>`;
+    $('#submitT').onclick=submit;
+  }
+  stage.addEventListener('click',e=>{
+    if(graded)return;const b=e.target.closest('.choice');if(!b)return;
+    const tq=b.closest('.tq'),Q=qs[+tq.dataset.qi];
+    $$('.choice',tq).forEach(x=>x.classList.toggle('sel',x===b));Q.user=b.dataset.v;
+  });
+  stage.addEventListener('input',e=>{const tq=e.target.closest('.tq');if(!tq||graded)return;const Q=qs[+tq.dataset.qi];if(e.target.matches('[data-w]'))Q.user=e.target.value});
+  stage.addEventListener('change',e=>{const tq=e.target.closest('.tq');if(!tq||graded)return;const Q=qs[+tq.dataset.qi];if(e.target.matches('[data-mk]'))Q.items[+e.target.dataset.mk].user=e.target.value});
+  async function submit(){
+    const un=qs.reduce((n,Q)=>n+(Q.type==='match'?Q.items.filter(i=>!i.user).length:(Q.user===null||(Q.type==='written'&&!String(Q.user).trim()))?1:0),0);
+    if(un&&!(await confirmBox(`You have ${un} unanswered question${un>1?'s':''}. Submit anyway?`,'Submit',false)))return;
+    graded=true;let right=0;
+    qs.forEach((Q,qi)=>{
+      const el=$(`.tq[data-qi="${qi}"]`);
+      if(Q.type==='match'){Q.items.forEach((it,k)=>{const cl=L[Q.order.indexOf(k)],ok=it.user===cl;if(ok)right++;record(it.c,ok);const r=$$('.mi',el)[k];r.classList.add(ok?'ok':'bad');$('.mres',r).textContent=ok?'✓':'✗ '+cl});$$('select',el).forEach(x=>x.disabled=true);return}
+      let ok=false,corr='';
+      if(Q.type==='tf'){ok=Q.user!==null&&(Q.user==='true')===Q.truth;corr=Q.truth?'True':`False — the answer is “${esc(Q.q.answer)}”`;$$('.choice',el).forEach(b=>{if((b.dataset.v==='true')===Q.truth)b.classList.add('ok');else if(b.dataset.v===Q.user)b.classList.add('bad')})}
+      if(Q.type==='mc'){ok=Q.user!==null&&Q.opts[+Q.user]===Q.q.answer;corr=nl(Q.q.answer);$$('.choice',el).forEach(b=>{if(Q.opts[+b.dataset.v]===Q.q.answer)b.classList.add('ok');else if(b.dataset.v===Q.user)b.classList.add('bad')})}
+      if(Q.type==='written'){ok=grade(Q.user,Q.q.answer)!=='wrong';corr=nl(Q.q.answer);$('input',el).readOnly=true}
+      $$('.choice',el).forEach(b=>{b.disabled=true;b.classList.remove('sel')});
+      if(ok)right++;record(Q.c,ok);
+      el.classList.add(ok?'ok':'bad');
+      el.insertAdjacentHTML('beforeend',`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct':'✗ Correct answer: '+corr}</div>`);
+    });
+    touch(s);
+    const pct=Math.round(right/total*100);
+    $('#scoreBox').innerHTML=`<div class="card score"><div class="ring" style="--p:${pct}">${pct}%</div><div><h2 style="margin:0 0 4px">${pct>=90?'Outstanding! 🎉':pct>=70?'Nice work! 👏':pct>=50?'Getting there 💪':'Keep practicing 📚'}</h2><p style="margin:0 0 12px"><b style="color:var(--ok)">${right} correct</b> · <b style="color:var(--bad)">${total-right} incorrect</b></p><div class="row"><button class="btn primary" id="retake">New test, same settings</button><button class="btn" id="reset">Change settings</button><a class="btn" href="#/learn/${s.id}">Study with Learn</a></div></div></div>`;
+    $('#submitT').remove();
+    $('#retake').onclick=build;$('#reset').onclick=setup;
+    scrollTo({top:0,behavior:'smooth'});
+  }
+  setup();
+}
+
+/* ========== match ========== */
+function viewMatch(s){
+  const cards=pool(s).filter(c=>c.term.trim()&&(c.def.trim()||c.img));
+  if(cards.length<2)return shell(s,'Match',{},`<div class="card empty"><h3>Match needs at least 2 cards with both a term and a definition</h3><a class="btn primary" href="#/edit/${s.id}">Edit set</a></div>`);
+  const key=s.id+':match';let timer=null;
+  shell(s,'Match',{},`<div id="stage"></div>`);
+  const stage=$('#stage');
+  onCleanup(()=>clearInterval(timer));
+  const fmt=t=>t.toFixed(1)+'s';
+  function intro(){
+    const best=DB.best[key];
+    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🧩</div><h2>Ready to play?</h2><p class="muted">Match every term with its definition as fast as you can.<br>Wrong matches add a 1-second penalty.</p>${best?`<p>Your best: <b>${fmt(best)}</b></p>`:''}<button class="btn primary big" id="start">Start game</button></div>`;
+    $('#start').onclick=play;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();play()}});
+  }
+  function play(){
+    setKeys(null);
+    const pickC=sample(cards,6);
+    const tiles=shuffle(pickC.flatMap(c=>[{id:c.id,txt:c.term,side:'t'},{id:c.id,txt:c.def,side:'d',img:c.img}]));
+    let sel=null,left=pickC.length,pen=0;const t0=performance.now();
+    stage.innerHTML=`<div class="match-hud"><span class="timer" id="tm">0.0s</span><span class="muted" id="pen"></span><button class="btn sm" id="quit">Restart</button></div><div class="match-grid">${tiles.map((t,k)=>`<button class="tile" data-k="${k}"><span>${nl(t.txt)}</span>${t.img?`<img src="${esc(t.img)}" alt="">`:''}</button>`).join('')}</div>`;
+    const now=()=>(performance.now()-t0)/1000+pen;
+    timer=setInterval(()=>{$('#tm').textContent=fmt(now())},100);
+    $('#quit').onclick=()=>{clearInterval(timer);play()};
+    $('.match-grid',stage).onclick=e=>{
+      const b=e.target.closest('.tile');if(!b||b.classList.contains('gone'))return;
+      const t=tiles[+b.dataset.k];
+      if(!sel){sel={b,t};b.classList.add('sel');return}
+      if(sel.b===b){b.classList.remove('sel');sel=null;return}
+      if(sel.t.id===t.id&&sel.t.side!==t.side){sel.b.classList.add('gone');b.classList.add('gone');sel.b.classList.remove('sel');sel=null;if(--left===0)end(now())}
+      else{const a=sel.b;a.classList.remove('sel');a.classList.add('wrong');b.classList.add('wrong');pen+=1;$('#pen').textContent=`+${pen}s penalty`;setTimeout(()=>{a.classList.remove('wrong');b.classList.remove('wrong')},450);sel=null}
+    };
+  }
+  function end(t){
+    clearInterval(timer);touch(s);
+    const best=DB.best[key],rec=!best||t<best;if(rec){DB.best[key]=t;save()}
+    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">${rec?'🏆':'⏱️'}</div><h2>${rec?'New personal record!':'Nice job!'}</h2><p style="font-size:34px;font-weight:800;margin:6px 0">${fmt(t)}</p><p class="muted">${rec&&best?`Previous best: ${fmt(best)}`:best?`Your best: ${fmt(best)}`:''}</p><button class="btn primary big" id="again">Play again <kbd>Enter</kbd></button></div>`;
+    $('#again').onclick=play;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();play()}});
+  }
+  intro();
+}
+
+/* ========== gravity ========== */
+function viewGravity(s){
+  const cards=pool(s).filter(c=>c.term.trim()&&c.def.trim());
+  if(!cards.length)return shell(s,'Gravity',{},emptyStudy(s));
+  const key=s.id+':gravity';let raf=0;
+  shell(s,'Gravity',{},`<div id="stage"></div>`);
+  const stage=$('#stage');
+  onCleanup(()=>cancelAnimationFrame(raf));
+  function intro(){
+    const best=DB.best[key];
+    stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">☄️</div><h2>Gravity</h2><p class="muted">Asteroids show a ${sideName(s.opts.answer==='def'?'term':'def').toLowerCase()}. Type the answer before they hit the ground.<br>Miss one and you lose a life — then retype the right answer to keep going.</p>${best?`<p>High score: <b>${best}</b></p>`:''}
+      <div class="row" style="justify-content:center">${['easy','medium','hard'].map(d=>`<button class="btn ${d==='medium'?'primary':''} big" data-d="${d}">${d[0].toUpperCase()+d.slice(1)}</button>`).join('')}</div></div>`;
+    $$('[data-d]',stage).forEach(b=>b.onclick=()=>play(b.dataset.d));
+  }
+  function play(diff){
+    let lives=3,score=0,level=1,hits=0,speed={easy:20,medium:32,hard:48}[diff],queue=shuffle(cards),cur=null,q=null,y=0,last=0,st='fall';
+    stage.innerHTML=`<div class="grav" id="gf"><div class="ghud"><span id="gl"></span><span id="glv"></span><span id="gs"></span></div><div class="ast" id="ast"></div><div class="ground"></div></div><form class="row wform" id="gform" style="margin-top:12px"><input class="wa" id="gin" autocomplete="off" spellcheck="false" placeholder="Type the answer and press Enter"><button class="btn primary">Enter</button></form>`;
+    const gf=$('#gf'),ast=$('#ast'),gin=$('#gin');
+    const hud=()=>{$('#gl').textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);$('#glv').textContent='Level '+level;$('#gs').textContent='Score '+score};
+    function spawn(){
+      $('.gmsg',gf)?.remove();
+      if(!queue.length)queue=shuffle(cards);
+      cur=queue.shift();q=qa(s,cur);
+      ast.className='ast';ast.style.display='';ast.innerHTML=nl(q.prompt);
+      ast.style.left=(4+Math.random()*48)+'%';y=-ast.offsetHeight;ast.style.top=y+'px';
+      st='fall';last=performance.now();gin.value='';gin.focus();hud();
+      cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+    }
+    function loop(t){
+      if(st!=='fall')return;
+      const dt=Math.min(.05,(t-last)/1000);last=t;y+=speed*dt;ast.style.top=y+'px';
+      if(y+ast.offsetHeight>=gf.clientHeight-26)return miss();
+      raf=requestAnimationFrame(loop);
+    }
+    function miss(){
+      st='miss';lives--;record(cur,false);touch(s);ast.style.display='none';queue.splice(Math.min(2,queue.length),0,cur);hud();
+      if(lives<=0)return over();
+      gf.insertAdjacentHTML('beforeend',`<div class="gmsg"><div>💥 It hit the ground! The answer was:</div><div class="okc">${nl(q.answer)}</div><div class="sm">Type it below to continue</div></div>`);
+      gin.value='';gin.focus();
+    }
+    $('#gform').onsubmit=e=>{
+      e.preventDefault();const v=gin.value;if(!v.trim())return;
+      if(st==='fall'){
+        if(grade(v,q.answer)!=='wrong'){
+          st='hit';cancelAnimationFrame(raf);record(cur,true);touch(s);hits++;score+=10*level+Math.max(0,Math.round((gf.clientHeight-y)/20));
+          if(hits%5===0){level++;speed*=1.18}
+          ast.classList.add('boom');hud();setTimeout(()=>{if(st==='hit')spawn()},380);
+        }else{gin.classList.remove('shake');void gin.offsetWidth;gin.classList.add('shake');gin.select()}
+      }else if(st==='miss'){
+        if(norm(v)===norm(q.answer))spawn();else{gin.classList.remove('shake');void gin.offsetWidth;gin.classList.add('shake');gin.select()}
+      }
+    };
+    function over(){
+      cancelAnimationFrame(raf);const best=DB.best[key]||0,rec=score>best;if(rec){DB.best[key]=score;save()}
+      gf.insertAdjacentHTML('beforeend',`<div class="gmsg"><div style="font-size:44px">${rec?'🏆':'🪐'}</div><h2 style="margin:4px 0">Game over</h2><div>The last answer was:</div><div class="okc">${nl(q.answer)}</div><div>Score <b>${score}</b> · Level ${level}${rec?' · <b>New high score!</b>':` · Best ${best}`}</div><div class="row" style="margin-top:16px;justify-content:center"><button class="btn primary" id="gAgain">Play again</button><button class="btn" id="gMenu">Change difficulty</button></div></div>`);
+      $('#gform').remove();
+      $('#gAgain').onclick=()=>play(diff);$('#gMenu').onclick=intro;
+    }
+    hud();spawn();
+  }
+  intro();
+}
+
+/* ========== import page ========== */
+function viewImport(){
+  app.innerHTML=`<h1>Import</h1>
+  <div class="card col"><h3 style="margin:0">📋 Paste text to create a set</h3><p class="muted sm" style="margin:0">Works with Quizlet exports (in Quizlet: ⋯ → Export → copy), Word, Excel and Google Sheets.</p>
+    <input id="iTitle" placeholder="Set title">
+    <div id="bulkHost">${bulkUI()}</div>
+    <div class="row between"><label class="btn sm">📄 Load a .txt / .csv / .tsv file<input type="file" id="iFile" accept=".txt,.csv,.tsv,text/plain" hidden></label><button class="btn primary" id="iGo">Create set</button></div>
+  </div>
+  <div class="card col" style="margin-top:16px"><h3 style="margin:0">🔗 Open a shared link</h3><div class="row"><input id="iLink" placeholder="Paste a StudyDeck share link" style="flex:1"><button class="btn" id="iLinkGo">Open</button></div></div>
+  <div class="card col" style="margin-top:16px"><h3 style="margin:0">💾 Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
+  const b=bindBulk($('#bulkHost'));
+  $('#iFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const t=await f.text();$('#bText').value=t;if(/\.csv$/i.test(f.name))$('input[name=tsep][value=comma]').checked=true;if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.\w+$/,'');b.upd()};
+  $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});s.cards=r;DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
+  $('#iLinkGo').onclick=()=>{const v=$('#iLink').value.trim(),i=v.indexOf('#share=');if(i<0)return toast('That doesn’t look like a share link');location.hash=v.slice(i+1)};
+  $('#iJson').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
+}
+async function importBackup(text){
+  let d;try{d=JSON.parse(text)}catch(e){return toast('That file isn’t valid JSON')}
+  if(!d||!Array.isArray(d.sets))return toast('No study sets found in that file');
+  const replace=d.folders&&(await confirmBox(`This backup has <b>${d.sets.length}</b> sets. Replace everything you have now, or merge?`,'Replace everything'));
+  if(replace){DB=Object.assign(blank(),d);DB.sets.forEach(fixSet)}
+  else{
+    (d.folders||[]).forEach(f=>{if(!DB.folders.some(x=>x.id===f.id))DB.folders.push(f)});
+    d.sets.forEach(s=>{fixSet(s);const k=DB.sets.findIndex(x=>x.id===s.id);if(k>=0)DB.sets[k]=s;else DB.sets.push(s)});
+    if(d.best)Object.assign(DB.best,d.best);
+  }
+  saveNow();toast(`Imported ${d.sets.length} set${d.sets.length>1?'s':''}`);location.hash='#/';route();
+}
+
+/* ========== shared set preview ========== */
+async function viewShare(code){
+  let d;
+  try{d=JSON.parse(await unpackStr(code))}catch(e){app.innerHTML=`<div class="card empty"><h2>This share link is broken</h2><p class="muted">It may have been cut off when it was copied.</p><a class="btn primary" href="#/">Go home</a></div>`;return}
+  const cards=(d.c||[]).map(([t,df,img])=>newCard(t||'',df||'',img||''));
+  app.innerHTML=`<div class="card"><span class="pill">Shared set</span><h1 style="margin-top:8px">${esc(d.t)}</h1>${d.d?`<p class="muted">${nl(d.d)}</p>`:''}<p>${cards.length} terms</p><div class="row"><button class="btn primary big" id="saveShare">Save to my sets & study</button><a class="btn" href="#/">Cancel</a></div></div>
+  <div class="card terms" style="padding:0;margin-top:16px">${cards.slice(0,100).map(c=>`<div class="t"><div class="tt">${nl(c.term)}</div><div>${nl(c.def)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div></div></div>`).join('')}${cards.length>100?`<div class="empty muted">…and ${cards.length-100} more</div>`:''}</div>`;
+  $('#saveShare').onclick=()=>{const s=newSet({title:d.t||'Shared set',desc:d.d||'',termLang:d.tl||'en-US',defLang:d.dl||'en-US'});s.cards=cards;DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast('Saved to your sets!')};
+}
+
+/* ========== settings ========== */
+function viewSettings(){
+  const size=new Blob([JSON.stringify(DB)]).size;
+  app.innerHTML=`<h1>Settings</h1>
+  <div class="card">
+    <label class="opt"><span>Theme</span><select id="sTheme"><option value="system">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
+    <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:180px"></label>
+    <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">🔊 Play</button></div>
+  </div>
+  <h2>Your data</h2>
+  <div class="card">
+    <p class="muted sm" style="margin-top:0">Everything is saved in this browser only (${(size/1024).toFixed(1)} KB used). Export a backup regularly, and use it to move your sets to another device or browser.</p>
+    <div class="row"><button class="btn primary" id="sExport">⬇ Export everything (.json)</button><label class="btn">⬆ Restore backup<input type="file" id="sImport" accept=".json,application/json" hidden></label><button class="btn danger" id="sWipe">Delete all data</button></div>
+  </div>
+  <h2>Keyboard shortcuts</h2>
+  <div class="card kbd-list">
+    <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick a multiple-choice answer</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
+  </div>`;
+  $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
+  $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
+  $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
+  $('#sRate').oninput=e=>{DB.settings.rate=+e.target.value;$('#sRateV').textContent=DB.settings.rate+'×';save()};
+  $('#sExport').onclick=()=>download(`studydeck-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');
+  $('#sImport').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
+  $('#sWipe').onclick=async()=>{if(await confirmBox('Delete <b>all</b> sets, folders and progress from this browser? Export a backup first if you might want them.','Delete everything')){DB=blank();saveNow();location.hash='#/';route();toast('All data deleted')}};
+}
+
+/* ========== theme & boot ========== */
+const mq=matchMedia('(prefers-color-scheme: dark)');
+function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t}
+mq.addEventListener?.('change',applyTheme);
+$('#themeBtn').onclick=()=>{DB.settings.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';save();applyTheme()};
+applyTheme();
+route();
+</script>
+</body>
+</html>
