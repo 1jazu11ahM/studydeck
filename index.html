@@ -1505,7 +1505,7 @@ function mediaUnlock(){
 }
 const GESTURES=['pointerdown','pointerup','touchend','click','keydown'];
 function ambAutostart(){
-  if(!DB.settings.amb.on)return;
+  if(!DB.settings.amb.on){showAmbHint();return}
   mediaSession();ambStart();
   const go=e=>{
     if(e&&e.target&&e.target.closest&&e.target.closest('#ambHint'))return;
@@ -1519,20 +1519,26 @@ function ambAutostart(){
   if(AMB.ctx)AMB.ctx.onstatechange=()=>{ambBtn();ambHintText()};
   showAmbHint();
 }
-function ambHintText(){
-  const h=$('#ambHint');if(!h||h.hidden||!h.classList.contains('show'))return;const on=AMB.ctx&&AMB.ctx.state==='running';
+function ambHintText(force){
+  const h=$('#ambHint');if(!h||h.hidden||(!force&&!h.classList.contains('show')))return;const t0=$('#hintT',h),d0=$('#hintD',h);if(!DB.settings.amb.on){if(t0){t0.textContent='Sound is off';d0.textContent='Turn on rain and thunder while you study. You can change this anytime with the headphones button.'}return}const on=AMB.ctx&&AMB.ctx.state==='running';
   const t=$('#hintT',h),d=$('#hintD',h);if(!t)return;
   t.textContent=on?'Rain and thunder are on':'Tap anywhere to start the rain and thunder';
   d.textContent=on?'If you don’t like the sound, you can turn it off here anytime.':'Browsers wait for your first tap before playing sound. If you don’t like it, turn it off here.';
 }
 function showAmbHint(){
   const h=$('#ambHint'),b=$('#ambBtn');if(!h||!b)return;
-  h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b id="hintT"></b><div class="sm muted" id="hintD"></div></div></div><div class="row end" style="margin-top:10px"><button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button></div>`;
+  const on=DB.settings.amb.on;
+  h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b id="hintT"></b><div class="sm muted" id="hintD"></div></div></div><div class="row end" style="margin-top:10px">${on?'<button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button>':'<button class="btn sm" id="hintKeepOff">Keep it off</button><button class="btn sm primary" id="hintOn">Turn sound on</button>'}</div>`;
   const place=()=>{const r=b.getBoundingClientRect(),w=h.offsetWidth||330,left=Math.max(8,Math.min(r.right+14-w,innerWidth-w-8));h.style.top=(r.bottom+12)+'px';h.style.left=left+'px';h.style.right='auto';h.style.setProperty('--ax',(r.left+r.width/2-left-7)+'px')};
-  h.hidden=false;place();ambHintText();requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
-  $('#hintOff').onclick=()=>{if(AMB.unarm)AMB.unarm();ambStop();hideAmbHint();toast('Sound off. Turn it back on with the headphones button.')};
-  $('#hintOk').onclick=()=>{mediaUnlock();if(AMB.ctx)AMB.ctx.resume();if(AMB.unarm)AMB.unarm();hideAmbHint()};
-  setTimeout(hideAmbHint,12000);
+  h.hidden=false;place();ambHintText(true);requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
+  if(on){
+    $('#hintOff').onclick=()=>{if(AMB.unarm)AMB.unarm();ambStop();hideAmbHint();toast('Sound off. Turn it back on with the headphones button.')};
+    $('#hintOk').onclick=()=>{mediaUnlock();if(AMB.ctx)AMB.ctx.resume();if(AMB.unarm)AMB.unarm();hideAmbHint()};
+  }else{
+    $('#hintOn').onclick=()=>{mediaUnlock();ambStart();if(AMB.ctx){AMB.ctx.resume();AMB.ctx.onstatechange=()=>ambBtn()}hideAmbHint();toast('Sound on')};
+    $('#hintKeepOff').onclick=()=>hideAmbHint();
+  }
+  clearTimeout(AMB.hintT);AMB.hintT=setTimeout(hideAmbHint,12000);
 }
 function hideAmbHint(){const h=$('#ambHint');if(!h||h.hidden)return;h.classList.remove('show');setTimeout(()=>{h.hidden=true},300)}
 function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.G.rain.gain.setTargetAtTime(a.rain*.55,t,.4);AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,.4);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
