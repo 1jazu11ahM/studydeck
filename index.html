@@ -289,7 +289,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 .xpfloat{position:absolute;right:16px;margin-top:-34px;animation:floatup .6s ease-out forwards}
 #fctl{position:relative}
 @keyframes floatup{to{transform:translateY(-22px);opacity:0}}
-.transmission{display:flex;gap:14px;align-items:center;padding:12px 16px;margin-bottom:16px;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card));position:relative;overflow:hidden}
+.transmission{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 16px;margin-bottom:16px;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card));position:relative;overflow:hidden}
 .transmission::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 3px,color-mix(in srgb,var(--accent) 7%,transparent) 3px 4px);pointer-events:none;animation:txscan 4s linear infinite}
 @keyframes txscan{to{background-position:0 40px}}
 .tx-dot{width:10px;height:10px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 0 var(--bad);animation:txpulse 1.4s infinite;flex:none}
@@ -354,6 +354,29 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 .lamp{position:absolute;left:20vw;bottom:-10vh;width:60vw;height:60vh;background:radial-gradient(ellipse at 30% 70%,rgba(255,190,100,.18),transparent 60%);animation:lamp 7s ease-in-out infinite alternate}
 @keyframes lamp{to{opacity:.75}}
 @media (max-width:700px){.shelf{width:16vw}.libwin{width:56vw}}
+
+.go{display:flex;flex-direction:row;align-items:center;gap:16px;padding:20px 22px;border-radius:12px;background:var(--text);color:var(--on-ink);margin:4px 0 8px;transition:transform .15s,box-shadow .15s}
+.go-t{display:flex;flex-direction:column;flex:1;min-width:0}
+.go-arrow{font-size:34px;line-height:1;opacity:.7}
+.dsec{margin-top:22px}
+.dh{margin:0 0 10px;font-size:18px}
+[data-theme=midnight] .dh{font-size:22px}
+.dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+.goals{display:flex;flex-direction:column;gap:18px}
+.goal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.goal-xp{flex:none;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.goal-xp.done{background:var(--ok-soft);color:var(--ok)}
+.goal-bar{display:flex;align-items:center;gap:12px;margin-top:8px}.goal-bar .bar{flex:1;margin:0}
+.goal-n{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);min-width:56px;text-align:right}
+.attn{padding:6px 18px}
+.arow{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.arow:last-child{border-bottom:0}
+.aic{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);flex:none}
+.atx{flex:1;min-width:0}.atx b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.quote{margin-top:22px;padding:18px 22px;border-left:4px solid var(--accent)}
+.quote .code-line{margin:4px 0 0}
+@media (max-width:760px){.dgrid{grid-template-columns:minmax(0,1fr)}.go{padding:18px}.arow .btn{padding:6px 10px}.quote .code-line{font-size:22px!important}}
+.dsec{min-width:0}
 #modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
 #modal[hidden]{display:none}
 .modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
@@ -779,37 +802,48 @@ function viewHome(){
   const rp=nxt?Math.min(100,(mastered-prevT)/Math.max(1,nxt[1]-prevT)*100):100;
   const dn=dayNum(),line=CODE[dn%CODE.length],prompt=PROMPTS[dn%PROMPTS.length],today=ymd(),refl=DB.refl[today]||'';
   const nAch=Object.keys(DB.ach).length;
-  app.innerHTML=`${overdueHtml(DB.sets)}
+  app.innerHTML=`
   <div class="cc-head">
     <div><h1 class="cc-title">Dashboard</h1><div class="clock" id="ccClock"></div></div>
     <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div class="rk"><div class="rk-top"><span class="rank-name">${RANKS[r][0]}</span><span class="rk-xp">${(DB.xp||0).toLocaleString()} XP</span></div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div><div class="sm rk-next">${(()=>{if(!nxt)return'You’ve reached the top rank. Legendary.';const left=Math.max(0,nxt[1]-mastered),env=ENVS.find(e=>e[3]===r+1);
       if(r===0)return`<b>Recruit</b> is one correct answer away. Claim your first badge.`;
       return`<b>${nxt[0]}</b> is ${left} mastered card${left===1?'':'s'} away${env?` · unlocks <b>${env[1]}</b>`:''}. Keep pushing.`})()}</div></div></a>
   </div>
-  <div class="cc-grid">
-    <div class="card brief">
-      <a class="go" href="${go.href}"><span class="go-l">${esc(go.label)}</span><span class="go-s">${esc(go.sub)}</span></a>
-      <div class="brief-rows">
-        <div class="brow"><span>${icon('clock',18)} Due for review</span><b>${due}</b></div>
-        ${DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).map(([x,pl])=>`<a class="brow" href="#/learn/${x.id}"><span>${icon('cal',18)} ${esc(x.title)}: ${pl.days===0?'exam today':`exam in ${pl.days} day${pl.days>1?'s':''}`}</span><b>${pl.left?`${pl.done}/${pl.per} today`:'ready'}</b></a>`).join('')}
-        <a class="brow" href="#/detective"><span>${icon('test',18)} ${V('Detective Mode · unresolved evidence','Weak cards to fix')}</span><b>${unresolvedSet().cards.length}</b></a>
-        ${weak.length?weak.map(w=>`<a class="brow" href="#/learn/${w.s.id}"><span>${icon('target',18)} Weak spot: ${esc(w.s.title)}</span><b>${Math.round(w.acc*100)}% accuracy</b></a>`).join(''):`<div class="brow muted"><span>${icon('target',18)} Weak spots appear once you've answered a few questions</span></div>`}
-        <div class="mission"><div class="row between sm"><span><b>Daily goal</b> · ${MISSION.daily} correct answers</span><span>${DB.daily.done?'✓ complete':`${DB.daily.n}/${MISSION.daily} · +${MISSION.dailyXP} XP`}</span></div><div class="bar"><i class="b-master" style="width:${Math.min(100,DB.daily.n/MISSION.daily*100)}%"></i></div></div>
-        <div class="mission"><div class="row between sm"><span><b>Weekly goal</b> · ${MISSION.weekly} correct answers</span><span>${DB.weekly.done?'✓ complete':`${DB.weekly.n}/${MISSION.weekly} · +${MISSION.weeklyXP} XP`}</span></div><div class="bar"><i class="b-learn" style="width:${Math.min(100,DB.weekly.n/MISSION.weekly*100)}%"></i></div></div>
+  <a class="go" href="${go.href}">${icon(due?'clock':'target',30)}<span class="go-t"><span class="go-l">${esc(go.label)}</span><span class="go-s">${esc(go.sub)}</span></span><span class="go-arrow" aria-hidden="true">›</span></a>
+  <section class="dsec">
+    <h2 class="dh">Your stats</h2>
+    <div class="stats">
+      <div class="card stat streak">${icon('flame')}<b>${streakNow()}</b><small>day streak</small></div>
+      <div class="card stat">${icon('stack')}<b>${DB.sets.length}</b><small>study sets</small></div>
+      <div class="card stat">${icon('check')}<b>${mastered}<span class="muted sm">/${total}</span></b><small>cards mastered</small></div>
+      <a class="card stat" href="#/achievements">${icon('target')}<b>${nAch}<span class="muted sm">/${ACH.length}</span></b><small>achievements</small></a>
+    </div>
+  </section>
+  <div class="dgrid">
+    <section class="dsec">
+      <h2 class="dh">Goals</h2>
+      <div class="card goals">
+        ${[['Daily goal',`Answer ${MISSION.daily} questions correctly today`,DB.daily.n,MISSION.daily,MISSION.dailyXP,DB.daily.done,'b-master'],['Weekly goal',`Answer ${MISSION.weekly} questions correctly this week`,DB.weekly.n,MISSION.weekly,MISSION.weeklyXP,DB.weekly.done,'b-learn']].map(([t,d,n,m,xp,done,cls])=>`
+        <div class="goal">
+          <div class="goal-top"><div><b>${t}</b><div class="muted sm">${d}</div></div><span class="goal-xp ${done?'done':''}">${done?'✓ Done':`+${xp} XP`}</span></div>
+          <div class="goal-bar"><div class="bar big"><i class="${cls}" style="width:${Math.min(100,n/m*100)}%"></i></div><span class="goal-n">${Math.min(n,m)}/${m}</span></div>
+        </div>`).join('')}
       </div>
-    </div>
-    <div class="rightcol"><div class="card code">
-      <div class="muted sm"><b>Daily motivation</b> · ${new Date().toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'})}</div>
-      <p class="code-line">${esc(line)}</p>
-    </div>
-  <div class="stats mini">
-    <div class="card stat streak">${icon('flame')}<b>${streakNow()}</b><small>day streak</small></div>
-    <div class="card stat">${icon('stack')}<b>${DB.sets.length}</b><small>study sets</small></div>
-    <div class="card stat">${icon('check')}<b>${mastered}<span class="muted sm">/${total}</span></b><small>cards mastered</small></div>
-    <a class="card stat" href="#/achievements">${icon('target')}<b>${nAch}<span class="muted sm">/${ACH.length}</span></b><small>achievements</small></a>
+    </section>
+    <section class="dsec">
+      <h2 class="dh">Needs attention</h2>
+      <div class="card attn">
+        ${(()=>{const rows=[];const wk=unresolvedSet().cards.length;
+          const dueSet=DB.sets.filter(x=>dueCards(x).length).sort((a,b)=>dueCards(b).length-dueCards(a).length)[0];
+          if(due)rows.push([icon('clock',20),`${due} card${due>1?'s':''} due for review`,'Reviewing on time keeps them in memory','Review',`#/review/${dueSet.id}`]);
+          if(wk)rows.push([icon('test',20),`${wk} weak card${wk>1?'s':''}`,'Cards you’ve missed recently','Practice','#/learn/unresolved']);
+          weak.forEach(w=>rows.push([icon('target',20),esc(w.s.title),`${Math.round(w.acc*100)}% accuracy`,'Train',`#/learn/${w.s.id}`]));
+          DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).forEach(([x,pl])=>rows.push([icon('cal',20),`Exam: ${esc(x.title)}`,`${pl.days===0?'Today':`In ${pl.days} day${pl.days>1?'s':''}`} · ${pl.left?`${pl.done}/${pl.per} mastered today`:'ready'}`,'Study',`#/learn/${x.id}`]));
+          return rows.length?rows.map(([ic,t,d,b,h])=>`<div class="arow"><span class="aic">${ic}</span><div class="atx"><b>${t}</b><div class="muted sm">${d}</div></div><a class="btn sm" href="${h}">${b}</a></div>`).join(''):`<div class="arow"><span class="aic">${icon('check',20)}</span><div class="atx"><b>All caught up</b><div class="muted sm">Nothing due and no weak spots right now.</div></div></div>`})()}
+      </div>
+    </section>
   </div>
-    </div>
-  </div>
+  <div class="card quote"><span class="muted sm">Daily motivation</span><p class="code-line">${esc(line)}</p></div>
   <div class="row between"><h2>Folders</h2><button class="btn sm" id="newFolder">+ New folder</button></div>
   ${DB.folders.length?`<div class="grid">${DB.folders.map(f=>`<a class="card setcard" href="#/folder/${f.id}"><div class="ttl">${esc(f.name)}</div><div class="muted sm">${DB.sets.filter(s=>s.folder===f.id).length} sets</div></a>`).join('')}</div>`:'<p class="muted">Folders help you group sets by class or topic.</p>'}
   <div class="row between"><h2>${V('Case files','Your sets')}</h2><a class="btn sm primary" href="#/new">+ ${V('Open a case','Create set')}</a></div>
