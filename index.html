@@ -285,6 +285,50 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 @keyframes txpulse{70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .nowrap{white-space:nowrap}
 @media (max-width:700px){.casestats{grid-template-columns:repeat(2,minmax(0,1fr))}.rates{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.envs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.envc{display:flex;flex-direction:column;gap:4px;text-align:left;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
+.envc.on{border-color:var(--accent)}.envc.locked{opacity:.5;cursor:not-allowed}.envc small{color:var(--muted)}
+.envthumb{display:block;height:74px;border-radius:6px;margin-bottom:6px}
+.env-city{background:linear-gradient(transparent 55%,#06080c 55%),linear-gradient(160deg,transparent 40%,rgba(242,194,48,.25) 48%,transparent 56%),linear-gradient(#0f131c,#1d2638)}
+.env-rooftop{background:linear-gradient(transparent 72%,#05070a 72%),radial-gradient(circle at 80% 30%,#ff3b3b 2px,transparent 3px),linear-gradient(transparent 60%,#111723 60%),linear-gradient(#0b0f18,#1a2132)}
+.env-cave{background:radial-gradient(ellipse at 50% 85%,rgba(63,209,192,.35),transparent 40%),linear-gradient(#030405,#0b0f12 60%,#05070a)}
+.env-library{background:linear-gradient(90deg,#2a1d14 0 22%,transparent 22% 78%,#2a1d14 78%),radial-gradient(circle at 50% 35%,#d8cda6 7px,transparent 8px),linear-gradient(#0d1220,#1a2236)}
+.planner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
+.planner .ic{color:var(--accent)}.planner input{width:auto;padding:5px 8px}
+.simhud{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-weight:600}
+[data-theme=midnight] .simhud{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-size:20px;letter-spacing:.03em}
+.simbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}.simbar i{display:block;height:100%;width:100%;background:var(--accent)}
+#ambBtn.amb-on{color:var(--accent);background:var(--accent-soft)}
+#ambPanel{position:fixed;top:64px;right:16px;z-index:40;width:300px;padding:16px}
+#ambPanel input[type=range]{width:140px}
+.envl{display:none;position:absolute;inset:0}
+.envsvg{position:absolute;left:0;right:0;bottom:0;width:100%;height:46vh;min-height:220px}
+.envsvg.top{top:0;bottom:auto;height:42vh}
+.blink{animation:blinkr 1.6s steps(1) infinite}@keyframes blinkr{50%{opacity:.1}}
+#scene[data-env=rooftop] #envRoof{display:block}
+#scene[data-env=rooftop] #city,#scene[data-env=rooftop] #cityFar{height:30vh;bottom:12vh;opacity:.8}
+#scene[data-env=rooftop] .rain{background-image:repeating-linear-gradient(100deg,transparent 0 16px,rgba(190,205,230,.08) 16px 17px)}
+#scene[data-env=cave]{background:radial-gradient(ellipse 70% 50% at 50% 90%,rgba(40,120,115,.25),transparent 70%),linear-gradient(#020304,#0a0e12 55%,#040507)!important}
+#scene[data-env=cave] #envCave{display:block}
+#scene[data-env=cave] :is(.moon,.clouds,.beam,#city,#cityFar,.rain,.fog){display:none}
+.screens{position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);display:flex;gap:14px;align-items:flex-end}
+.screens i{display:block;width:16vw;max-width:200px;height:11vw;max-height:130px;border:2px solid #1f6b66;border-radius:4px;background:repeating-linear-gradient(#0b2a2a 0 6px,#103b39 6px 7px);box-shadow:0 0 50px 8px rgba(63,209,192,.22),inset 0 0 30px rgba(63,209,192,.25);animation:scr 6s linear infinite}
+.screens i.big{width:24vw;max-width:300px;height:15vw;max-height:180px}
+@keyframes scr{to{background-position:0 140px}}
+.drip{position:absolute;width:3px;height:9px;border-radius:2px;background:rgba(160,200,220,.5);animation:drip 3.8s ease-in infinite}
+@keyframes drip{0%,30%{transform:translateY(0);opacity:0}35%{opacity:1}100%{transform:translateY(70vh);opacity:.2}}
+#scene[data-env=library]{background:linear-gradient(#0c0a09,#120d0a)!important}
+#scene[data-env=library] #envLib{display:block}
+#scene[data-env=library] :is(.moon,.clouds,.beam,#city,#cityFar,.rain,.fog,.bats){display:none}
+.shelf{position:absolute;top:0;bottom:0;width:24vw;height:100%}.shelf.l{left:0}.shelf.r{right:0}
+.libwin{position:absolute;top:8vh;left:50%;transform:translateX(-50%);width:30vw;max-width:420px;height:62vh;border:10px solid #1a120d;border-radius:200px 200px 6px 6px;background:linear-gradient(#0d1424,#1a2440);overflow:hidden;box-shadow:0 0 0 2px #2a1d14}
+.libwin::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent calc(50% - 4px),#1a120d calc(50% - 4px) calc(50% + 4px),transparent 0),linear-gradient(transparent calc(55% - 4px),#1a120d calc(55% - 4px) calc(55% + 4px),transparent 0)}
+.libmoon{position:absolute;top:16%;right:18%;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fbf4dc,#cfc49d 60%,#9d9372);box-shadow:0 0 50px 10px rgba(251,244,220,.12)}
+.librain{position:absolute;inset:-20%;background-image:repeating-linear-gradient(104deg,transparent 0 12px,rgba(190,205,230,.12) 12px 13px);animation:rain .5s linear infinite}
+.lamp{position:absolute;left:20vw;bottom:-10vh;width:60vw;height:60vh;background:radial-gradient(ellipse at 30% 70%,rgba(255,190,100,.18),transparent 60%);animation:lamp 7s ease-in-out infinite alternate}
+@keyframes lamp{to{opacity:.75}}
+@media (max-width:700px){.shelf{width:16vw}.libwin{width:56vw}}
 #modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
 #modal[hidden]{display:none}
 .modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
@@ -325,7 +369,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 </style>
 </head>
 <body>
-<div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="bats"><div class="bat" style="top:8vh;animation-duration:26s;animation-delay:-3s"><svg width="30" height="18" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:14vh;animation-duration:34s;animation-delay:-17s"><svg width="22" height="13" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:22vh;animation-duration:29s;animation-delay:-11s"><svg width="26" height="16" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:5vh;animation-duration:41s;animation-delay:-27s"><svg width="18" height="11" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:30vh;animation-duration:37s;animation-delay:-6s"><svg width="20" height="12" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city2" id="cityFar" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="fog"></div><svg class="city2" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="strike-l"></div><div class="rain"></div></div>
+<div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="bats"><div class="bat" style="top:8vh;animation-duration:26s;animation-delay:-3s"><svg width="30" height="18" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:14vh;animation-duration:34s;animation-delay:-17s"><svg width="22" height="13" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:22vh;animation-duration:29s;animation-delay:-11s"><svg width="26" height="16" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:5vh;animation-duration:41s;animation-delay:-27s"><svg width="18" height="11" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:30vh;animation-duration:37s;animation-delay:-6s"><svg width="20" height="12" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city2" id="cityFar" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="fog"></div><svg class="city2" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="strike-l"></div><div class="envl" id="envRoof"></div><div class="envl" id="envCave"></div><div class="envl" id="envLib"></div><div class="rain"></div></div>
 <header class="top">
   <a href="#/" class="logo" aria-label="QuizCraft home"><svg class="logo-bat" width="40" height="26" viewBox="0 0 64 40" aria-hidden="true"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg><span class="word hide-sm">QuizCraft</span></a>
   <input id="globalSearch" type="search" placeholder="Search your sets and terms…" aria-label="Search">
@@ -333,6 +377,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
     <a href="#/new" class="btn primary sm">+ Create</a>
     <a href="#/import" class="btn sm hide-sm">Import</a>
     <button class="btn sm" id="syncBtn" title="Cloud sync">☁️ <span class="hide-sm">Sign in</span></button>
+    <button class="ico" id="ambBtn" title="Ambience" aria-label="Ambience sounds"></button>
     <button class="ico" id="themeBtn" title="Toggle dark mode">🌓</button>
     <a href="#/settings" class="ico" title="Settings">⚙️</a>
   </nav>
@@ -341,6 +386,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 <div id="modal" hidden></div>
 <div id="toast" role="status"></div>
 <div id="achbar" role="status" aria-live="polite"></div>
+<div id="ambPanel" class="card" hidden></div>
 <script>
 'use strict';
 /* ========== helpers ========== */
@@ -352,7 +398,7 @@ const nl=s=>esc(s).replace(/\n/g,'<br>');
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const sample=(a,n)=>shuffle(a).slice(0,n);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const ICONS={cards:'<rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/>',target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',pencil:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',sound:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',test:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 8l1.5 1.5 3-3M8.5 14l1.5 1.5 3-3"/>',match:'<rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>',comet:'<circle cx="15" cy="15" r="5"/><path d="M3 3l8 8M7.5 3l5 5M3 7.5l5 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',flame:'<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.6 3-5.6 3.6-9.3 2.2 1.3 3.4 3.4 3.5 5.3 1-.8 1.6-2 1.7-3.3 2.6 2 4.2 4.6 4.2 7.3 0 3.6-2.6 6.2-6.5 6.2z"/>',stack:'<path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 12.5l9 4 9-4M3 16.5l9 4 9-4"/>',check:'<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16 9.6"/>'};
+const ICONS={bolt:'<path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/>',head:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',cards:'<rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/>',target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',pencil:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',sound:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',test:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 8l1.5 1.5 3-3M8.5 14l1.5 1.5 3-3"/>',match:'<rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>',comet:'<circle cx="15" cy="15" r="5"/><path d="M3 3l8 8M7.5 3l5 5M3 7.5l5 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',flame:'<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.6 3-5.6 3.6-9.3 2.2 1.3 3.4 3.4 3.5 5.3 1-.8 1.6-2 1.7-3.3 2.6 2 4.2 4.6 4.2 7.3 0 3.6-2.6 6.2-6.5 6.2z"/>',stack:'<path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 12.5l9 4 9-4M3 16.5l9 4 9-4"/>',check:'<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16 9.6"/>'};
 const icon=(n,sz=22)=>`<svg class="ic" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 const DAY=864e5;
 const L='ABCDEFGHIJ';
@@ -364,7 +410,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -378,7 +424,7 @@ function load(){
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
-if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
+if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.vision===undefined)DB.settings.vision=true;
 const V=(det,plain)=>DB.settings.vocab?det:plain;
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
@@ -490,7 +536,7 @@ function checkProgress(){
   ACH.forEach(([id,name,desc,test])=>{if(!DB.ach[id]&&test()){DB.ach[id]=Date.now();DB.xp+=50;changed=true;announce('check','Achievement unlocked: '+name,desc+' · +50 XP')}});
   DB.sets.forEach(x=>{if(x.cards.length>=3&&!x.closedAt&&isClosed(x)){x.closedAt=Date.now();DB.xp+=250;changed=true;announce('check',V('Case closed: ','Set mastered: ')+x.title,'+250 XP');celebrate()}});
   const r=rankIndex();
-  if(r>(DB.rank||0)){DB.rank=r;changed=true;if(r>=2){announce('rank','Promoted to '+RANKS[r][0],'Your new rank is in the Command Center',r);celebrate()}}
+  if(r>(DB.rank||0)){DB.rank=r;changed=true;if(r>=2){const ne=ENVS.find(x=>x[3]===r);announce('rank','Promoted to '+RANKS[r][0],ne?'New environment unlocked: '+ne[1]:'Your new rank is in the Command Center',r);celebrate()}}
   else if(r<(DB.rank||0)){DB.rank=r;changed=true}
   if(changed)save();
 }
@@ -656,7 +702,7 @@ function route(){
   scrollTo(0,0);
   app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');
   if(v!=='search')$('#globalSearch').value='';
-  const needSet={set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
+  const needSet={sim:viewSim,set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
   if(id==='unresolved'&&(v==='set'||v==='edit')){location.replace('#/detective');return}
   if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · QuizCraft';return needSet[v](s)}
   document.title='QuizCraft';
@@ -706,6 +752,7 @@ function viewHome(){
       <a class="go" href="${go.href}"><span class="go-l">${esc(go.label)}</span><span class="go-s">${esc(go.sub)}</span></a>
       <div class="brief-rows">
         <div class="brow"><span>${icon('clock',18)} Due for review</span><b>${due}</b></div>
+        ${DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).map(([x,pl])=>`<a class="brow" href="#/learn/${x.id}"><span>${icon('cal',18)} ${esc(x.title)}: ${pl.days===0?'exam today':`exam in ${pl.days} day${pl.days>1?'s':''}`}</span><b>${pl.left?`${pl.done}/${pl.per} today`:'ready'}</b></a>`).join('')}
         <a class="brow" href="#/detective"><span>${icon('test',18)} ${V('Detective Mode · unresolved evidence','Weak cards to fix')}</span><b>${unresolvedSet().cards.length}</b></a>
         ${weak.length?weak.map(w=>`<a class="brow" href="#/learn/${w.s.id}"><span>${icon('target',18)} Weak spot: ${esc(w.s.title)}</span><b>${Math.round(w.acc*100)}% accuracy</b></a>`).join(''):`<div class="brow muted"><span>${icon('target',18)} Weak spots appear once you've answered a few questions</span></div>`}
         <div class="mission"><div class="row between sm"><span><b>Daily mission</b> · verify ${MISSION.daily} pieces of evidence</span><span>${DB.daily.done?'✓ complete':`${DB.daily.n}/${MISSION.daily} · +${MISSION.dailyXP} XP`}</span></div><div class="bar"><i class="b-master" style="width:${Math.min(100,DB.daily.n/MISSION.daily*100)}%"></i></div></div>
@@ -736,12 +783,13 @@ function viewHome(){
   $('#reflS').onclick=()=>{const v=$('#reflT').value.trim();if(v)DB.refl[today]=v;else delete DB.refl[today];save();queueProgress();$('#reflM').textContent=`Saved · ${Object.keys(DB.refl).length} reflection${Object.keys(DB.refl).length===1?'':'s'}`;toast('Reflection saved')};
   $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewHome()}};
 }
-function viewAchievements(){
+function viewAchievements(){setTimeout(()=>bindEnvPicker(app),0);
   const r=rankIndex(),m=masteredTotal();
   app.innerHTML=`<a class="btn ghost sm" href="#/">← Command Center</a>
   <h1 style="margin-top:8px">Ranks & achievements</h1><p class="muted">${(DB.xp||0).toLocaleString()} XP earned · ${m} cards mastered · ${Object.keys(DB.ach).length}/${ACH.length} achievements</p>
   <h2>Ranks</h2><div class="card ladder">${RANKS.slice(1).map(([n,t],k)=>{const i=k+1;return `<div class="rung ${i===r?'cur':i<r?'done':''}">${rankBadge(i,36)}<div style="flex:1"><b>${n}</b><div class="muted sm">${i===1?'Complete your first study session':`Master ${t.toLocaleString()} cards`}</div></div>${i===r?'<span class="pill">Current</span>':i<r?'<span class="muted sm">✓</span>':`<span class="muted sm">${Math.max(0,t-m)} to go</span>`}</div>`}).join('')}</div>
   <h2>Achievements</h2><div class="grid">${ACH.map(([id,n,d])=>{const t=DB.ach[id];return `<div class="card achcard ${t?'got':''}"><span class="achic">${icon(t?'check':'clock',26)}</span><div><b>${n}</b><div class="muted sm">${d}</div>${t?`<div class="sm" style="color:var(--ok)">Unlocked ${new Date(t).toLocaleDateString()}</div>`:''}</div></div>`}).join('')}</div>
+  <h2>Environments</h2><p class="muted" style="margin-top:-6px">Backgrounds for the Midnight theme. Each rank unlocks a new one.</p>${envPicker()}
   <h2>How XP works</h2><div class="card sm"><p style="margin-top:0">+15 XP for a correct answer on the first try (+10 if you missed it in the last 10 minutes) · +25 when a card becomes mastered · +${MISSION.dailyXP} for the daily mission · +${MISSION.weeklyXP} for the weekly challenge · +50 for each achievement.</p><p class="muted" style="margin-bottom:0">Flipping through cards without answering earns nothing, so XP tracks what you actually remember.</p></div>`;
 }
 /* ========== folder ========== */
@@ -780,7 +828,7 @@ $('#globalSearch').addEventListener('input',e=>{clearTimeout(searchT);const v=e.
 /* ========== set page ========== */
 function viewSet(s){
   const p=progress(s),due=dueCards(s).length,f=DB.folders.find(f=>f.id===s.folder);
-  const modes=[['flash','cards','Flashcards','Flip & review'],['learn','target','Learn','Adaptive rounds'],['write','pencil','Write','Type the answers'],['spell','sound','Spell','Listen & type'],['test','test','Test','Practice exam'],['match','match','Match','Beat the clock'],['gravity','comet','Gravity','Arcade typing'],['review','clock','Review',due?`${due} due now`:'Spaced repetition']];
+  const modes=[['flash','cards','Flashcards','Flip & review'],['learn','target','Learn','Adaptive rounds'],['write','pencil','Write','Type the answers'],['spell','sound','Spell','Listen & type'],['test','test','Test','Practice exam'],['match','match','Match','Beat the clock'],['gravity','comet','Gravity','Arcade typing'],['review','clock','Review',due?`${due} due now`:'Spaced repetition'],['sim','bolt','Simulator','Timed exam']];
   const cl=isClosed(s),pct=s.cards.length?Math.round(p.master/s.cards.length*100):0,unres=s.cards.filter(isUnresolved).length,SW=STAT_WORD();
   const contHref=due?`#/review/${s.id}`:cl?`#/test/${s.id}`:`#/learn/${s.id}`;
   app.innerHTML=`${overdueHtml([s])}
@@ -789,6 +837,7 @@ function viewSet(s){
     <div class="muted sm">${DB.settings.vocab?`${cl?'Closed case':'Active investigation'} · Case #${caseNo(s)} · Classification: ${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a>`:'unfiled'}`:`${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}created ${new Date(s.created).toLocaleDateString()}`}</div>
     <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}
     <div class="casestats"><div><b>${s.cards.length}</b><small>${V('evidence items','terms')}</small></div><div><b>${pct}%</b><small>${V('evidence verified','mastered')}</small></div><div><b>${unres}</b><small>${V('unresolved','to fix')}</small></div><div><b>${due}</b><small>due now</small></div></div>
+    ${(()=>{const pl=examPlan(s);return `<div class="planner noprint">${icon('cal',18)}<label for="examD">Exam date</label><input type="date" id="examD" value="${s.exam||''}" min="${ymd()}">${pl?`<span>${pl.days===0?'Exam today':`${pl.days} day${pl.days>1?'s':''} left`} · ${pl.left?`master <b>${pl.per}</b> a day · today <b>${pl.done}/${pl.per}</b>`:'everything mastered'}</span>`:'<span class="muted">Set a date and QuizCraft splits the work into daily targets.</span>'}</div>`})()}
     <div class="row noprint"><a class="btn primary big" href="${contHref}">${due?V('Review overdue evidence','Review due cards'):cl?V('Re-examine the case','Take a test'):V('Continue investigation','Continue studying')}</a><a class="btn" href="#/edit/${s.id}">✏️ Edit</a><button class="btn" id="shareBtn">🔗 Share</button><button class="btn" id="moreBtn">⋯</button></div>
   </div>
   <div class="modes noprint">${modes.map(m=>`<a class="mode" href="#/${m[0]}/${s.id}">${icon(m[1])}${m[2]}<small>${m[3]}</small></a>`).join('')}</div>
@@ -804,6 +853,7 @@ function viewSet(s){
     $('#terms').innerHTML=cs.length?cs.map(c=>`<div class="t"><div class="tt">${nl(c.term)}${tag[status(c)]}</div><div>${dvHtml(c.def,vre,c.term)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div class="row noprint" style="gap:0">${sayBtn(c.term,s.termLang)}${starBtn(s,c)}</div></div>`).join(''):'<div class="empty muted">No terms match this filter.</div>';
   };
   $('#filt').onchange=renderTerms;renderTerms();bindOverdue();
+  $('#examD').onchange=e=>{s.exam=e.target.value||'';save();viewSet(s);toast(s.exam?'Exam date saved':'Exam date cleared')};
   $('#resetP').onclick=async()=>{if(await confirmBox('Reset all progress for this set? Stars are kept.','Reset')){s.cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));save();viewSet(s)}};
   $('#shareBtn').onclick=async()=>{
     const link=await shareLink(s);
@@ -999,7 +1049,7 @@ function viewFlash(s,review){
 }
 
 /* ========== shared question renderer ========== */
-function presentQ(stage,s,c,q,type,next,label=''){
+function presentQ(stage,s,c,q,type,next,label='',onAnswer){
   let st='ask',finalOk=false,undo=null,opts=null;
   if(type==='mc'){opts=mcOptions(s,c,q);if(opts.length<2)type='written'}
   stage.innerHTML=`<div class="card qcard">
@@ -1015,7 +1065,7 @@ function presentQ(stage,s,c,q,type,next,label=''){
   if(DB.settings.autoSpeak)speak(q.prompt,langOf(s,q.pSide));
   const go=()=>{if(st==='gone')return;st='gone';clearTimeout(qTimer);next(finalOk)};
   function answer(ok,{close=false,given=''}={}){
-    if(st!=='ask')return;st='fb';finalOk=ok;undo=recordUndoable(c,ok);touch(s);
+    if(st!=='ask')return;st='fb';finalOk=ok;undo=recordUndoable(c,ok);touch(s);if(onAnswer)onAnswer(ok);
     $('.dk',stage)?.remove();
     if(inp)inp.readOnly=true;
     if(opts)$$('.choice',stage).forEach(b=>{if(opts[+b.dataset.k]===q.answer)b.classList.add('ok');b.disabled=true});
@@ -1037,6 +1087,7 @@ function presentQ(stage,s,c,q,type,next,label=''){
     if(st==='fb'&&e.key==='Enter'){e.preventDefault();go();return}
     if(st==='ask'&&opts&&/^[1-9]$/.test(e.key)&&!isTyping(e)){$$('.choice',stage)[+e.key-1]?.click()}
   });
+  return{timeout:()=>answer(false),get state(){return st}};
 }
 
 /* ========== learn ========== */
@@ -1327,6 +1378,125 @@ function viewGravity(s){
 }
 
 
+
+/* ========== environments ========== */
+const ENVS=[['city','Midnight City','The skyline, searchlights and rain',1],['rooftop','The Rooftop','A ledge high above the city, with a blinking antenna',2],['cave','The Cave','Stalactites, dripping water and glowing screens',3],['library','Manor Library','Tall shelves, a lamp and the storm outside the window',4]];
+const envUnlocked=e=>{const r=ENVS.find(x=>x[0]===e);return r&&rankIndex()>=r[3]||e==='city'};
+function setEnv(e){if(!envUnlocked(e))return toast('Locked: reach '+RANKS[ENVS.find(x=>x[0]===e)[3]][0]+' to unlock');DB.settings.env=e;if(DB.settings.theme!=='midnight'){DB.settings.theme='midnight'}save();applyTheme();applyEnv();toast('Environment: '+ENVS.find(x=>x[0]===e)[1])}
+function envPicker(){return `<div class="envs">${ENVS.map(([id,n,d,r])=>{const u=envUnlocked(id),on=DB.settings.env===id;return `<button class="envc ${on?'on':''} ${u?'':'locked'}" data-env="${id}"><span class="envthumb env-${id}"></span><b>${n}</b><small>${u?d:'Unlocks at '+RANKS[r][0]}</small></button>`}).join('')}</div>`}
+function bindEnvPicker(root=document){$$('[data-env]',root).forEach(b=>b.onclick=()=>{setEnv(b.dataset.env);$$('[data-env]',root).forEach(x=>x.classList.toggle('on',x.dataset.env===DB.settings.env))})}
+function applyEnv(){
+  let e=DB.settings.env||'city';if(!envUnlocked(e))e='city';
+  const sc=$('#scene');sc.dataset.env=e;
+  if(e==='rooftop'&&!$('#envRoof').childNodes.length){
+    let v='';for(let x=0;x<1600;x+=Math.random()*60+30)v+=`<rect x="${x|0}" y="${(214+Math.random()*4)|0}" width="${(Math.random()*24+10)|0}" height="12" fill="#0a0d12"/>`;
+    $('#envRoof').innerHTML=`<svg class="envsvg" viewBox="0 0 1600 320" preserveAspectRatio="xMidYMax slice"><rect x="0" y="222" width="1600" height="98" fill="#05070a"/><rect x="0" y="218" width="1600" height="6" fill="#1b2230"/>${v}
+      <g fill="#05070a"><rect x="1190" y="70" width="140" height="100" rx="6"/><path d="M1180 72 L1260 26 L1340 72Z"/><rect x="1196" y="170" width="8" height="52"/><rect x="1316" y="170" width="8" height="52"/><path d="M1200 220 L1320 172 M1320 220 L1200 172" stroke="#05070a" stroke-width="5"/>
+      <rect x="296" y="40" width="5" height="182"/><path d="M270 120h58M280 90h38M286 64h26" stroke="#05070a" stroke-width="4"/><rect x="520" y="180" width="60" height="40"/><rect x="900" y="196" width="34" height="24"/></g>
+      <circle class="blink" cx="298.5" cy="36" r="5" fill="#ff3b3b"/></svg>`;
+  }
+  if(e==='cave'&&!$('#envCave').childNodes.length){
+    let top='M0 0 ',x=0;const tips=[];while(x<1600){const w=Math.random()*70+30,h=Math.random()*150+30;top+=`L${x|0} ${(Math.random()*20)|0} L${(x+w/2)|0} ${h|0} `;tips.push([x+w/2,h]);x+=w}
+    top+='L1600 0Z';
+    let floor='M0 320 ';for(let x2=0;x2<=1600;x2+=80)floor+=`L${x2} ${(250+Math.random()*30)|0} `;floor+='L1600 320Z';
+    const drips=sample(tips.filter(t=>t[1]>90),6).map((t,k)=>`<i class="drip" style="left:${(t[0]/16).toFixed(1)}%;top:calc(${(t[1]/320*100).toFixed(1)}% * .5);animation-delay:-${(k*1.3).toFixed(1)}s"></i>`).join('');
+    $('#envCave').innerHTML=`<svg class="envsvg top" viewBox="0 0 1600 320" preserveAspectRatio="xMidYMin slice"><path d="${top}" fill="#05070a"/></svg><svg class="envsvg" viewBox="0 0 1600 320" preserveAspectRatio="xMidYMax slice"><path d="${floor}" fill="#05070a"/></svg><div class="screens"><i></i><i class="big"></i><i></i></div>${drips}`;
+  }
+  if(e==='library'&&!$('#envLib').childNodes.length){
+    const shelf=side=>{let b='';const cols=['#3a1f1f','#1f3326','#2a2440','#3b2e1a','#1d2a3d','#402a1f','#2c2c2c'];for(let row=0;row<7;row++){let x=0;const y=row*130;while(x<380){const w=Math.random()*14+10,h=Math.random()*40+70;b+=`<rect x="${x|0}" y="${(y+110-h)|0}" width="${w|0}" height="${h|0}" fill="${pick(cols)}"/>`;x+=w+1}b+=`<rect x="0" y="${y+110}" width="400" height="14" fill="#140e0a"/>`}return `<svg class="shelf ${side}" viewBox="0 0 400 910" preserveAspectRatio="xMidYMax slice"><rect width="400" height="910" fill="#0d0907"/>${b}</svg>`};
+    $('#envLib').innerHTML=`<div class="libwin"><div class="libmoon"></div><div class="librain"></div></div>${shelf('l')}${shelf('r')}<div class="lamp"></div>`;
+  }
+}
+/* ========== ambience (generated in the browser, no audio files) ========== */
+const AMB={ctx:null,on:false};
+function ambStart(){
+  if(AMB.ctx){AMB.ctx.resume();AMB.on=true;ambVol();return}
+  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return toast('Your browser can’t play generated sound');
+  const ctx=new Ctx(),out=ctx.createGain();out.connect(ctx.destination);AMB.ctx=ctx;AMB.out=out;
+  const len=ctx.sampleRate*3,nb=ctx.createBuffer(1,len,ctx.sampleRate),d=nb.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+  const bb=ctx.createBuffer(1,len,ctx.sampleRate),bd=bb.getChannelData(0);let last=0;for(let i=0;i<len;i++){last=(last+.02*(Math.random()*2-1))/1.02;bd[i]=last*3.5}
+  AMB.noise=nb;AMB.brown=bb;
+  const src=b=>{const n=ctx.createBufferSource();n.buffer=b;n.loop=true;n.start();return n};
+  const filt=(type,f,q)=>{const x=ctx.createBiquadFilter();x.type=type;x.frequency.value=f;if(q)x.Q.value=q;return x};
+  AMB.rain=ctx.createGain();src(nb).connect(filt('highpass',1100)).connect(filt('lowpass',7500)).connect(AMB.rain).connect(out);
+  const rumble=ctx.createGain();rumble.gain.value=.35;src(bb).connect(filt('lowpass',400)).connect(rumble).connect(AMB.rain);
+  AMB.hum=ctx.createGain();[[55,.5],[110,.22],[165,.07]].forEach(([f,g])=>{const o=ctx.createOscillator();o.frequency.value=f;const gg=ctx.createGain();gg.gain.value=g;o.connect(gg).connect(AMB.hum);o.start()});
+  const hn=ctx.createGain();hn.gain.value=.25;src(nb).connect(filt('bandpass',2400,8)).connect(hn).connect(AMB.hum);AMB.hum.connect(out);
+  AMB.on=true;ambVol();
+}
+function ambStop(){if(AMB.ctx)AMB.ctx.suspend();AMB.on=false;ambBtn()}
+function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.rain.gain.setTargetAtTime(a.rain*.5,t,.3);AMB.hum.gain.setTargetAtTime(a.hum*.12,t,.3);ambBtn()}
+function thunder(){
+  if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;
+  const ctx=AMB.ctx,t=ctx.currentTime,v=DB.settings.amb.thunder;
+  const n=ctx.createBufferSource();n.buffer=AMB.brown;const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(900,t);f.frequency.exponentialRampToValueAtTime(90,t+3);
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*1.4,t+.08);g.gain.exponentialRampToValueAtTime(.001,t+4.5);
+  n.connect(f).connect(g).connect(AMB.out);n.start(t,Math.random()*2);n.stop(t+5);
+}
+window.onLightning=()=>setTimeout(thunder,600+Math.random()*1800);
+function ambBtn(){const b=$('#ambBtn');if(b){b.innerHTML=icon('head',20);b.classList.toggle('amb-on',AMB.on)}}
+function ambPanel(){
+  const p=$('#ambPanel');if(!p.hidden){p.hidden=true;return}
+  const a=DB.settings.amb;
+  p.innerHTML=`<div class="row between"><b>Ambience</b><button class="btn sm ${AMB.on?'':'primary'}" id="ambToggle">${AMB.on?'Pause':'Play'}</button></div>
+    ${[['rain','Rain'],['thunder','Thunder'],['hum','Computer hum']].map(([k,l])=>`<label class="opt"><span>${l}</span><input type="range" min="0" max="1" step="0.05" value="${a[k]}" data-amb="${k}"></label>`).join('')}
+    <p class="muted sm" style="margin:6px 0 0">Thunder follows the lightning in Midnight. All sound is generated live in your browser.</p>`;
+  p.hidden=false;
+  $('#ambToggle').onclick=()=>{AMB.on?ambStop():ambStart();ambPanel();ambPanel()};
+  $$('[data-amb]',p).forEach(r=>r.oninput=()=>{a[r.dataset.amb]=+r.value;save();ambVol();if(r.dataset.amb==='thunder'&&AMB.on)thunder()});
+}
+document.addEventListener('mousedown',e=>{const p=$('#ambPanel');if(!p.hidden&&!e.target.closest('#ambPanel,#ambBtn'))p.hidden=true});
+/* ========== training simulator ========== */
+function viewSim(s){
+  const cards=pool(s).filter(c=>c.term.trim()&&c.def.trim());
+  if(cards.length<2)return shell(s,'Simulator',{},emptyStudy(s));
+  shell(s,V('Training Simulator','Timed exam'),{},`<div id="stage"></div>`);
+  const stage=$('#stage'),key=s.id+':sim';let tmr=null;onCleanup(()=>clearInterval(tmr));
+  const STAGES=[{name:'Warm-up',type:'mc',sec:20},{name:'Pressure',type:'mc',sec:12},{name:'Interrogation',type:'written',sec:25}];
+  function intro(){
+    const best=DB.best[key];
+    stage.innerHTML=`<div class="card qcard" style="max-width:560px;margin:16px auto"><h2 style="margin-top:0">${V('Training Simulator','Timed exam')}</h2>
+      <p class="muted">Three stages that get harder: multiple choice with 20 seconds, then 12 seconds, then typed answers with 25 seconds. Fast answers and streaks score more. Running out of time counts as a miss.</p>
+      <label class="opt"><span>Questions <span class="muted sm">(max ${cards.length})</span></span><input type="number" id="simN" min="3" max="${cards.length}" value="${Math.min(15,cards.length)}" style="width:100px"></label>
+      ${best?`<p>Best score: <b>${best.toLocaleString()}</b></p>`:''}
+      <div class="row end"><button class="btn primary big" id="simGo">Start <kbd>Enter</kbd></button></div></div>`;
+    const go=()=>run(Math.max(3,Math.min(cards.length,parseInt($('#simN').value)||10)));
+    $('#simGo').onclick=go;setKeys(e=>{if(e.key==='Enter'&&!isTyping(e)){e.preventDefault();go()}});
+  }
+  function run(n){
+    const qs=sample(cards,n);let i=0,score=0,streak=0,bestStreak=0;const res=[];
+    const ask=()=>{
+      if(i>=qs.length)return results();
+      const st=STAGES[Math.min(2,Math.floor(i/(n/3)))],c=qs[i],q=qa(s,c);let left=st.sec,t0=performance.now(),answered=false;
+      stage.innerHTML=`<div class="simhud"><span>${st.name} · ${i+1}/${n}</span><span>Streak ×${(1+Math.min(streak,10)*.1).toFixed(1)}</span><span>Score <b id="simS">${score.toLocaleString()}</b></span></div><div class="simbar"><i id="simT"></i></div><div id="simQ"></div>`;
+      const ctl=presentQ($('#simQ'),s,c,q,st.type,()=>{i++;ask()},st.name,ok=>{
+        answered=true;clearInterval(tmr);const dt=(performance.now()-t0)/1000;
+        if(ok){streak++;bestStreak=Math.max(bestStreak,streak);const pts=Math.round((100+Math.max(0,st.sec-dt)*10)*(1+Math.min(streak-1,10)*.1));score+=pts}else streak=0;
+        res.push({c,q,ok,dt,stage:st.name});$('#simS').textContent=score.toLocaleString();
+      });
+      const bar=$('#simT');bar.style.transition='none';bar.style.width='100%';void bar.offsetWidth;bar.style.transition=`width ${st.sec}s linear`;bar.style.width='0%';
+      clearInterval(tmr);tmr=setInterval(()=>{left-=.25;if(left<=0&&!answered){clearInterval(tmr);ctl.timeout()}},250);
+    };
+    ask();
+    function results(){
+      clearInterval(tmr);setKeys(null);
+      const ok=res.filter(r=>r.ok).length,avg=res.reduce((a,r)=>a+r.dt,0)/res.length,best=DB.best[key]||0,rec=score>best;
+      if(rec){DB.best[key]=score;save()}if(ok/res.length>=.8||rec)celebrate();touch(s);queueProgress();
+      stage.innerHTML=`<div class="card score"><div class="ring" style="--p:${Math.round(ok/res.length*100)}">${Math.round(ok/res.length*100)}%</div><div><h2 style="margin:0 0 4px">${rec?'New best score':'Simulation complete'}: ${score.toLocaleString()}</h2><p style="margin:0 0 10px">${ok}/${res.length} correct · ${avg.toFixed(1)}s average · best streak ${bestStreak}</p><div class="row"><button class="btn primary" id="simAgain">Run again</button><a class="btn" href="#/detective">${V('Detective Mode','Weak spots')}</a></div></div></div>
+        <div class="casestats card" style="margin-top:14px">${STAGES.map(st=>{const r=res.filter(x=>x.stage===st.name);return `<div><b>${r.length?Math.round(r.filter(x=>x.ok).length/r.length*100):0}%</b><small>${st.name} (${r.length})</small></div>`}).join('')}<div><b>${avg.toFixed(1)}s</b><small>avg response</small></div></div>
+        ${res.some(r=>!r.ok)?`<h2>Missed</h2><div class="card terms" style="padding:0">${res.filter(r=>!r.ok).map(r=>`<div class="t"><div class="tt">${nl(r.q.prompt)}</div><div>${nl(r.q.answer)}</div><span class="muted sm">${r.stage}</span></div>`).join('')}</div>`:''}`;
+      $('#simAgain').onclick=intro;
+    }
+  }
+  intro();
+}
+/* ========== mission planner (exam dates) ========== */
+function examPlan(s){
+  if(!s.exam)return null;const days=Math.round((new Date(s.exam+'T00:00')-new Date(ymd()+'T00:00'))/DAY);if(days<0)return null;
+  const left=s.cards.filter(c=>status(c)!=='master').length,per=Math.ceil(left/Math.max(1,days)),today=ymd();
+  const done=s.cards.filter(c=>c.mAt&&ymd(new Date(c.mAt))===today).length;
+  return{days,left,per,done};
+}
 /* ========== detective mode ========== */
 function viewDetective(){
   const all=[];DB.sets.forEach(x=>x.cards.forEach(c=>all.push({c,s:x})));
@@ -1394,6 +1564,7 @@ function viewSettings(){
   app.innerHTML=`<h1>Settings</h1>
   <h2>Account & sync</h2>
   <div class="card"><div class="opt" style="border:0"><span>${user?`☁️ Signed in as <b>${esc(user.email)}</b> — your sets sync across devices`:sb?'Not signed in — your sets are only saved on this device':'Cloud sync is unavailable right now (are you offline?)'}</span>${sb?`<button class="btn sm ${user?'':'primary'}" id="acctBtn">${user?'Manage':'Sign in to sync'}</button>`:''}</div></div>
+  <h2>Environment</h2>${envPicker()}
   <h2>Preferences</h2>
   <div class="card">
     <label class="opt"><span>Theme</span><select id="sTheme"><option value="midnight">Midnight (city at night)</option><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match my device</option></select></label>
@@ -1412,7 +1583,7 @@ function viewSettings(){
   <div class="card kbd-list">
     <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick a multiple-choice answer</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
   </div>`;
-  if($('#acctBtn'))$('#acctBtn').onclick=authModal;
+  if($('#acctBtn'))$('#acctBtn').onclick=authModal;bindEnvPicker(app);
   $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
@@ -1589,12 +1760,12 @@ function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset
 mq.addEventListener?.('change',applyTheme);
 $('#themeBtn').onclick=()=>{const order=['midnight','light','dark'],cur=document.documentElement.dataset.theme;DB.settings.theme=order[(order.indexOf(cur)+1)%3];save();applyTheme();toast('Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark'})[DB.settings.theme])};
 buildCity();
-applyTheme();
+applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=ambPanel;
 route();
 setTimeout(checkProgress,1200);
 (()=>{ // parallax + lightning (midnight only)
   let pend=false;addEventListener('scroll',()=>{if(pend||document.documentElement.dataset.theme!=='midnight')return;pend=true;requestAnimationFrame(()=>{const y=Math.min(scrollY,1500);$('#cityFar').style.transform=`translateY(${y*-.015}px)`;$('#city').style.transform=`translateY(${y*-.05}px)`;pend=false})},{passive:true});
-  const strike=()=>{const sc=$('#scene');if(document.documentElement.dataset.theme==='midnight'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&document.visibilityState==='visible'){sc.classList.remove('strike');void sc.offsetWidth;sc.classList.add('strike');if(window.onLightning)onLightning()}setTimeout(strike,18000+Math.random()*30000)};
+  const strike=()=>{const sc=$('#scene');if(document.visibilityState==='visible'){if(document.documentElement.dataset.theme==='midnight'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sc.dataset.env!=='cave'){sc.classList.remove('strike');void sc.offsetWidth;sc.classList.add('strike')}if(window.onLightning)onLightning()}setTimeout(strike,18000+Math.random()*30000)};
   setTimeout(strike,9000);
 })();
 </script>

@@ -11,6 +11,18 @@ A free, open-source Quizlet-style flashcard app that runs in one HTML file. It n
 - Themes: Midnight (night city skyline with searchlights and rain), Light and Dark
 - Read-aloud in 18 languages, keyboard shortcuts, mobile layout
 
+## Night Detective features
+- **Command Center** dashboard: Nocturne City clock, daily briefing, Continue Training, weak spots, upcoming exams
+- **XP, ranks and achievements**: Recruit → Vigilante → Detective → Night Warden → Master Detective; XP only for correct answers and mastery
+- **Daily mission & weekly challenge**, **The Code** (daily line + reflection journal)
+- **Case Files** (detective vocabulary, case numbers, case-closed stamps, linked cases, detective vision)
+- **Training mode**: reveal, then rate 1–4 (Didn't know / Hard / Knew it / Easy) to schedule reviews
+- **Detective Mode**: weakness report and an "unresolved evidence" study session across all sets
+- **Training Simulator**: three-stage timed exam with streak scoring
+- **Mission planner**: set an exam date and get a daily mastery target
+- **Environments** (unlock by rank): Midnight City, The Rooftop, The Cave, Manor Library
+- **Ambience**: rain, thunder and computer hum generated live with the Web Audio API
+
 ## Cloud sync
 Click **☁️ Sign in** to create an account. Your sets, progress, folders and settings then sync across all your devices through Supabase (free plan). The app saves to the browser first, so it keeps working offline and uploads when you reconnect. If the same set is changed on two devices, the newer change wins.
 
