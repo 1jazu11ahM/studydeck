@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>StudyDeck — free flashcards & study modes</title>
+<title>QuizCraft — flashcards & study modes</title>
 <meta name="description" content="Free, open flashcard app: flashcards, learn, write, spell, test, match and gravity.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2220%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%234255ff%22/><rect x=%2222%22 y=%2230%22 width=%2270%22 height=%2255%22 rx=%2210%22 fill=%22%23ffcd1f%22/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,6 +162,42 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .gmsg .okc{font-size:24px;font-weight:700;color:#7fffc8;margin:8px 0 14px}
 .shake{animation:shake .35s}
 /* modal & toast */
+
+[data-theme=midnight]{color-scheme:dark;--bg:#0b0e14;--card:#151a23;--text:#ece8dc;--on-ink:#0b0e14;--muted:#8d95a3;--line:#262d3a;--accent:#f2c230;--accent-2:#ffd75a;--accent-soft:#2b2615;--ok:#4ccf8f;--ok-soft:#13302a;--bad:#ff6363;--bad-soft:#3a1c22;--warn:#f2c230;--rule:#1d2431;--margin:#9c7a1c;--hl:#f2c230;--shadow:0 1px 2px rgba(0,0,0,.4),0 14px 30px -16px rgba(0,0,0,.8)}
+[data-theme=midnight] body{background:transparent}
+[data-theme=midnight] .top{background:rgba(17,21,29,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+[data-theme=midnight] .btn.primary{background:var(--accent);border-color:var(--accent);color:#0b0e14}
+[data-theme=midnight] .btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:#0b0e14}
+[data-theme=midnight] .prog i{background:var(--accent)}
+[data-theme=midnight] .ftxt{color:#f3efe2}
+[data-theme=midnight] .st-learn{background:#3a2f0e;color:#f2c230}
+#scene{display:none}
+[data-theme=midnight] #scene{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 120% 70% at 50% 110%,#1d2638 0%,#0f131c 45%,#07090d 100%)}
+.moon{position:absolute;top:17vh;right:3vw;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fbf4dc,#d8cda6 58%,#a39874);box-shadow:0 0 90px 24px rgba(251,244,220,.10);opacity:.8}
+.clouds{position:absolute;top:4vh;left:-60%;width:220%;height:40vh;opacity:.55;background:radial-gradient(ellipse 18% 22% at 20% 40%,rgba(120,135,160,.18),transparent 70%),radial-gradient(ellipse 22% 18% at 48% 30%,rgba(120,135,160,.14),transparent 70%),radial-gradient(ellipse 16% 20% at 75% 50%,rgba(120,135,160,.16),transparent 70%);animation:drift 140s linear infinite}
+.beam{position:absolute;bottom:-6vh;width:22vw;min-width:180px;height:115vh;background:linear-gradient(to top,rgba(242,194,48,.22),rgba(242,194,48,.06) 55%,rgba(242,194,48,0) 90%);clip-path:polygon(47% 100%,53% 100%,100% 0,0 0);transform-origin:50% 100%;filter:blur(3px)}
+.b1{left:18%;animation:sweep 16s ease-in-out infinite alternate}
+.b2{left:60%;animation:sweep 21s ease-in-out -8s infinite alternate-reverse}
+.city{position:absolute;left:0;right:0;bottom:0;width:100%;height:42vh;min-height:220px}
+.city .w{animation:flicker 7s steps(1) infinite}
+.rain{position:absolute;inset:-20% -20%;background-image:repeating-linear-gradient(104deg,transparent 0 22px,rgba(190,205,230,.06) 22px 23px);animation:rain .55s linear infinite}
+@keyframes sweep{from{transform:rotate(-24deg)}to{transform:rotate(20deg)}}
+@keyframes drift{to{transform:translateX(45%)}}
+@keyframes rain{to{transform:translate(-14px,62px)}}
+@keyframes flicker{0%,100%{opacity:.75}48%{opacity:.75}50%{opacity:.15}52%{opacity:.75}}
+/* motion */
+.enter{animation:pagein .28s ease-out}
+@keyframes pagein{from{opacity:0;transform:translateY(8px)}}
+.flash.in-next{animation:cardin-r .32s cubic-bezier(.2,.8,.2,1)}
+.flash.in-prev{animation:cardin-l .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardin-r{from{opacity:0;transform:translateX(46px) rotate(1.5deg)}}
+@keyframes cardin-l{from{opacity:0;transform:translateX(-46px) rotate(-1.5deg)}}
+.qcard.pop{animation:pop .45s ease-out}
+@keyframes pop{40%{transform:scale(1.012);box-shadow:0 0 0 3px var(--ok),var(--shadow)}}
+.qcard.miss{animation:shake .35s}
+.mode .ic{transition:transform .2s}.mode:hover .ic{transform:translateY(-2px) scale(1.08)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70}
+@media (prefers-reduced-motion:reduce){#scene *,.enter,.flash,.qcard{animation:none!important;transition:none!important}}
 #modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
 #modal[hidden]{display:none}
 .modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
@@ -202,8 +238,9 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 </style>
 </head>
 <body>
+<div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="rain"></div></div>
 <header class="top">
-  <a href="#/" class="logo"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/></svg></span><span class="hide-sm">StudyDeck</span></a>
+  <a href="#/" class="logo"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="14" height="11" rx="1.5"/><path d="M7 4.5h12.5A1.5 1.5 0 0 1 21 6v9.5"/></svg></span><span class="hide-sm">QuizCraft</span></a>
   <input id="globalSearch" type="search" placeholder="Search your sets and terms…" aria-label="Search">
   <nav>
     <a href="#/new" class="btn primary sm">+ Create</a>
@@ -239,7 +276,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'system',autoSpeak:false,rate:1},streak:{last:'',count:0},best:{}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1},streak:{last:'',count:0},best:{}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -252,6 +289,7 @@ function load(){
   const d=blank();d.sets.push(sampleSet());return d;
 }
 let DB=load();
+if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
 function saveNow(){clearTimeout(saveT);try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast('Could not save — browser storage may be full. Export a backup in Settings.')}if(typeof user!=='undefined'&&user&&!inSync)scheduleSync()}
@@ -407,10 +445,11 @@ function route(){
   if(raw.startsWith('share='))return viewShare(raw.slice(6));
   const [v,id]=raw.replace(/^\//,'').split('/');
   scrollTo(0,0);
+  app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');
   if(v!=='search')$('#globalSearch').value='';
   const needSet={set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
-  if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · StudyDeck';return needSet[v](s)}
-  document.title='StudyDeck';
+  if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · QuizCraft';return needSet[v](s)}
+  document.title='QuizCraft';
   switch(v||''){
     case '':return viewHome();
     case 'new':return viewEdit(null,id);
@@ -522,7 +561,7 @@ function viewSet(s){
       if(m==='copy'){closeModal(true);copyText(text)}
       if(m==='txt'){download(fileSafe(s.title)+'.txt',text);closeModal(true)}
       if(m==='csv'){download(fileSafe(s.title)+'.csv','﻿Term,Definition\n'+s.cards.map(c=>q(c.term)+','+q(c.def)).join('\n'),'text/csv');closeModal(true)}
-      if(m==='json'){download(fileSafe(s.title)+'.studydeck.json',JSON.stringify({studydeck:1,sets:[s]},null,1),'application/json');closeModal(true)}
+      if(m==='json'){download(fileSafe(s.title)+'.quizcraft.json',JSON.stringify({studydeck:1,sets:[s]},null,1),'application/json');closeModal(true)}
       if(m==='dup'){const d=fixSet(structuredClone(s));d.id=uid();d.title=s.title+' (copy)';d.created=d.updated=Date.now();d.cards.forEach(c=>c.id=uid());DB.sets.push(d);save();closeModal(true);location.hash='#/set/'+d.id;toast('Set duplicated')}
       if(m==='print'){closeModal(true);$('#filt').value='all';renderTerms();setTimeout(()=>print(),100)}
       if(m==='folder'){modal(`<h3>Move to folder</h3><select id="mvF"><option value="">No folder</option>${DB.folders.map(f=>`<option value="${f.id}" ${s.folder===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Move</button></div>`);$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{s.folder=$('#mvF').value;save();closeModal(true);viewSet(s)}}
@@ -621,7 +660,7 @@ function viewFlash(s,review){
     return;
   }
   const track=review||s.opts.track;
-  let deck=[...base],i=0,flipped=false,shuf=false,known=0,still=[],auto=null;
+  let deck=[...base],i=0,flipped=false,shuf=false,known=0,still=[],auto=null,dir='';
   const front=s.opts.front==='def'?'def':'term',back=front==='term'?'def':'term';
   shell(s,review?'Review · spaced repetition':'Flashcards',{front:true},`
     <div class="flash-wrap" id="fwrap"></div>
@@ -638,7 +677,7 @@ function viewFlash(s,review){
   function render(){
     if(i>=deck.length)return done();
     const c=deck[i];flipped=false;
-    fwrap.innerHTML=`<div class="flash" id="fc"><div class="face front">${face(c,front)}</div><div class="face back">${face(c,back)}</div></div>`;
+    fwrap.innerHTML=`<div class="flash ${dir?'in-'+dir:''}" id="fc"><div class="face front">${face(c,front)}</div><div class="face back">${face(c,back)}</div></div>`;
     $('#fc').onclick=e=>{if(!e.target.closest('button'))flip()};
     ctl.innerHTML=track?`<button class="btn badb" id="bStill">✗ Still learning</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn okb" id="bKnow">✓ Know</button>`:`<button class="btn" id="bPrev" ${i?'':'disabled'}>← Prev</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn" id="bNext">Next →</button>`;
     if(track){$('#bStill').onclick=()=>mark(false);$('#bKnow').onclick=()=>mark(true)}else{$('#bPrev').onclick=prev;$('#bNext').onclick=next}
@@ -646,15 +685,16 @@ function viewFlash(s,review){
     if(DB.settings.autoSpeak)speak(sideText(c,front),langOf(s,front));
   }
   function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;fc.classList.toggle('flipped',flipped);if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
-  const next=()=>{if(i<deck.length){i++;render()}};
-  const prev=()=>{if(i>0){i--;render()}};
-  function mark(ok){if(i>=deck.length)return;const c=deck[i];record(c,ok);touch(s);if(ok)known++;else still.push(c);i++;render()}
+  const next=()=>{if(i<deck.length){i++;dir='next';render()}};
+  const prev=()=>{if(i>0){i--;dir='prev';render()}};
+  function mark(ok){if(i>=deck.length)return;const c=deck[i];record(c,ok);touch(s);if(ok)known++;else still.push(c);i++;dir='next';render()}
   function done(){
     stopAuto();$('#fprog').style.width='100%';ctl.innerHTML='';
     if(track){
       fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">${still.length?'💪':'🎉'}</div><h2>${still.length?'Keep it up!':'You know them all!'}</h2>
         <p><b style="color:var(--ok)">${known} know</b> · <b style="color:var(--bad)">${still.length} still learning</b></p>
         <div class="row" style="justify-content:center">${still.length?`<button class="btn primary" id="dAgain">Keep reviewing ${still.length} terms</button>`:''}<button class="btn" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a></div></div>`;
+      if(!still.length)celebrate();
       if(still.length)$('#dAgain').onclick=()=>{deck=shuf?shuffle(still):still;still=[];known=0;i=0;render()};
     }else{
       fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">🎉</div><h2>You reviewed all ${deck.length} cards</h2><div class="row" style="justify-content:center"><button class="btn primary" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;
@@ -697,6 +737,7 @@ function presentQ(stage,s,c,q,type,next,label=''){
     $('.dk',stage)?.remove();
     if(inp)inp.readOnly=true;
     if(opts)$$('.choice',stage).forEach(b=>{if(opts[+b.dataset.k]===q.answer)b.classList.add('ok');b.disabled=true});
+    $('.qcard',stage).classList.add(ok?'pop':'miss');
     if(ok&&!close){fb.innerHTML=`<div class="fbx ok">✓ ${pick(PRAISE)}</div>`;qTimer=setTimeout(go,950);return}
     fb.innerHTML=`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct — just check your spelling':given?'✗ Not quite, you’re still learning!':'Let’s look at the answer'}</div>
       ${given?`<div class="ans"><small>You said</small><div class="${ok?'okc':'strike'}">${nl(given)}</div></div>`:''}
@@ -749,6 +790,7 @@ function viewLearn(s){
     prog();
     stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏆</div><h2>You’ve mastered all ${cards.length} terms!</h2><p class="muted">Lock it in with a practice test, or come back for spaced review.</p>
       <div class="row" style="justify-content:center"><button class="btn primary" id="again">Study again</button><a class="btn" href="#/test/${s.id}">Take a test</a><a class="btn" href="#/match/${s.id}">Play Match</a></div></div>`;
+    celebrate();
     $('#again').onclick=()=>{cards.forEach(c=>lvl.set(c.id,0));order=shuffle(cards);roundN=0;nextRound()};
     setKeys(null);
   }
@@ -770,7 +812,7 @@ function viewWrite(s){
   }
   function roundEnd(){
     const pct=Math.round(right/roundSize*100);if(firstScore===null)firstScore=pct;
-    if(!missed.length){stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏁</div><h2>All ${cards.length} terms answered correctly!</h2><p class="muted">First-round score: <b>${firstScore}%</b> · finished in ${round} round${round>1?'s':''}</p><div class="row" style="justify-content:center"><button class="btn primary" id="again">Start over</button><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;$('#again').onclick=()=>route();setKeys(null);return}
+    if(!missed.length){celebrate();stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🏁</div><h2>All ${cards.length} terms answered correctly!</h2><p class="muted">First-round score: <b>${firstScore}%</b> · finished in ${round} round${round>1?'s':''}</p><div class="row" style="justify-content:center"><button class="btn primary" id="again">Start over</button><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;$('#again').onclick=()=>route();setKeys(null);return}
     stage.innerHTML=`<div class="card qcard center"><h2>Round ${round}: ${pct}%</h2><p>${right} correct · ${missed.length} to review</p><button class="btn primary big" id="nr">Retry the ${missed.length} missed <kbd>Enter</kbd></button></div>`;
     const go=()=>{queue=shuffle(missed);missed=[];right=0;round++;roundSize=queue.length;ask()};
     $('#nr').onclick=go;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();go()}});
@@ -814,7 +856,7 @@ function viewSpell(s){
     };
     setKeys(e=>{if(st==='fb'&&e.key==='Enter'){e.preventDefault();cont()}});
   }
-  function finish(){stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🐝</div><h2>Spelling complete!</h2><p>${firstTry} / ${total} spelled right on the first try (${Math.round(firstTry/total*100)}%)</p><button class="btn primary" id="again">Start over</button></div>`;$('#again').onclick=()=>route();setKeys(null)}
+  function finish(){celebrate();stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">🐝</div><h2>Spelling complete!</h2><p>${firstTry} / ${total} spelled right on the first try (${Math.round(firstTry/total*100)}%)</p><button class="btn primary" id="again">Start over</button></div>`;$('#again').onclick=()=>route();setKeys(null)}
   ask();
 }
 
@@ -889,7 +931,7 @@ function viewTest(s){
       el.insertAdjacentHTML('beforeend',`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct':'✗ Correct answer: '+corr}</div>`);
     });
     touch(s);
-    const pct=Math.round(right/total*100);
+    const pct=Math.round(right/total*100);if(pct>=80)celebrate();
     $('#scoreBox').innerHTML=`<div class="card score"><div class="ring" style="--p:${pct}">${pct}%</div><div><h2 style="margin:0 0 4px">${pct>=90?'Outstanding! 🎉':pct>=70?'Nice work! 👏':pct>=50?'Getting there 💪':'Keep practicing 📚'}</h2><p style="margin:0 0 12px"><b style="color:var(--ok)">${right} correct</b> · <b style="color:var(--bad)">${total-right} incorrect</b></p><div class="row"><button class="btn primary" id="retake">New test, same settings</button><button class="btn" id="reset">Change settings</button><a class="btn" href="#/learn/${s.id}">Study with Learn</a></div></div></div>`;
     $('#submitT').remove();
     $('#retake').onclick=build;$('#reset').onclick=setup;
@@ -932,7 +974,7 @@ function viewMatch(s){
   }
   function end(t){
     clearInterval(timer);touch(s);
-    const best=DB.best[key],rec=!best||t<best;if(rec){DB.best[key]=t;save()}
+    const best=DB.best[key],rec=!best||t<best;if(rec){DB.best[key]=t;save();celebrate()}
     stage.innerHTML=`<div class="card qcard center"><div style="font-size:54px">${rec?'🏆':'⏱️'}</div><h2>${rec?'New personal record!':'Nice job!'}</h2><p style="font-size:34px;font-weight:800;margin:6px 0">${fmt(t)}</p><p class="muted">${rec&&best?`Previous best: ${fmt(best)}`:best?`Your best: ${fmt(best)}`:''}</p><button class="btn primary big" id="again">Play again <kbd>Enter</kbd></button></div>`;
     $('#again').onclick=play;setKeys(e=>{if(e.key==='Enter'){e.preventDefault();play()}});
   }
@@ -1010,7 +1052,7 @@ function viewImport(){
     <div id="bulkHost">${bulkUI()}</div>
     <div class="row between"><label class="btn sm">📄 Load a .txt / .csv / .tsv file<input type="file" id="iFile" accept=".txt,.csv,.tsv,text/plain" hidden></label><button class="btn primary" id="iGo">Create set</button></div>
   </div>
-  <div class="card col" style="margin-top:16px"><h3 style="margin:0">🔗 Open a shared link</h3><div class="row"><input id="iLink" placeholder="Paste a StudyDeck share link" style="flex:1"><button class="btn" id="iLinkGo">Open</button></div></div>
+  <div class="card col" style="margin-top:16px"><h3 style="margin:0">🔗 Open a shared link</h3><div class="row"><input id="iLink" placeholder="Paste a QuizCraft share link" style="flex:1"><button class="btn" id="iLinkGo">Open</button></div></div>
   <div class="card col" style="margin-top:16px"><h3 style="margin:0">💾 Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
   const b=bindBulk($('#bulkHost'));
   $('#iFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const t=await f.text();$('#bText').value=t;if(/\.csv$/i.test(f.name))$('input[name=tsep][value=comma]').checked=true;if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.\w+$/,'');b.upd()};
@@ -1049,7 +1091,7 @@ function viewSettings(){
   <div class="card"><div class="opt" style="border:0"><span>${user?`☁️ Signed in as <b>${esc(user.email)}</b> — your sets sync across devices`:sb?'Not signed in — your sets are only saved on this device':'Cloud sync is unavailable right now (are you offline?)'}</span>${sb?`<button class="btn sm ${user?'':'primary'}" id="acctBtn">${user?'Manage':'Sign in to sync'}</button>`:''}</div></div>
   <h2>Preferences</h2>
   <div class="card">
-    <label class="opt"><span>Theme</span><select id="sTheme"><option value="system">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label class="opt"><span>Theme</span><select id="sTheme"><option value="midnight">Midnight (city at night)</option><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match my device</option></select></label>
     <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
     <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:180px"></label>
     <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">🔊 Play</button></div>
@@ -1068,7 +1110,7 @@ function viewSettings(){
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
   $('#sRate').oninput=e=>{DB.settings.rate=+e.target.value;$('#sRateV').textContent=DB.settings.rate+'×';save()};
-  $('#sExport').onclick=()=>download(`studydeck-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');
+  $('#sExport').onclick=()=>download(`quizcraft-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');
   $('#sImport').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
   $('#sWipe').onclick=async()=>{if(await confirmBox(`Delete <b>all</b> sets, folders and progress from this browser${user?' <b>and your cloud account</b>':''}? Export a backup first if you might want them.`,'Delete everything')){DB=blank();saveNow();location.hash='#/';route();toast('All data deleted')}};
 }
@@ -1206,11 +1248,35 @@ document.addEventListener('visibilitychange',()=>{if(!user)return;if(document.vi
 addEventListener('online',()=>{if(user)sync()});
 addEventListener('offline',()=>{if(user)setSync('offline')});
 
+
+/* ========== midnight skyline & celebration ========== */
+function buildCity(){
+  const svg=$('#city');if(!svg||svg.childNodes.length)return;
+  let x=0,out='',win='';const rnd=(a,b)=>a+Math.random()*(b-a);
+  const layer=(fill,minH,maxH,winP)=>{x=-20;while(x<1620){const w=rnd(36,110),h=rnd(minH,maxH),y=420-h;out+=`<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" fill="${fill}"/>`;
+    if(Math.random()<.3)out+=`<path d="M${(x+w*.2).toFixed(0)} ${y.toFixed(0)}L${(x+w/2).toFixed(0)} ${(y-rnd(20,60)).toFixed(0)}L${(x+w*.8).toFixed(0)} ${y.toFixed(0)}Z" fill="${fill}"/>`;
+    if(winP)for(let wy=y+12;wy<410;wy+=16)for(let wx=x+8;wx<x+w-10;wx+=13)if(Math.random()<winP)win+=`<rect class="${Math.random()<.08?'w':''}" x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="5" height="7" fill="#f2c230" opacity="${rnd(.35,.8).toFixed(2)}" style="animation-delay:-${rnd(0,7).toFixed(1)}s"/>`;
+    x+=w+rnd(0,6)}};
+  layer('#111723',140,330,0);layer('#06080c',60,250,.07);
+  svg.innerHTML=out+win;
+}
+function celebrate(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const c=document.createElement('canvas');c.id='fx';c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;document.body.appendChild(c);
+  const x=c.getContext('2d'),dpr=devicePixelRatio,mid=document.documentElement.dataset.theme==='midnight';
+  const cols=mid?['#f2c230','#ffe9a3','#ffffff','#8d95a3']:['#2449c9','#ffe14d','#14895f','#d93f45','#18263a'];
+  const ps=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*6+4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:pick(cols)}));
+  const t0=performance.now();
+  (function f(t){const k=(t-t0)/1000;x.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{p.vy+=.38;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x*dpr,p.y*dpr);x.rotate(p.r);x.globalAlpha=Math.max(0,1-k/2.4);x.fillStyle=p.c;x.fillRect(-p.s*dpr/2,-p.s*dpr/4,p.s*dpr,p.s*dpr/2);x.restore()});
+    if(k<2.4)requestAnimationFrame(f);else c.remove()})(t0);
+}
 /* ========== theme & boot ========== */
 const mq=matchMedia('(prefers-color-scheme: dark)');
-function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t}
+function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t;$('#themeBtn').title='Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark',system:'Match device'})[t]}
 mq.addEventListener?.('change',applyTheme);
-$('#themeBtn').onclick=()=>{DB.settings.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';save();applyTheme()};
+$('#themeBtn').onclick=()=>{const order=['midnight','light','dark'],cur=document.documentElement.dataset.theme;DB.settings.theme=order[(order.indexOf(cur)+1)%3];save();applyTheme();toast('Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark'})[DB.settings.theme])};
+buildCity();
 applyTheme();
 route();
 </script>

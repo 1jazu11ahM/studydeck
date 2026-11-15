@@ -1,4 +1,4 @@
-# StudyDeck
+# QuizCraft
 
 A free, open-source Quizlet-style flashcard app that runs in one HTML file. It needs no server, database or account.
 
@@ -8,7 +8,8 @@ A free, open-source Quizlet-style flashcard app that runs in one HTML file. It n
 - Modes: Flashcards (flip, shuffle, autoplay, track progress), Learn (adaptive rounds), Write, Spell (text-to-speech), Test (true/false, multiple choice, matching, written), Match (timed game), Gravity (arcade game), Review (spaced repetition)
 - Progress tracking (not studied / learning / mastered), day streak, best scores
 - Share links (the set lives inside the URL), export to TXT / CSV / JSON, full backup & restore
-- Read-aloud in 18 languages, dark mode, keyboard shortcuts, mobile layout
+- Themes: Midnight (night city skyline with searchlights and rain), Light and Dark
+- Read-aloud in 18 languages, keyboard shortcuts, mobile layout
 
 ## Cloud sync
 Click **☁️ Sign in** to create an account. Your sets, progress, folders and settings then sync across all your devices through Supabase (free plan). The app saves to the browser first, so it keeps working offline and uploads when you reconnect. If the same set is changed on two devices, the newer change wins.
