@@ -11,7 +11,10 @@ A free, open-source Quizlet-style flashcard app that runs in one HTML file. It n
 - Themes: Midnight (night city skyline with searchlights and rain), Light and Dark
 - Read-aloud in 18 languages, keyboard shortcuts, mobile layout
 
-## Night Detective features
+## Getting started
+New visitors get a short guided tour and two starter sets (IT: OSI Model & Common Ports, Nursing: Vital Signs & Abbreviations). Replay the tour or re-add the starter sets from Settings → Help.
+
+## Features
 - **Command Center** dashboard: Nocturne City clock, daily briefing, Continue Training, weak spots, upcoming exams
 - **XP, ranks and achievements**: Recruit → Vigilante → Detective → Night Warden → Master Detective; XP only for correct answers and mastery
 - **Daily mission & weekly challenge**, **The Code** (daily line + reflection journal)

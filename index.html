@@ -377,6 +377,14 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 .quote .code-line{margin:4px 0 0}
 @media (max-width:760px){.dgrid{grid-template-columns:minmax(0,1fr)}.go{padding:18px}.arow .btn{padding:6px 10px}.quote .code-line{font-size:22px!important}}
 .dsec{min-width:0}
+#tour{display:none;position:fixed;inset:0;z-index:80}
+#tour.on{display:block}
+.tour-hole{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(5,7,12,.72);outline:2px solid var(--accent);outline-offset:0;transition:all .35s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.tour-card{position:fixed;width:min(340px,calc(100vw - 24px));padding:18px;border:2px solid var(--accent);transition:top .35s,left .35s;z-index:81}
+.tour-card h3{margin:2px 0 6px}.tour-card p{margin:0 0 14px;color:var(--muted)}
+.tour-n{font-size:12px;font-weight:700;color:var(--accent)}
+[data-theme=midnight] .tour-card h3{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-size:24px;letter-spacing:.02em}
+@media (prefers-reduced-motion:reduce){.tour-hole,.tour-card{transition:none}}
 #modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
 #modal[hidden]{display:none}
 .modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
@@ -475,13 +483,18 @@ function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
-  const s=newSet({id:'sample-osi',title:'Sample: OSI Model & Common Ports',desc:'An example set to try every study mode. Edit or delete it anytime.'});
+  const s=newSet({id:'sample-osi',sample:true,title:'IT: OSI Model & Common Ports',desc:'Starter set: the seven OSI layers and common ports. Edit or delete it anytime.'});
   [['Layer 7 – Application','Network services used directly by apps (HTTP, DNS, SMTP)'],['Layer 6 – Presentation','Formats, encrypts and compresses data'],['Layer 5 – Session','Opens, manages and closes conversations between hosts'],['Layer 4 – Transport','End-to-end delivery using ports (TCP / UDP)'],['Layer 3 – Network','Logical addressing (IP) and routing between networks'],['Layer 2 – Data Link','MAC addresses, frames and switches'],['Layer 1 – Physical','Raw bits over cables, fiber or radio'],['Port 22','SSH'],['Port 53','DNS'],['Port 443','HTTPS']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
+  return s;
+}
+function nursingSet(){
+  const s=newSet({id:'sample-nursing',sample:true,title:'Nursing: Vital Signs & Abbreviations',desc:'Starter set: normal adult vital signs and common charting abbreviations. Always follow your program and facility guidelines.'});
+  [['Normal adult heart rate','60–100 beats per minute'],['Normal adult respiratory rate','12–20 breaths per minute'],['Normal adult blood pressure','Below 120/80 mmHg'],['Normal oral body temperature','About 36.5–37.5 °C (97.7–99.5 °F)'],['Normal oxygen saturation (SpO2)','95–100%'],['Tachycardia','Adult heart rate above 100 beats per minute'],['Bradycardia','Adult heart rate below 60 beats per minute'],['Hypotension','Blood pressure below 90/60 mmHg'],['The 5 rights of medication administration','Right patient, right drug, right dose, right route, right time'],['PRN','As needed (pro re nata)'],['NPO','Nothing by mouth (nil per os)'],['STAT','Immediately']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
   return s;
 }
 function load(){
   try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);const b=blank();return Object.assign(b,d,{settings:Object.assign(b.settings,d.settings||{}),streak:d.streak||b.streak,best:d.best||{},stats:Object.assign(b.stats,d.stats||{})})}}catch(e){}
-  const d=blank();d.sets.push(sampleSet());return d;
+  const d=blank();d.sets.push(sampleSet(),nursingSet());d.settings.newUser=1;return d;
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
@@ -1004,7 +1017,7 @@ function viewEdit(s,preFolder){
     const cards=d.cards.filter(c=>c.term.trim()||c.def.trim()||c.img);
     if(!d.title){toast('Give your set a title first');$('#eTitle').focus();return}
     if(!cards.length){toast('Add at least one card');return}
-    d.cards=cards;d.updated=Date.now();
+    d.cards=cards;d.updated=Date.now();delete d.sample;
     if(isNew)DB.sets.push(d);else DB.sets[DB.sets.findIndex(x=>x.id===s.id)]=d;
     dirty=false;saveNow();queueProgress();location.hash='#/set/'+d.id;toast(isNew?'Set created!':'Saved');
   };
@@ -1751,11 +1764,12 @@ function viewSettings(){
     <p class="muted sm" style="margin-top:0">${user?'Your sets are saved in this browser and synced to your account':'Everything is saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net${user?'':', and a way to move your sets to another device'}.</p>
     <div class="row"><button class="btn primary" id="sExport">⬇ Export everything (.json)</button><label class="btn">⬆ Restore backup<input type="file" id="sImport" accept=".json,application/json" hidden></label><button class="btn danger" id="sWipe">Delete all data</button></div>
   </div>
+  <h2>Help</h2><div class="card"><div class="opt" style="border:0"><span>Take the quick tour of QuizCraft again</span><button class="btn sm" id="sTour">Replay tour</button></div><div class="opt" style="border:0"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add starter sets</button></div></div>
   <h2>Keyboard shortcuts</h2>
   <div class="card kbd-list">
     <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick a multiple-choice answer</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
   </div>`;
-  if($('#acctBtn'))$('#acctBtn').onclick=authModal;bindEnvPicker(app);
+  if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};bindEnvPicker(app);
   $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
@@ -1783,7 +1797,7 @@ const metaHash=()=>hashStr(JSON.stringify(metaObj()));
 const seen={};let seenMeta=null;
 function noteChanges(){ // stamp local edit times so the newest edit wins a conflict
   const now=Date.now();
-  DB.sets.forEach(x=>{const h=setHash(x);if(seen[x.id]!==h){if(seen[x.id]!==undefined||SY.sets?.[x.id]?.h!==h)x._m=now;seen[x.id]=h}});
+  DB.sets.forEach(x=>{const h=setHash(x);if(x.sample&&!SY.sets?.[x.id]&&seen[x.id]===undefined){x._m=x._m||1;seen[x.id]=h;return}if(seen[x.id]!==h){if(seen[x.id]!==undefined||SY.sets?.[x.id]?.h!==h)x._m=now;seen[x.id]=h}});
   const mh=metaHash();if(seenMeta!==mh){if(seenMeta!==null||SY.meta?.h!==mh)DB._metaM=now;seenMeta=mh}
 }
 function scheduleSync(ms=2500){clearTimeout(syncT);syncT=setTimeout(sync,ms)}
@@ -1935,7 +1949,8 @@ function mMenuRefresh(){
     <a href="#/detective">${icon('test',20)} ${V('Detective Mode','Weak spots')}</a><a href="#/achievements">${icon('check',20)} Ranks & achievements</a><hr>
     <button class="mi" id="mSync">${icon('cloud',20)} ${user?'Account & sync':'Sign in to sync'}${user?`<span class="mstat">${syncTxt}</span>`:''}</button>
     <button class="mi" id="mTheme">${icon('half',20)} Theme<span class="mstat">${tname}</span></button>
-    <a href="#/settings">${icon('gear',20)} Settings</a>`;
+    <a href="#/settings">${icon('gear',20)} Settings</a><button class="mi" id="mTour">${icon('target',20)} Take the tour</button>`;
+  $('#mTour').onclick=()=>{closeMMenu();startTour()};
   $('#mSync').onclick=()=>{closeMMenu();authModal()};
   $('#mTheme').onclick=()=>{$('#themeBtn').click();mMenuRefresh()};
 }
@@ -1946,13 +1961,54 @@ $('#mPanel').addEventListener('click',e=>{if(e.target.closest('a'))closeMMenu()}
 document.addEventListener('mousedown',e=>{if(!$('#mPanel').hidden&&!e.target.closest('#mPanel,#mMenu'))closeMMenu()});
 $('#mSearch').onclick=()=>{const t=$('.top');t.classList.toggle('searching');if(t.classList.contains('searching'))$('#globalSearch').focus();else{$('#globalSearch').value='';if(location.hash.startsWith('#/search'))location.hash='#/'}};
 addEventListener('hashchange',()=>{closeMMenu();if(!location.hash.startsWith('#/search'))$('.top').classList.remove('searching')});
+
+/* ========== first-visit tour ========== */
+const vis=sel=>{const el=[...document.querySelectorAll(sel)].find(e=>e.offsetParent!==null&&e.getBoundingClientRect().width>0);return el||null};
+const TOUR=[
+  {t:'Welcome to QuizCraft',d:'Study with flashcards, quizzes and quick games. Here’s a one-minute tour of how it works.'},
+  {sel:'.rankcard',t:'Your rank and XP',d:'Earn XP for correct answers and for mastering cards. Rank up to unlock new backgrounds.'},
+  {sel:'.go',t:'Your next step',d:'This button always picks the most useful thing to study right now. Tap it whenever you’re not sure where to start.'},
+  {sel:'.goals',t:'Daily and weekly goals',d:'Answer enough questions correctly to hit your goals and earn bonus XP.'},
+  {sel:'.attn',t:'Needs attention',d:'Cards that are due for review or that you keep missing show up here, each with a one-tap fix.'},
+  {sel:'.setcard[href^="#/set/"]',t:'Your study sets',d:'Open a set to study it with Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam. Two starter sets, IT and Nursing, are ready to try.'},
+  {sel:'.top a[href="#/new"].desk, #mMenu',t:'Make your own sets',d:'Create a set from scratch, or import one from Quizlet, Word or Excel.'},
+  {sel:'#syncBtn, #mMenu',t:'Sync your devices',d:'Sign in with Google or email to keep your sets and progress on every device.'},
+  {sel:'#ambBtn',t:'Study sounds',d:'Rain and thunder play while you study. Turn them on or off here anytime.'},
+];
+let tourI=0;
+function startTour(){
+  if(!location.hash.match(/^#?\/?$/)){location.hash='#/';setTimeout(startTour,350);return}
+  tourI=0;hideAmbHint();closeMMenu&&closeMMenu();
+  if(!$('#tour')){const t=document.createElement('div');t.id='tour';t.innerHTML='<div class="tour-hole"></div><div class="tour-card card" role="dialog" aria-live="polite"></div>';document.body.appendChild(t);addEventListener('resize',()=>{if($('#tour').classList.contains('on'))tourStep()});addEventListener('scroll',()=>{if($('#tour').classList.contains('on')&&window.tourPlace)tourPlace()},{passive:true})}
+  $('#tour').classList.add('on');tourStep();
+}
+function endTour(){const t=$('#tour');if(t)t.classList.remove('on');DB.settings.tourDone=1;save();setKeys(null);if(DB.settings.amb.on)showAmbHint()}
+function tourStep(){
+  const st=TOUR[tourI],hole=$('#tour .tour-hole'),card=$('#tour .tour-card'),el=st.sel?vis(st.sel):null;
+  card.innerHTML=`<div class="tour-n">${tourI+1} of ${TOUR.length}</div><h3>${st.t}</h3><p>${st.d}</p><div class="row between"><button class="btn sm ghost" id="tSkip">${tourI===TOUR.length-1?'':'Skip tour'}</button><div class="row">${tourI?'<button class="btn sm" id="tBack">Back</button>':''}<button class="btn sm primary" id="tNext">${tourI===TOUR.length-1?'Start studying':'Next'}</button></div></div>`;
+  $('#tSkip').onclick=endTour;$('#tNext').onclick=()=>{if(tourI===TOUR.length-1)return endTour();tourI++;tourStep()};
+  if($('#tBack'))$('#tBack').onclick=()=>{tourI--;tourStep()};
+  setKeys(e=>{if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();$('#tNext').click()}else if(e.key==='ArrowLeft'&&tourI){tourI--;tourStep()}else if(e.key==='Escape')endTour()});
+  const place=()=>{
+    if(!el){hole.style.cssText='left:50%;top:40%;width:0;height:0';card.style.left=Math.max(12,(innerWidth-card.offsetWidth)/2)+'px';card.style.top=Math.max(80,(innerHeight-card.offsetHeight)/2)+'px';card.classList.remove('up','down');return}
+    const r=el.getBoundingClientRect(),pad=8;
+    hole.style.cssText=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
+    const cw=card.offsetWidth,ch=card.offsetHeight,below=r.bottom+pad+14+ch<innerHeight;
+    card.style.left=Math.max(12,Math.min(r.left+r.width/2-cw/2,innerWidth-cw-12))+'px';
+    card.style.top=(below?r.bottom+pad+14:Math.max(12,r.top-pad-14-ch))+'px';
+  };
+  window.tourPlace=place;
+  if(el){const r=el.getBoundingClientRect();if(r.top<70||r.bottom>innerHeight-40){el.scrollIntoView({block:'center',behavior:'smooth'});setTimeout(place,420);setTimeout(place,900)}else place()}else place();
+  requestAnimationFrame(place);
+}
 /* ========== theme & boot ========== */
 const mq=matchMedia('(prefers-color-scheme: dark)');
 function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t;$('#themeBtn').title='Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark',system:'Match device'})[t]}
 mq.addEventListener?.('change',applyTheme);
 $('#themeBtn').onclick=()=>{const order=['midnight','light','dark'],cur=document.documentElement.dataset.theme;DB.settings.theme=order[(order.indexOf(cur)+1)%3];save();applyTheme();toast('Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark'})[DB.settings.theme])};
 buildCity();
-applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};ambAutostart();
+applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};
+const firstVisit=!DB.settings.tourDone&&DB.settings.newUser;if(firstVisit){const sh=showAmbHint;showAmbHint=()=>{};ambAutostart();showAmbHint=sh;setTimeout(startTour,700)}else ambAutostart();
 route();
 setTimeout(checkProgress,1200);
 (()=>{ // parallax + lightning (midnight only)
