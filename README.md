@@ -10,7 +10,12 @@ A free, open-source Quizlet-style flashcard app that runs in one HTML file. It n
 - Share links (the set lives inside the URL), export to TXT / CSV / JSON, full backup & restore
 - Read-aloud in 18 languages, dark mode, keyboard shortcuts, mobile layout
 
-Data is saved in your browser (localStorage). Use **Settings → Export everything** to back up or move to another device.
+## Cloud sync
+Click **☁️ Sign in** to create an account. Your sets, progress, folders and settings then sync across all your devices through Supabase (free plan). The app saves to the browser first, so it keeps working offline and uploads when you reconnect. If the same set is changed on two devices, the newer change wins.
+
+- Database: one `docs` table protected by Row Level Security, so each user can only read and write their own rows.
+- `.github/workflows/keep-supabase-awake.yml` pings the database every 3 days, because Supabase pauses free projects after 7 days without activity.
+- The publishable key in `index.html` is meant to be public. Never put the **secret / service_role** key in this repo.
 
 ## Host it free on GitHub Pages
 1. Create a new public repo on GitHub (e.g. `studydeck`).
