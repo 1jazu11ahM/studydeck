@@ -226,6 +226,7 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .rk-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .rk-xp{font-weight:700;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
 .rk .bar{margin-top:0}
+.rk-next{color:var(--muted)}.rk-next b{color:var(--text)}
 .cc-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px}
 .brief{display:flex;flex-direction:column;gap:14px}
 .go{display:flex;flex-direction:column;gap:2px;padding:18px 22px;border-radius:10px;background:var(--text);color:var(--on-ink);transition:transform .15s,box-shadow .15s}
@@ -236,7 +237,10 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .brow span{display:flex;align-items:center;gap:8px}.brow .ic{color:var(--accent)}
 a.brow:hover b{color:var(--accent)}
 .mission .bar{margin-top:6px}
-.code{display:flex;flex-direction:column;gap:10px}
+.code{display:flex;flex-direction:column;gap:8px}
+.rightcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+.stats.mini{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1}
+.stats.mini .stat{justify-content:center}
 .code-line{font-family:var(--hand);font-size:25px;line-height:1.3;margin:4px 0 6px}
 .xpg{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:13px;animation:xpup .6s ease-out}
 @keyframes xpup{from{transform:translateY(8px);opacity:0}}
@@ -250,6 +254,7 @@ a.brow:hover b{color:var(--accent)}
 .achcard{display:flex;gap:12px;align-items:flex-start;opacity:.55}.achcard.got{opacity:1}.achcard .achic{color:var(--muted)}.achcard.got .achic{color:var(--ok)}
 a.stat:hover{border-color:var(--accent)}
 [data-theme=midnight] .go{background:var(--accent);color:#0b0e14}
+[data-theme=midnight] .setcard .ttl{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-weight:800;font-size:25px;line-height:1.05;letter-spacing:.02em;text-transform:uppercase}
 [data-theme=midnight] .rank-name,[data-theme=midnight] .go-l{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-weight:900;letter-spacing:.02em;font-size:26px;text-transform:uppercase}
 [data-theme=midnight] .code-line{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-weight:800;font-size:30px;line-height:1.1;letter-spacing:.01em}
 [data-theme=midnight] .clock b{color:var(--accent)}
@@ -458,7 +463,7 @@ function load(){
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
 if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.amb.on===undefined)DB.settings.amb.on=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
-const V=(det,plain)=>DB.settings.vocab?det:plain;
+const V=(det,plain)=>plain;
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
 function saveNow(){clearTimeout(saveT);try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast('Could not save — browser storage may be full. Export a backup in Settings.')}if(typeof user!=='undefined'&&user&&!inSync)scheduleSync()}
@@ -505,7 +510,7 @@ function overdueHtml(sets){
   const lim=Date.now()-DAY;let n=0,best=null,bn=0;
   sets.forEach(x=>{const k=x.cards.filter(c=>c.right+c.wrong>0&&c.due<lim).length;n+=k;if(k>bn){bn=k;best=x}});
   if(!n)return '';
-  return `<div class="transmission noprint"><span class="tx-dot"></span><div style="flex:1"><b>Incoming transmission</b><div class="sm">${n} ${V('piece'+(n>1?'s':'')+' of evidence','card'+(n>1?'s':''))} overdue for review by more than a day.</div></div><a class="btn sm primary" href="#/review/${best.id}">Review now</a><button class="ico" id="txX" title="Dismiss">✕</button></div>`;
+  return `<div class="transmission noprint"><span class="tx-dot"></span><div style="flex:1"><b>Reviews overdue</b><div class="sm">${n} ${V('piece'+(n>1?'s':'')+' of evidence','card'+(n>1?'s':''))} overdue for review by more than a day.</div></div><a class="btn sm primary" href="#/review/${best.id}">Review now</a><button class="ico" id="txX" title="Dismiss">✕</button></div>`;
 }
 function bindOverdue(){const x=$('#txX');if(x)x.onclick=()=>{try{sessionStorage.setItem('txOff','1')}catch(e){}x.closest('.transmission').remove()}}
 function fixSet(s){s.opts=Object.assign({answer:'term',starred:false,front:'term',written:true,track:false},s.opts||{});s.cards=(s.cards||[]).map(c=>Object.assign(newCard(),c));return s}
@@ -539,28 +544,27 @@ const MISSION={daily:25,dailyXP:100,weekly:150,weeklyXP:300};
 function rollMissions(){const t=ymd(),w=weekKey();if(DB.daily.d!==t)DB.daily={d:t,n:0,done:0};if(DB.weekly.w!==w)DB.weekly={w,n:0,done:0}}
 function countMission(){
   rollMissions();DB.daily.n++;DB.weekly.n++;
-  if(!DB.daily.done&&DB.daily.n>=MISSION.daily){DB.daily.done=1;DB.stats.missions++;gain(MISSION.dailyXP);announce('target','Daily mission complete',`+${MISSION.dailyXP} XP · ${MISSION.daily} pieces of evidence verified`)}
-  if(!DB.weekly.done&&DB.weekly.n>=MISSION.weekly){DB.weekly.done=1;gain(MISSION.weeklyXP);announce('flame','Weekly challenge complete',`+${MISSION.weeklyXP} XP`)}
+  if(!DB.daily.done&&DB.daily.n>=MISSION.daily){DB.daily.done=1;DB.stats.missions++;gain(MISSION.dailyXP);announce('target','Daily goal complete',`+${MISSION.dailyXP} XP · ${MISSION.daily} correct answers today`)}
+  if(!DB.weekly.done&&DB.weekly.n>=MISSION.weekly){DB.weekly.done=1;gain(MISSION.weeklyXP);announce('flame','Weekly goal complete',`+${MISSION.weeklyXP} XP`)}
 }
 const RANKS=[['Civilian',0],['Recruit',0],['Vigilante',50],['Detective',200],['Night Warden',500],['Master Detective',1000]];
 const masteredTotal=()=>DB.sets.reduce((n,s)=>n+s.cards.filter(c=>status(c)==='master').length,0);
 function rankIndex(){if(!DB.stats.answers)return 0;const m=masteredTotal();let r=1;RANKS.forEach(([,t],i)=>{if(i>1&&m>=t)r=i});return r}
 function rankBadge(r,sz=46){const n=Math.max(0,Math.min(r,5));if(n===0)return `<svg class="badge" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M24 2l19 7v14c0 11-8 19-19 23C13 42 5 34 5 23V9z" stroke-dasharray="4 4" opacity=".7"/><circle cx="24" cy="23" r="3.5" fill="currentColor" stroke="none"/></svg>`;let p='';for(let i=0;i<Math.min(n,4);i++)p+=`<path d="M10 ${34-i*7}l14-8 14 8" />`;if(n>=5)p+=`<path d="M24 4l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="currentColor" stroke="none"/>`;return `<svg class="badge" width="${sz}" height="${sz}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 2l19 7v14c0 11-8 19-19 23C13 42 5 34 5 23V9z" stroke-width="2" opacity=".45"/>${p}</svg>`}
 const ACH=[
- ['first','First Case','Answer your first question',()=>DB.stats.answers>0],
+ ['first','First Answer','Answer your first question',()=>DB.stats.answers>0],
  ['streak3','On the Beat','Study 3 days in a row',()=>streakNow()>=3],
  ['streak7','Week of Nights','Study 7 days in a row',()=>streakNow()>=7],
  ['streak30','Relentless','Study 30 days in a row',()=>streakNow()>=30],
  ['m50','Fifty Verified','Master 50 cards',()=>masteredTotal()>=50],
- ['m100','Hundred Cases','Master 100 cards',()=>masteredTotal()>=100],
- ['closed','Case Closed','Master every card in a set of 5 or more',()=>DB.sets.some(s=>s.cards.length>=5&&s.cards.every(c=>status(c)==='master'))],
+ ['m100','Hundred Mastered','Master 100 cards',()=>masteredTotal()>=100],
+ ['closed','Set Mastered','Master every card in a set of 5 or more',()=>DB.sets.some(s=>s.cards.length>=5&&s.cards.every(c=>status(c)==='master'))],
  ['perfect','Flawless','Score 100% on a test of 10+ questions',()=>DB.stats.perfect>0],
  ['match20','Quick Hands','Finish Match in under 20 seconds',()=>Object.entries(DB.best).some(([k,v])=>k.endsWith(':match')&&v<20)],
  ['grav500','Sky Watcher','Score 500 in Gravity',()=>Object.entries(DB.best).some(([k,v])=>k.endsWith(':gravity')&&v>=500)],
- ['mission5','Mission Ready','Complete 5 daily missions',()=>DB.stats.missions>=5],
+ ['mission5','Goal Getter','Complete 5 daily goals',()=>DB.stats.missions>=5],
  ['owl','Night Owl','Study between midnight and 4 a.m.',()=>DB.stats.owl>0],
- ['builder','Case Builder','Create 5 study sets',()=>DB.sets.length>=5],
- ['reflect7','Reflective','Write 7 daily reflections',()=>Object.keys(DB.refl).length>=7],
+ ['builder','Set Builder','Create 5 study sets',()=>DB.sets.length>=5],
 ];
 let progT;
 function queueProgress(){clearTimeout(progT);progT=setTimeout(checkProgress,350)}
@@ -569,7 +573,7 @@ function checkProgress(){
   ACH.forEach(([id,name,desc,test])=>{if(!DB.ach[id]&&test()){DB.ach[id]=Date.now();DB.xp+=50;changed=true;announce('check','Achievement unlocked: '+name,desc+' · +50 XP')}});
   DB.sets.forEach(x=>{if(x.cards.length>=3&&!x.closedAt&&isClosed(x)){x.closedAt=Date.now();DB.xp+=250;changed=true;announce('check',V('Case closed: ','Set mastered: ')+x.title,'+250 XP');celebrate()}});
   const r=rankIndex();
-  if(r>(DB.rank||0)){DB.rank=r;changed=true;if(r>=2){const ne=ENVS.find(x=>x[3]===r);announce('rank','Promoted to '+RANKS[r][0],ne?'New environment unlocked: '+ne[1]:'Your new rank is in the Command Center',r);celebrate()}}
+  if(r>(DB.rank||0)){DB.rank=r;changed=true;if(r>=2){const ne=ENVS.find(x=>x[3]===r);announce('rank','Promoted to '+RANKS[r][0],ne?'New environment unlocked: '+ne[1]:'Your new rank is on the dashboard',r);celebrate()}}
   else if(r<(DB.rank||0)){DB.rank=r;changed=true}
   if(changed)save();
 }
@@ -597,7 +601,7 @@ const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/DAY)
 const dueCards=s=>{const n=Date.now();return s.cards.filter(c=>c.right+c.wrong>0&&c.due<=n)};
 function progress(s){const p={new:0,learn:0,master:0};s.cards.forEach(c=>p[status(c)]++);return p}
 function barHtml(p,big){const t=(p.new+p.learn+p.master)||1;return `<div class="bar ${big?'big':''}" title="${p.master} mastered · ${p.learn} learning · ${p.new} not studied"><i class="b-master" style="width:${p.master/t*100}%"></i><i class="b-learn" style="width:${p.learn/t*100}%"></i></div>`}
-function legendHtml(p){const w=DB.settings.vocab;return `<div class="row legend"><span><i class="dot b-new"></i>${w?'Unexamined':'Not studied'} ${p.new}</span><span><i class="dot b-learn"></i>${w?'In progress':'Still learning'} ${p.learn}</span><span><i class="dot b-master"></i>${w?'Verified':'Mastered'} ${p.master}</span></div>`}
+function legendHtml(p){const w=false;return `<div class="row legend"><span><i class="dot b-new"></i>${w?'Unexamined':'Not studied'} ${p.new}</span><span><i class="dot b-learn"></i>${w?'In progress':'Still learning'} ${p.learn}</span><span><i class="dot b-master"></i>${w?'Verified':'Mastered'} ${p.master}</span></div>`}
 function ymd(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function touch(s){
   s.studied=Date.now();
@@ -755,7 +759,7 @@ addEventListener('hashchange',route);
 function notFound(){app.innerHTML=`<div class="card empty"><div style="font-size:48px">🔍</div><h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
 
 /* ========== home ========== */
-function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder),cl=isClosed(s);return `<a class="card setcard" href="#/set/${s.id}">${cl?`<span class="mini-stamp">${V('Closed','Mastered')}</span>`:''}${DB.settings.vocab?`<div class="muted sm">Case #${caseNo(s)}</div>`:''}<div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} ${V('evidence','terms')}${f?' · '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
+function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder),cl=isClosed(s);return `<a class="card setcard" href="#/set/${s.id}">${cl?`<span class="mini-stamp">${V('Closed','Mastered')}</span>`:''}${false?`<div class="muted sm">Case #${caseNo(s)}</div>`:''}<div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} ${V('evidence','terms')}${f?' · '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
 function continueTarget(){
   const due=DB.sets.map(s=>[s,dueCards(s).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
   if(due.length)return{href:'#/review/'+due[0][0].id,label:`Review ${due[0][1]} overdue card${due[0][1]>1?'s':''}`,sub:due[0][0].title};
@@ -777,8 +781,10 @@ function viewHome(){
   const nAch=Object.keys(DB.ach).length;
   app.innerHTML=`${overdueHtml(DB.sets)}
   <div class="cc-head">
-    <div><h1 class="cc-title">Command Center</h1><div class="clock" id="ccClock"></div></div>
-    <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div class="rk"><div class="rk-top"><span class="rank-name">${RANKS[r][0]}</span><span class="rk-xp">${(DB.xp||0).toLocaleString()} XP</span></div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div><div class="muted sm">${r===0?'Next: Recruit · answer your first question':nxt?`Next: ${nxt[0]} · master ${Math.max(0,nxt[1]-mastered)} more card${nxt[1]-mastered===1?'':'s'}`:'Highest rank reached'}</div></div></a>
+    <div><h1 class="cc-title">Dashboard</h1><div class="clock" id="ccClock"></div></div>
+    <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div class="rk"><div class="rk-top"><span class="rank-name">${RANKS[r][0]}</span><span class="rk-xp">${(DB.xp||0).toLocaleString()} XP</span></div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div><div class="sm rk-next">${(()=>{if(!nxt)return'You’ve reached the top rank. Legendary.';const left=Math.max(0,nxt[1]-mastered),env=ENVS.find(e=>e[3]===r+1);
+      if(r===0)return`<b>Recruit</b> is one correct answer away. Claim your first badge.`;
+      return`<b>${nxt[0]}</b> is ${left} mastered card${left===1?'':'s'} away${env?` · unlocks <b>${env[1]}</b>`:''}. Keep pushing.`})()}</div></div></a>
   </div>
   <div class="cc-grid">
     <div class="card brief">
@@ -788,42 +794,39 @@ function viewHome(){
         ${DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).map(([x,pl])=>`<a class="brow" href="#/learn/${x.id}"><span>${icon('cal',18)} ${esc(x.title)}: ${pl.days===0?'exam today':`exam in ${pl.days} day${pl.days>1?'s':''}`}</span><b>${pl.left?`${pl.done}/${pl.per} today`:'ready'}</b></a>`).join('')}
         <a class="brow" href="#/detective"><span>${icon('test',18)} ${V('Detective Mode · unresolved evidence','Weak cards to fix')}</span><b>${unresolvedSet().cards.length}</b></a>
         ${weak.length?weak.map(w=>`<a class="brow" href="#/learn/${w.s.id}"><span>${icon('target',18)} Weak spot: ${esc(w.s.title)}</span><b>${Math.round(w.acc*100)}% accuracy</b></a>`).join(''):`<div class="brow muted"><span>${icon('target',18)} Weak spots appear once you've answered a few questions</span></div>`}
-        <div class="mission"><div class="row between sm"><span><b>Daily mission</b> · verify ${MISSION.daily} pieces of evidence</span><span>${DB.daily.done?'✓ complete':`${DB.daily.n}/${MISSION.daily} · +${MISSION.dailyXP} XP`}</span></div><div class="bar"><i class="b-master" style="width:${Math.min(100,DB.daily.n/MISSION.daily*100)}%"></i></div></div>
-        <div class="mission"><div class="row between sm"><span><b>Weekly challenge</b> · ${MISSION.weekly} correct answers</span><span>${DB.weekly.done?'✓ complete':`${DB.weekly.n}/${MISSION.weekly} · +${MISSION.weeklyXP} XP`}</span></div><div class="bar"><i class="b-learn" style="width:${Math.min(100,DB.weekly.n/MISSION.weekly*100)}%"></i></div></div>
+        <div class="mission"><div class="row between sm"><span><b>Daily goal</b> · ${MISSION.daily} correct answers</span><span>${DB.daily.done?'✓ complete':`${DB.daily.n}/${MISSION.daily} · +${MISSION.dailyXP} XP`}</span></div><div class="bar"><i class="b-master" style="width:${Math.min(100,DB.daily.n/MISSION.daily*100)}%"></i></div></div>
+        <div class="mission"><div class="row between sm"><span><b>Weekly goal</b> · ${MISSION.weekly} correct answers</span><span>${DB.weekly.done?'✓ complete':`${DB.weekly.n}/${MISSION.weekly} · +${MISSION.weeklyXP} XP`}</span></div><div class="bar"><i class="b-learn" style="width:${Math.min(100,DB.weekly.n/MISSION.weekly*100)}%"></i></div></div>
       </div>
     </div>
-    <div class="card code">
-      <div class="muted sm"><b>The Code</b> · ${new Date().toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'})}</div>
+    <div class="rightcol"><div class="card code">
+      <div class="muted sm"><b>Daily motivation</b> · ${new Date().toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'})}</div>
       <p class="code-line">${esc(line)}</p>
-      <label class="muted sm" for="reflT">${esc(prompt)}</label>
-      <textarea id="reflT" rows="3" placeholder="Write a sentence or two…">${esc(refl)}</textarea>
-      <div class="row between"><span class="muted sm" id="reflM">${Object.keys(DB.refl).length} reflection${Object.keys(DB.refl).length===1?'':'s'} saved</span><button class="btn sm" id="reflS">Save reflection</button></div>
     </div>
-  </div>
-  <div class="stats" style="margin-top:14px">
+  <div class="stats mini">
     <div class="card stat streak">${icon('flame')}<b>${streakNow()}</b><small>day streak</small></div>
     <div class="card stat">${icon('stack')}<b>${DB.sets.length}</b><small>study sets</small></div>
     <div class="card stat">${icon('check')}<b>${mastered}<span class="muted sm">/${total}</span></b><small>cards mastered</small></div>
     <a class="card stat" href="#/achievements">${icon('target')}<b>${nAch}<span class="muted sm">/${ACH.length}</span></b><small>achievements</small></a>
   </div>
+    </div>
+  </div>
   <div class="row between"><h2>Folders</h2><button class="btn sm" id="newFolder">+ New folder</button></div>
   ${DB.folders.length?`<div class="grid">${DB.folders.map(f=>`<a class="card setcard" href="#/folder/${f.id}"><div class="ttl">${esc(f.name)}</div><div class="muted sm">${DB.sets.filter(s=>s.folder===f.id).length} sets</div></a>`).join('')}</div>`:'<p class="muted">Folders help you group sets by class or topic.</p>'}
   <div class="row between"><h2>${V('Case files','Your sets')}</h2><a class="btn sm primary" href="#/new">+ ${V('Open a case','Create set')}</a></div>
   ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:`<div class="card empty"><h3>No sets yet</h3><p class="muted">Create your first study set or import one.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">Create a set</a><a class="btn" href="#/import">Import</a></div></div>`}`;
-  const tick=()=>{const d=new Date(),c=$('#ccClock');if(c)c.innerHTML=`Nocturne City · <b>${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</b> · ${d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'})}`};
+  const tick=()=>{const d=new Date(),c=$('#ccClock');if(c)c.innerHTML=`<b>${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</b> · ${d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'})}`};
   tick();const ti=setInterval(tick,1000);onCleanup(()=>clearInterval(ti));
   bindOverdue();
-  $('#reflS').onclick=()=>{const v=$('#reflT').value.trim();if(v)DB.refl[today]=v;else delete DB.refl[today];save();queueProgress();$('#reflM').textContent=`Saved · ${Object.keys(DB.refl).length} reflection${Object.keys(DB.refl).length===1?'':'s'}`;toast('Reflection saved')};
   $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewHome()}};
 }
 function viewAchievements(){setTimeout(()=>bindEnvPicker(app),0);
   const r=rankIndex(),m=masteredTotal();
-  app.innerHTML=`<a class="btn ghost sm" href="#/">← Command Center</a>
+  app.innerHTML=`<a class="btn ghost sm" href="#/">← Dashboard</a>
   <h1 style="margin-top:8px">Ranks & achievements</h1><p class="muted">${(DB.xp||0).toLocaleString()} XP earned · ${m} cards mastered · ${Object.keys(DB.ach).length}/${ACH.length} achievements</p>
   <h2>Ranks</h2><div class="card ladder">${RANKS.slice(1).map(([n,t],k)=>{const i=k+1;return `<div class="rung ${i===r?'cur':i<r?'done':''}">${rankBadge(i,36)}<div style="flex:1"><b>${n}</b><div class="muted sm">${i===1?'Complete your first study session':`Master ${t.toLocaleString()} cards`}</div></div>${i===r?'<span class="pill">Current</span>':i<r?'<span class="muted sm">✓</span>':`<span class="muted sm">${Math.max(0,t-m)} to go</span>`}</div>`}).join('')}</div>
   <h2>Achievements</h2><div class="grid">${ACH.map(([id,n,d])=>{const t=DB.ach[id];return `<div class="card achcard ${t?'got':''}"><span class="achic">${icon(t?'check':'clock',26)}</span><div><b>${n}</b><div class="muted sm">${d}</div>${t?`<div class="sm" style="color:var(--ok)">Unlocked ${new Date(t).toLocaleDateString()}</div>`:''}</div></div>`}).join('')}</div>
   <h2>Environments</h2><p class="muted" style="margin-top:-6px">Backgrounds for the Midnight theme. Each rank unlocks a new one.</p>${envPicker()}
-  <h2>How XP works</h2><div class="card sm"><p style="margin-top:0">+15 XP for a correct answer on the first try (+10 if you missed it in the last 10 minutes) · +25 when a card becomes mastered · +${MISSION.dailyXP} for the daily mission · +${MISSION.weeklyXP} for the weekly challenge · +50 for each achievement.</p><p class="muted" style="margin-bottom:0">Flipping through cards without answering earns nothing, so XP tracks what you actually remember.</p></div>`;
+  <h2>How XP works</h2><div class="card sm"><p style="margin-top:0">+15 XP for a correct answer on the first try (+10 if you missed it in the last 10 minutes) · +25 when a card becomes mastered · +${MISSION.dailyXP} for the daily goal · +${MISSION.weeklyXP} for the weekly goal · +50 for each achievement.</p><p class="muted" style="margin-bottom:0">Flipping through cards without answering earns nothing, so XP tracks what you actually remember.</p></div>`;
 }
 /* ========== folder ========== */
 function viewFolder(id){
@@ -867,7 +870,7 @@ function viewSet(s){
   app.innerHTML=`${overdueHtml([s])}
   <div class="card casehead">
     ${cl?`<div class="stamp">${V('Case closed','Mastered')}</div>`:''}
-    <div class="muted sm">${DB.settings.vocab?`${cl?'Closed case':'Active investigation'} · Case #${caseNo(s)} · Classification: ${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a>`:'unfiled'}`:`${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}created ${new Date(s.created).toLocaleDateString()}`}</div>
+    <div class="muted sm">${false?`${cl?'Closed case':'Active investigation'} · Case #${caseNo(s)} · Classification: ${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a>`:'unfiled'}`:`${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}created ${new Date(s.created).toLocaleDateString()}`}</div>
     <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}
     <div class="casestats"><div><b>${s.cards.length}</b><small>${V('evidence items','terms')}</small></div><div><b>${pct}%</b><small>${V('evidence verified','mastered')}</small></div><div><b>${unres}</b><small>${V('unresolved','to fix')}</small></div><div><b>${due}</b><small>due now</small></div></div>
     ${(()=>{const pl=examPlan(s);return `<div class="planner noprint">${icon('cal',18)}<label for="examD">Exam date</label><input type="date" id="examD" value="${s.exam||''}" min="${ymd()}">${pl?`<span>${pl.days===0?'Exam today':`${pl.days} day${pl.days>1?'s':''} left`} · ${pl.left?`master <b>${pl.per}</b> a day · today <b>${pl.done}/${pl.per}</b>`:'everything mastered'}</span>`:'<span class="muted">Set a date and QuizCraft splits the work into daily targets.</span>'}</div>`})()}
@@ -1588,7 +1591,7 @@ function viewSim(s){
   if(cards.length<2)return shell(s,'Simulator',{},emptyStudy(s));
   shell(s,V('Training Simulator','Timed exam'),{},`<div id="stage"></div>`);
   const stage=$('#stage'),key=s.id+':sim';let tmr=null;onCleanup(()=>clearInterval(tmr));
-  const STAGES=[{name:'Warm-up',type:'mc',sec:20},{name:'Pressure',type:'mc',sec:12},{name:'Interrogation',type:'written',sec:25}];
+  const STAGES=[{name:'Warm-up',type:'mc',sec:20},{name:'Pressure',type:'mc',sec:12},{name:'Typed answers',type:'written',sec:25}];
   function intro(){
     const best=DB.best[key];
     stage.innerHTML=`<div class="card qcard" style="max-width:560px;margin:16px auto"><h2 style="margin-top:0">${V('Training Simulator','Timed exam')}</h2>
@@ -1641,7 +1644,7 @@ function viewDetective(){
   const unres=all.filter(o=>isUnresolved(o.c));
   const report=answered.filter(o=>o.c.wrong>0).sort((a,b)=>(b.c.wrong-b.c.right*.5)-(a.c.wrong-a.c.right*.5)).slice(0,20);
   const weak=weakest();
-  app.innerHTML=`<a class="btn ghost sm" href="#/">← Command Center</a>
+  app.innerHTML=`<a class="btn ghost sm" href="#/">← Dashboard</a>
   <h1 style="margin-top:8px">${V('Detective Mode','Weak spots')}</h1>
   <p class="muted">${V('Every mistake is evidence. This report finds the cards you keep missing so you can close them out.','The cards you miss most, across every set.')}</p>
   <div class="casestats card" style="margin:14px 0">
@@ -1650,7 +1653,7 @@ function viewDetective(){
     <div><b>${answered.length}</b><small>cards examined</small></div>
     <div><b>${W}</b><small>total misses</small></div>
   </div>
-  <div class="row">${unres.length?`<a class="btn primary big" href="#/learn/unresolved">${V('Study unresolved evidence','Study weak cards')}</a><a class="btn big" href="#/flash/unresolved">Rapid training (1–4)</a><a class="btn big" href="#/test/unresolved">Test me on them</a>`:`<span class="muted">Nothing unresolved right now. Miss a card in any mode and it shows up here.</span>`}</div>
+  <div class="row">${unres.length?`<a class="btn primary big" href="#/learn/unresolved">${V('Study unresolved evidence','Study weak cards')}</a><a class="btn big" href="#/flash/unresolved">Flashcards (rate 1–4)</a><a class="btn big" href="#/test/unresolved">Test me on them</a>`:`<span class="muted">Nothing unresolved right now. Miss a card in any mode and it shows up here.</span>`}</div>
   ${weak.length?`<h2>${V('Weakest cases','Weakest sets')}</h2><div class="card terms" style="padding:0">${weak.map(w=>`<div class="t"><div class="tt">${esc(w.s.title)}</div><div>${Math.round(w.acc*100)}% accuracy · ${w.open} ${V('in progress','still learning')}</div><a class="pill" href="#/learn/${w.s.id}">Train</a></div>`).join('')}</div>`:''}
   <h2>${V('Weakness report','Most-missed cards')}</h2>
   ${report.length?`<div class="card terms" style="padding:0">${report.map(o=>`<div class="t"><div class="tt">${nl(o.c.term)}</div><div>${nl(o.c.def)}<div class="muted sm"><a href="#/set/${o.s.id}">${esc(o.s.title)}</a></div></div><div class="sm nowrap"><b style="color:var(--bad)">✗ ${o.c.wrong}</b> · <span style="color:var(--ok)">✓ ${o.c.right}</span></div></div>`).join('')}</div>`:'<div class="card empty muted">No misses recorded yet.</div>'}`;
@@ -1704,8 +1707,7 @@ function viewSettings(){
   <h2>Preferences</h2>
   <div class="card">
     <label class="opt"><span>Theme</span><select id="sTheme"><option value="midnight">Midnight (city at night)</option><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match my device</option></select></label>
-    <label class="opt"><span>Detective vocabulary <span class="muted sm">(case files, evidence, verified)</span></span><input type="checkbox" id="sVocab"></label>
-    <label class="opt"><span>Detective vision <span class="muted sm">(highlight key terms inside definitions)</span></span><input type="checkbox" id="sVision"></label>
+    <label class="opt"><span>Highlight key terms <span class="muted sm">(underline other terms from the set inside definitions)</span></span><input type="checkbox" id="sVision"></label>
     <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
     <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:180px"></label>
     <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">🔊 Play</button></div>
@@ -1723,8 +1725,7 @@ function viewSettings(){
   $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
-  $('#sVocab').checked=DB.settings.vocab;$('#sVision').checked=DB.settings.vision;
-  $('#sVocab').onchange=e=>{DB.settings.vocab=e.target.checked;save();toast(e.target.checked?'Detective vocabulary on':'Standard vocabulary on')};
+  $('#sVision').checked=DB.settings.vision;
   $('#sVision').onchange=e=>{DB.settings.vision=e.target.checked;save()};
   $('#sRate').oninput=e=>{DB.settings.rate=+e.target.value;$('#sRateV').textContent=DB.settings.rate+'×';save()};
   $('#sExport').onclick=()=>download(`quizcraft-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');
