@@ -300,6 +300,10 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 [data-theme=midnight] .simhud{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-size:20px;letter-spacing:.03em}
 .simbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}.simbar i{display:block;height:100%;width:100%;background:var(--accent)}
 #ambBtn.amb-on{color:var(--accent);background:var(--accent-soft)}
+#ambHint{position:fixed;z-index:45;width:min(330px,calc(100vw - 16px));padding:14px 16px;border:2px solid var(--accent);opacity:0;transform:translateY(-8px);transition:opacity .3s,transform .3s}
+#ambHint.show{opacity:1;transform:none}
+#ambHint .ic{color:var(--accent);flex:none}
+#ambHint::before{content:'';position:absolute;top:-9px;right:22px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--accent);border-top:2px solid var(--accent);transform:rotate(45deg)}
 #ambPanel{position:fixed;top:64px;right:16px;z-index:40;width:300px;padding:16px}
 #ambPanel input[type=range]{width:140px}
 .envl{display:none;position:absolute;inset:0}
@@ -387,6 +391,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 <div id="toast" role="status"></div>
 <div id="achbar" role="status" aria-live="polite"></div>
 <div id="ambPanel" class="card" hidden></div>
+<div id="ambHint" class="card" role="dialog" aria-label="Sound notice" hidden></div>
 <script>
 'use strict';
 /* ========== helpers ========== */
@@ -410,7 +415,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:true}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -424,7 +429,7 @@ function load(){
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
-if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.vision===undefined)DB.settings.vision=true;
+if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.amb.on===undefined)DB.settings.amb.on=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
 const V=(det,plain)=>DB.settings.vocab?det:plain;
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
@@ -1480,12 +1485,32 @@ function thunderAt(G,t,v,dist){
   n.connect(lp).connect(sh).connect(g).connect(pan);n.start(t,Math.random()*4);n.stop(Math.max(tk+1.6,start+dur)+.1);
 }
 function ambStart(){
+  DB.settings.amb.on=true;save();
   if(AMB.ctx){AMB.ctx.resume();AMB.on=true;ambVol();return}
   const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return toast('Your browser can’t play generated sound');
   const ctx=new Ctx();AMB.ctx=ctx;AMB.G=ambGraph(ctx,ctx.destination);AMB.on=true;ambVol();
   AMB.timer=setInterval(()=>{if(AMB.on&&ctx.state==='running'&&DB.settings.amb.rain>0)scheduleDrops(AMB.G,ctx.currentTime+.2,DB.settings.amb.rain)},80);
 }
-function ambStop(){if(AMB.ctx)AMB.ctx.suspend();AMB.on=false;ambBtn()}
+function ambStop(){if(AMB.ctx)AMB.ctx.suspend();AMB.on=false;DB.settings.amb.on=false;save();ambBtn();hideAmbHint()}
+/* default-on sound: browsers only allow audio after the visitor's first click, tap or key press */
+function ambAutostart(){
+  if(!DB.settings.amb.on)return;
+  ambStart();
+  const go=()=>{if(DB.settings.amb.on&&AMB.ctx&&AMB.ctx.state!=='running')AMB.ctx.resume();['pointerdown','keydown','touchstart'].forEach(ev=>document.removeEventListener(ev,go,true))};
+  ['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,go,true));
+  showAmbHint();
+}
+function showAmbHint(){
+  try{if(sessionStorage.getItem('ambHint'))return;sessionStorage.setItem('ambHint','1')}catch(e){}
+  const h=$('#ambHint'),b=$('#ambBtn');if(!h||!b)return;
+  h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b>Rain and thunder are on</b><div class="sm muted">If you don’t like the sound, you can turn it off here anytime.</div></div></div><div class="row end" style="margin-top:10px"><button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button></div>`;
+  const place=()=>{const r=b.getBoundingClientRect();h.style.top=(r.bottom+12)+'px';h.style.right=Math.max(8,innerWidth-r.right-14)+'px';h.style.setProperty('--ax',(r.left+r.width/2)+'px')};
+  place();h.hidden=false;requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
+  $('#hintOff').onclick=()=>{ambStop();toast('Sound off. Turn it back on with the headphones button.')};
+  $('#hintOk').onclick=()=>{if(AMB.ctx)AMB.ctx.resume();hideAmbHint()};
+  setTimeout(hideAmbHint,12000);
+}
+function hideAmbHint(){const h=$('#ambHint');if(!h||h.hidden)return;h.classList.remove('show');setTimeout(()=>{h.hidden=true},300)}
 function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.G.rain.gain.setTargetAtTime(a.rain*.55,t,.4);AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,.4);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
 function thunder(dist){if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;thunderAt(AMB.G,AMB.ctx.currentTime+.02,1,dist)}
 window.onLightning=()=>{const d=Math.random();setTimeout(()=>thunder(d),300+d*3500)};
@@ -1815,7 +1840,7 @@ function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset
 mq.addEventListener?.('change',applyTheme);
 $('#themeBtn').onclick=()=>{const order=['midnight','light','dark'],cur=document.documentElement.dataset.theme;DB.settings.theme=order[(order.indexOf(cur)+1)%3];save();applyTheme();toast('Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark'})[DB.settings.theme])};
 buildCity();
-applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=ambPanel;
+applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};ambAutostart();
 route();
 setTimeout(checkProgress,1200);
 (()=>{ // parallax + lightning (midnight only)
