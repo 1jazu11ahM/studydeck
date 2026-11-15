@@ -38,3 +38,9 @@ Click **☁️ Sign in** to create an account. Your sets, progress, folders and 
 2. Upload `index.html` (and this README) → Commit.
 3. Settings → Pages → Source: *Deploy from a branch* → Branch: `main` / root → Save.
 4. Your site will be live at `https://<your-username>.github.io/studydeck/` within a minute or two.
+
+## Design versions
+
+- The current design (v2) uses four pages: **Home**, **Library**, **Progress** and **Profile**, with a minimal Charcoal theme. Midnight, Dark and Light themes are still available in Profile.
+- The classic design is archived at [`archive/v1/`](archive/v1/) and tagged `v1-classic` in git. Both designs read the same saved data, so you can switch between them freely.
+- To fully revert: `git checkout v1-classic -- index.html`.

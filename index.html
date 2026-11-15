@@ -425,8 +425,147 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
   .tf{grid-template-columns:1fr}.tfeq{display:none}
   .score{flex-direction:column;align-items:flex-start}
 }
+/* ===================== v2: minimal shell (all themes) ===================== */
+:root{--on-accent:#fff}
+[data-theme=midnight]{--on-accent:#0b0e14}
+.top{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:0 24px;height:60px}
+.top .tools{display:flex;justify-content:flex-end;align-items:center;gap:4px}
+.logo .word{font-size:23px}
+.top .nav{display:flex;gap:2px;margin:0}
+.nav a{position:relative;padding:8px 14px;border-radius:8px;font-size:15px;font-weight:500;color:var(--muted);transition:color .15s}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current=page]{color:var(--text)}
+.nav a[aria-current=page]::after{content:'';position:absolute;left:14px;right:14px;bottom:-11px;height:2px;border-radius:2px;background:var(--accent)}
+.navdot{display:none;position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--bad)}
+.sync-warn .navdot{display:block}
+#tabbar{display:none}
+.wrap{max-width:720px;margin:0 auto}
+.page-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 24px}
+.page-h h1{margin:0}
+.lede{color:var(--muted);margin:4px 0 0}
+.eyebrow{color:var(--muted);font-size:14px}
+.sec{margin-top:36px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 10px}
+.sec-h h2{margin:0;font-size:16px;font-weight:600}
+.sec-h a{font-size:14px;color:var(--muted)}.sec-h a:hover{color:var(--accent)}
+/* home */
+.hello h1{font-size:34px;font-weight:600;letter-spacing:-.025em;margin:2px 0 6px}
+.briefing{color:var(--muted);font-size:17px;margin:0;max-width:56ch}
+.start{display:flex;align-items:center;gap:18px;margin-top:28px;padding:22px 26px;border-radius:16px;background:var(--accent);color:var(--on-accent);transition:background .15s,transform .15s}
+.start:hover{background:var(--accent-2)}
+.start:active{transform:scale(.995)}
+.start-t{flex:1;min-width:0;display:flex;flex-direction:column}
+.start-l{font-size:21px;font-weight:650;letter-spacing:-.01em;line-height:1.2}
+.start-s{font-size:14px;opacity:.72;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.start svg{flex:none;opacity:.8}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kpis.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.kpi{padding:16px 0 16px 18px;border-left:1px solid var(--line);display:flex;flex-direction:column}
+.kpi:first-child{border-left:0;padding-left:0}
+.kpi b{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--muted);font-size:13px}
+.list{border-top:1px solid var(--line)}
+.lrow{display:flex;align-items:center;gap:14px;padding:14px 2px;border-bottom:1px solid var(--line);min-width:0}
+a.lrow:hover .lt{color:var(--accent)}
+.lmain{flex:1;min-width:0}
+.lt{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .15s}
+.lm{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lpct{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:38px;text-align:right}
+.lbar{width:72px;height:4px;border-radius:4px;background:var(--line);overflow:hidden;flex:none}
+.lbar i{display:block;height:100%;background:var(--accent)}
+.chev{color:var(--muted);flex:none}
+.resume{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--card);transition:border-color .15s}
+.resume:hover{border-color:#45474d}
+.motto{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:15px;display:flex;gap:10px;align-items:baseline}
+.motto svg{flex:none;color:var(--accent);opacity:.7;transform:translateY(2px)}
+/* library */
+.lsearch{position:relative;margin-bottom:18px}
+.lsearch svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.lsearch input{padding-left:38px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.chip{padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:14px;color:var(--muted);background:transparent;font:inherit;font-size:14px;cursor:pointer}
+.chip:hover{color:var(--text);border-color:var(--muted)}
+.chip.on{color:var(--text);border-color:var(--accent)}
+/* progress + profile */
+.goalrow{padding:14px 0;border-bottom:1px solid var(--line)}
+.goalrow:first-child{padding-top:4px}
+.rankrow{display:flex;align-items:center;gap:16px;padding:16px 18px}
+.rankrow .badge{color:var(--accent);flex:none}
+.prof{display:flex;align-items:center;gap:16px}
+.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:650;font-size:21px;flex:none}
+.plist .opt{padding:14px 0}
+.plist .opt:last-child{border-bottom:0}
+.plist{padding:4px 18px}
+.classic{font-size:14px;color:var(--muted)}.classic:hover{color:var(--accent)}
+details.more summary{cursor:pointer;color:var(--muted);font-size:14px;padding:6px 0;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:'+ '}details.more[open] summary::before{content:'– '}
+@media (max-width:760px){
+  .top{grid-template-columns:1fr auto;height:56px;padding:0 14px}
+  .top .nav{display:none}
+  #tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+  #tabbar a{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:11px;font-weight:500;color:var(--muted)}
+  #tabbar a[aria-current=page]{color:var(--accent)}
+  #tabbar .navdot{top:4px;right:calc(50% - 16px)}
+  body.studying #tabbar{display:none}
+  main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  body.studying main{padding-bottom:60px}
+  .hello h1{font-size:28px}
+  .start{padding:18px 20px;margin-top:22px}
+  .start-l{font-size:19px}
+  .kpi{padding-left:12px}.kpi b{font-size:24px}
+  .kpis.k4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis.k4 .kpi:nth-child(3){border-left:0;padding-left:0}
+  .kpis.k4 .kpi:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .lbar{display:none}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+/* ===================== v2: Charcoal theme ===================== */
+[data-theme=charcoal]{color-scheme:dark;--bg:#141518;--card:#1b1d21;--text:#ebe9e4;--on-ink:#141518;--on-accent:#17150f;--muted:#8d8f96;--line:#2a2c31;--accent:#c6a660;--accent-2:#d4b672;--accent-soft:#29251c;--ok:#7cbf93;--ok-soft:#1a2820;--bad:#e2806f;--bad-soft:#2d1d1a;--warn:#c6a660;--rule:transparent;--margin:transparent;--hl:#c6a660;--shadow:none;--r:14px;--hand:'Instrument Sans',system-ui,sans-serif}
+[data-theme=charcoal] body{background:radial-gradient(900px 420px at 50% -260px,rgba(198,166,96,.07),transparent 70%) no-repeat,var(--bg)}
+[data-theme=charcoal] ::selection{background:#c6a66055;color:#fff}
+[data-theme=charcoal] .top{background:rgba(20,21,24,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+[data-theme=charcoal] .logo-bat{color:var(--accent);transform:none}
+[data-theme=charcoal] .logo:hover .logo-bat{transform:none}
+[data-theme=charcoal] .logo .word{letter-spacing:.06em;font-weight:800}
+[data-theme=charcoal] .card{box-shadow:none;border:1px solid var(--line);border-radius:14px}
+[data-theme=charcoal] h1{font-size:30px;font-weight:600;letter-spacing:-.025em}
+[data-theme=charcoal] h2{font-size:17px;font-weight:600}
+[data-theme=charcoal] :is(input,textarea,select){border-width:1px;border-radius:10px;background:#17181b}
+[data-theme=charcoal] .egrid textarea{background:transparent;border-width:0 0 1px}
+[data-theme=charcoal] .btn{border-width:1px;border-radius:10px;font-weight:550}
+[data-theme=charcoal] .btn:hover{border-color:#4a4c52}
+[data-theme=charcoal] .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+[data-theme=charcoal] .btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:var(--on-accent)}
+[data-theme=charcoal] .btn.ghost:hover{background:#ffffff0a}
+[data-theme=charcoal] .ico:hover{background:#ffffff0d;color:var(--text)}
+[data-theme=charcoal] .setcard{background-image:none;padding-top:18px}
+[data-theme=charcoal] .setcard:hover{transform:none;box-shadow:none;border-color:#3a3c42}
+[data-theme=charcoal] .ttl{font-weight:600;font-size:17px}
+[data-theme=charcoal] .face{background:var(--card);border-radius:18px;box-shadow:none}
+[data-theme=charcoal] .ftxt,[data-theme=charcoal] .qtxt{font-weight:500;font-size:28px;letter-spacing:-.01em}
+[data-theme=charcoal] .qcard{border-top:1px solid var(--line);border-radius:16px}
+[data-theme=charcoal] .casehead{border-top:1px solid var(--line)}
+[data-theme=charcoal] .mode{border-width:1px;border-radius:12px;font-weight:600}
+[data-theme=charcoal] .mode:hover{transform:none;border-color:#45474d}
+[data-theme=charcoal] .mode:hover .ic{transform:none}
+[data-theme=charcoal] .choice,[data-theme=charcoal] .tile,[data-theme=charcoal] .envc{border-width:1px}
+[data-theme=charcoal] .prog i{background:var(--accent)}
+[data-theme=charcoal] .stamp{border-color:var(--accent);color:var(--accent);border-width:2px;font-size:15px;animation:none}
+[data-theme=charcoal] .mini-stamp{border-color:var(--accent);color:var(--accent);top:14px}
+[data-theme=charcoal] mark.dv{border-bottom:1px solid var(--accent)}
+[data-theme=charcoal] .transmission{border-color:var(--line);background:var(--card)}
+[data-theme=charcoal] .transmission::before{display:none}
+[data-theme=charcoal] .tx-dot{background:var(--accent);animation:none}
+[data-theme=charcoal] .face.front.interro .ftxt::after{content:none}
+[data-theme=charcoal] .flash.flipped .face.back::after{content:none}
+[data-theme=charcoal] #ambHint,[data-theme=charcoal] #achbar,[data-theme=charcoal] .tour-card{border-width:1px}
+[data-theme=charcoal] #ambHint::before{border-width:1px}
+[data-theme=charcoal] #toast{background:#26282d;border:1px solid var(--line)}
+[data-theme=charcoal] .st-learn{background:#2b2618;color:var(--accent)}
+[data-theme=charcoal] .done-box .big-emoji{display:none}
 @media print{
-  .top,.noprint,#toast{display:none!important}
+  .top,.noprint,#toast,#tabbar{display:none!important}
   body{background:#fff;color:#000}
   .card{box-shadow:none;border:1px solid #ccc}
   .terms .t{break-inside:avoid}
@@ -437,24 +576,15 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 <div id="scene" aria-hidden="true"><div class="clouds"></div><div class="moon"></div><div class="bats"><div class="bat" style="top:8vh;animation-duration:26s;animation-delay:-3s"><svg width="30" height="18" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:14vh;animation-duration:34s;animation-delay:-17s"><svg width="22" height="13" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:22vh;animation-duration:29s;animation-delay:-11s"><svg width="26" height="16" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:5vh;animation-duration:41s;animation-delay:-27s"><svg width="18" height="11" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div><div class="bat" style="top:30vh;animation-duration:37s;animation-delay:-6s"><svg width="20" height="12" viewBox="0 0 64 40"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg></div></div><div class="beam b1"></div><div class="beam b2"></div><svg class="city2" id="cityFar" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="fog"></div><svg class="city2" id="city" preserveAspectRatio="xMidYMax slice" viewBox="0 0 1600 420"></svg><div class="strike-l"></div><div class="envl" id="envRoof"></div><div class="envl" id="envCave"></div><div class="envl" id="envLib"></div><div class="rain"></div></div>
 <header class="top">
   <a href="#/" class="logo" aria-label="QuizCraft home"><svg class="logo-bat" width="40" height="26" viewBox="0 0 64 40" aria-hidden="true"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg><span class="word">QuizCraft</span></a>
-  <div class="searchwrap"><input id="globalSearch" type="search" placeholder="Search your sets and terms…" aria-label="Search"></div>
-  <nav>
-    <a href="#/new" class="btn primary sm desk">+ Create</a>
-    <a href="#/import" class="btn sm desk">Import</a>
-    <button class="btn sm desk" id="syncBtn" title="Cloud sync">Sign in</button>
-    <button class="ico mob" id="mSearch" title="Search" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button>
-    <button class="ico" id="ambBtn" title="Ambience" aria-label="Ambience sounds"></button>
-    <button class="ico desk" id="themeBtn" title="Change theme" aria-label="Change theme"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
-    <a href="#/settings" class="ico desk" title="Settings" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
-    <button class="ico mob" id="mMenu" title="Menu" aria-label="Open menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  </nav>
+  <nav class="nav" aria-label="Main"><a href="#/" data-nav="home">Home</a><a href="#/library" data-nav="library">Library</a><a href="#/progress" data-nav="progress">Progress</a><a href="#/profile" data-nav="profile">Profile<span class=navdot></span></a></nav>
+  <div class="tools"><button class="ico" id="ambBtn" title="Study sounds" aria-label="Study sounds"></button></div>
 </header>
 <main id="app"></main>
+<nav id="tabbar" aria-label="Main"><a href="#/" data-nav="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="#/library" data-nav="library"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="16" rx="1.2"/><rect x="12" y="4" width="4" height="16" rx="1"/><path d="M18 5.2l2.6.7-3.6 13.9-2.6-.7"/></svg><span>Library</span></a><a href="#/progress" data-nav="progress"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Progress</span></a><a href="#/profile" data-nav="profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5c1.2-3.6 4.1-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profile</span><span class=navdot></span></a></nav>
 <div id="modal" hidden></div>
 <div id="toast" role="status"></div>
 <div id="achbar" role="status" aria-live="polite"></div>
 <div id="ambPanel" class="card" hidden></div>
-<div id="mPanel" class="card" hidden></div>
 <div id="ambHint" class="card" role="dialog" aria-label="Sound notice" hidden></div>
 <script>
 'use strict';
@@ -479,7 +609,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:true}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:true}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -498,6 +628,7 @@ function load(){
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
+if(!DB.settings.themeV3){DB.settings.theme='charcoal';DB.settings.themeV3=1}
 if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.amb.on===undefined)DB.settings.amb.on=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
 const V=(det,plain)=>plain;
 let saveT;
@@ -510,7 +641,12 @@ function unresolvedSet(){
   if(!DB.unresOpts)DB.unresOpts={answer:'term',starred:false,front:'term',written:true,track:true};
   return{id:'unresolved',virtual:true,title:V('Unresolved evidence','Cards to fix'),desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:0,updated:0,studied:0,cards,opts:DB.unresOpts};
 }
-const getSet=id=>id==='unresolved'?unresolvedSet():DB.sets.find(s=>s.id===id);
+function dueSet(){
+  const n=Date.now(),cards=[];DB.sets.forEach(x=>x.cards.forEach(c=>{if(c.right+c.wrong>0&&c.due<=n)cards.push(c)}));
+  if(!DB.dueOpts)DB.dueOpts={answer:'term',starred:false,front:'term',written:true,track:true};
+  return{id:'due',virtual:true,title:'Due for review',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:0,updated:0,studied:0,cards,opts:DB.dueOpts};
+}
+const getSet=id=>id==='unresolved'?unresolvedSet():id==='due'?dueSet():DB.sets.find(s=>s.id===id);
 function caseNo(s){let h=0;for(const ch of String(s.id))h=(h*31+ch.charCodeAt(0))>>>0;return String(h%9000+1000)}
 const isClosed=s=>s.cards.length>0&&s.cards.every(c=>status(c)==='master');
 const STAT_WORD=()=>V({new:'unexamined',learn:'in progress',master:'verified'},{new:'new',learn:'learning',master:'mastered'});
@@ -774,24 +910,35 @@ function route(){
   const [v,id]=raw.replace(/^\//,'').split('/');
   scrollTo(0,0);
   app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');
-  if(v!=='search')$('#globalSearch').value='';
   const needSet={sim:viewSim,set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
   if(id==='unresolved'&&(v==='set'||v==='edit')){location.replace('#/detective');return}
-  if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · QuizCraft';return needSet[v](s)}
+  if(id==='due'&&(v==='set'||v==='edit')){location.replace('#/');return}
+  markNav(v||'');
+  if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · QuizCraft';
+    if(STUDY_MODES[v]&&(!s.virtual||id==='unresolved')){DB.lastStudy={v,id,t:Date.now()};save()}
+    return needSet[v](s)}
   document.title='QuizCraft';
   switch(v||''){
     case '':return viewHome();
     case 'new':return viewEdit(null,id);
     case 'folder':return viewFolder(id);
     case 'import':return viewImport();
-    case 'settings':return viewSettings();
+    case 'library':return viewLibrary();
+    case 'progress':return viewProgress();
+    case 'profile':case 'settings':return viewSettings();
     case 'achievements':return viewAchievements();
     case 'detective':return viewDetective();
-    case 'search':return viewSearch(decodeURIComponent(id||''));
+    case 'search':return viewLibrary(decodeURIComponent(id||''));
     default:return notFound();
   }
 }
 addEventListener('hashchange',route);
+const STUDY_MODES={flash:'Flashcards',review:'Review',learn:'Learn',write:'Write',spell:'Spell',test:'Test',match:'Match',gravity:'Gravity',sim:'Timed exam'};
+const NAV_OF={'':'home',library:'library',folder:'library',set:'library',edit:'library',new:'library',import:'library',search:'library',progress:'progress',achievements:'progress',detective:'progress',profile:'profile',settings:'profile'};
+function markNav(v){
+  const k=NAV_OF[v]||'';$$('[data-nav]').forEach(a=>{if(a.dataset.nav===k)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  document.body.classList.toggle('studying',!!STUDY_MODES[v]);
+}
 function notFound(){app.innerHTML=`<div class="card empty"><div style="font-size:48px">🔍</div><h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
 
 /* ========== home ========== */
@@ -807,84 +954,109 @@ function continueTarget(){
 function weakest(){
   return DB.sets.map(s=>{const r=s.cards.reduce((a,c)=>a+c.right,0),w=s.cards.reduce((a,c)=>a+c.wrong,0);return{s,acc:r+w?r/(r+w):1,n:r+w,open:s.cards.filter(c=>status(c)==='learn').length}}).filter(x=>x.n>=3&&x.acc<1).sort((a,b)=>a.acc-b.acc).slice(0,2);
 }
+const BAT_PATH='M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z';
+const chev='<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+function firstName(){const n=(DB.settings.name||(typeof user!=='undefined'&&user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'').trim();return n.split(/\s+/)[0]||''}
+function greeting(){const h=new Date().getHours(),g=h<5?'Good evening':h<12?'Good morning':h<18?'Good afternoon':'Good evening',n=firstName();return n?`${g}, ${n}`:g}
+const pctOf=s=>s.cards.length?Math.round(s.cards.filter(c=>status(c)==='master').length/s.cards.length*100):0;
+function setRow(s){const f=DB.folders.find(f=>f.id===s.folder),p=pctOf(s);return `<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(s.title||'Untitled')}</div><div class="lm">${s.cards.length} term${s.cards.length===1?'':'s'}${f?' · '+esc(f.name):''}${isClosed(s)?' · mastered':''}</div></div><span class="lbar"><i style="width:${p}%"></i></span><span class="lpct">${p}%</span>${chev}</a>`}
+const recentSets=()=>[...DB.sets].sort((a,b)=>Math.max(b.studied||0,b.updated||0)-Math.max(a.studied||0,a.updated||0));
+function trainTarget(){
+  const ds=dueSet(),n=ds.cards.length;
+  if(n){const k=new Set(DB.sets.filter(x=>dueCards(x).length).map(x=>x.id)).size;return{href:'#/review/due',label:'Start training',sub:`Review ${n} due card${n>1?'s':''}${k>1?` from ${k} sets`:''}`}}
+  const open=recentSets().filter(x=>x.cards.some(c=>status(c)!=='master'));
+  if(open.length)return{href:'#/learn/'+open[0].id,label:open[0].studied?'Start training':'Start your first session',sub:`Learn · ${open[0].title}`};
+  if(DB.sets.length)return{href:'#/test/'+recentSets()[0].id,label:'Start training',sub:'Everything is mastered. Take a practice test.'};
+  return{href:'#/new',label:'Create your first set',sub:'Add terms, then start training'};
+}
+function continueItem(){
+  const L=DB.lastStudy;
+  if(L&&STUDY_MODES[L.v]){const s=getSet(L.id);if(s&&s.cards.length){const p=pctOf(s);return{href:`#/${L.v}/${L.id}`,title:s.title,meta:`${STUDY_MODES[L.v]} · ${s.virtual?s.cards.length+' cards':p+'% mastered'}`,p}}}
+  const s=DB.sets.filter(x=>x.studied).sort((a,b)=>b.studied-a.studied)[0];
+  if(s){const p=pctOf(s);return{href:'#/learn/'+s.id,title:s.title,meta:`Learn · ${p}% mastered`,p}}
+  return null;
+}
 function viewHome(){
   rollMissions();
-  const sets=[...DB.sets].sort((a,b)=>Math.max(b.studied,b.updated)-Math.max(a.studied,a.updated));
-  const total=DB.sets.reduce((n,s)=>n+s.cards.length,0),due=DB.sets.reduce((n,s)=>n+dueCards(s).length,0),mastered=masteredTotal();
-  const r=rankIndex(),nxt=RANKS[r+1],prevT=r>=2?RANKS[r][1]:0,go=continueTarget(),weak=weakest();
-  const rp=nxt?Math.min(100,(mastered-prevT)/Math.max(1,nxt[1]-prevT)*100):100;
-  const dn=dayNum(),line=CODE[dn%CODE.length],prompt=PROMPTS[dn%PROMPTS.length],today=ymd(),refl=DB.refl[today]||'';
-  const nAch=Object.keys(DB.ach).length;
-  app.innerHTML=`
-  <div class="cc-head">
-    <div><h1 class="cc-title">Dashboard</h1><div class="clock" id="ccClock"></div></div>
-    <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div class="rk"><div class="rk-top"><span class="rank-name">${RANKS[r][0]}</span><span class="rk-xp">${(DB.xp||0).toLocaleString()} XP</span></div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div><div class="sm rk-next">${(()=>{if(!nxt)return'You’ve reached the top rank. Legendary.';const left=Math.max(0,nxt[1]-mastered),env=ENVS.find(e=>e[3]===r+1);
-      if(r===0)return`<b>Recruit</b> is one correct answer away. Claim your first badge.`;
-      return`<b>${nxt[0]}</b> is ${left} mastered card${left===1?'':'s'} away${env?` · unlocks <b>${env[1]}</b>`:''}. Keep pushing.`})()}</div></div></a>
-  </div>
-  <a class="go" href="${go.href}">${icon(due?'clock':'target',30)}<span class="go-t"><span class="go-l">${esc(go.label)}</span><span class="go-s">${esc(go.sub)}</span></span><span class="go-arrow" aria-hidden="true">›</span></a>
-  <section class="dsec">
-    <h2 class="dh">Your stats</h2>
-    <div class="stats">
-      <div class="card stat streak">${icon('flame')}<b>${streakNow()}</b><small>day streak</small></div>
-      <div class="card stat">${icon('stack')}<b>${DB.sets.length}</b><small>study sets</small></div>
-      <div class="card stat">${icon('check')}<b>${mastered}<span class="muted sm">/${total}</span></b><small>cards mastered</small></div>
-      <a class="card stat" href="#/achievements">${icon('target')}<b>${nAch}<span class="muted sm">/${ACH.length}</span></b><small>achievements</small></a>
-    </div>
-  </section>
-  <div class="dgrid">
-    <section class="dsec">
-      <h2 class="dh">Goals</h2>
-      <div class="card goals">
-        ${[['Daily goal',`Answer ${MISSION.daily} questions correctly today`,DB.daily.n,MISSION.daily,MISSION.dailyXP,DB.daily.done,'b-master'],['Weekly goal',`Answer ${MISSION.weekly} questions correctly this week`,DB.weekly.n,MISSION.weekly,MISSION.weeklyXP,DB.weekly.done,'b-learn']].map(([t,d,n,m,xp,done,cls])=>`
-        <div class="goal">
-          <div class="goal-top"><div><b>${t}</b><div class="muted sm">${d}</div></div><span class="goal-xp ${done?'done':''}">${done?'✓ Done':`+${xp} XP`}</span></div>
-          <div class="goal-bar"><div class="bar big"><i class="${cls}" style="width:${Math.min(100,n/m*100)}%"></i></div><span class="goal-n">${Math.min(n,m)}/${m}</span></div>
-        </div>`).join('')}
-      </div>
-    </section>
-    <section class="dsec">
-      <h2 class="dh">Needs attention</h2>
-      <div class="card attn">
-        ${(()=>{const rows=[];const wk=unresolvedSet().cards.length;
-          const dueSet=DB.sets.filter(x=>dueCards(x).length).sort((a,b)=>dueCards(b).length-dueCards(a).length)[0];
-          if(due)rows.push([icon('clock',20),`${due} card${due>1?'s':''} due for review`,'Reviewing on time keeps them in memory','Review',`#/review/${dueSet.id}`]);
-          if(wk)rows.push([icon('test',20),`${wk} weak card${wk>1?'s':''}`,'Cards you’ve missed recently','Practice','#/learn/unresolved']);
-          weak.forEach(w=>rows.push([icon('target',20),esc(w.s.title),`${Math.round(w.acc*100)}% accuracy`,'Train',`#/learn/${w.s.id}`]));
-          DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).forEach(([x,pl])=>rows.push([icon('cal',20),`Exam: ${esc(x.title)}`,`${pl.days===0?'Today':`In ${pl.days} day${pl.days>1?'s':''}`} · ${pl.left?`${pl.done}/${pl.per} mastered today`:'ready'}`,'Study',`#/learn/${x.id}`]));
-          return rows.length?rows.map(([ic,t,d,b,h])=>`<div class="arow"><span class="aic">${ic}</span><div class="atx"><b>${t}</b><div class="muted sm">${d}</div></div><a class="btn sm" href="${h}">${b}</a></div>`).join(''):`<div class="arow"><span class="aic">${icon('check',20)}</span><div class="atx"><b>All caught up</b><div class="muted sm">Nothing due and no weak spots right now.</div></div></div>`})()}
-      </div>
-    </section>
-  </div>
-  <div class="card quote"><span class="muted sm">Daily motivation</span><p class="code-line">${esc(line)}</p></div>
-  <div class="row between"><h2>Folders</h2><button class="btn sm" id="newFolder">+ New folder</button></div>
-  ${DB.folders.length?`<div class="grid">${DB.folders.map(f=>`<a class="card setcard" href="#/folder/${f.id}"><div class="ttl">${esc(f.name)}</div><div class="muted sm">${DB.sets.filter(s=>s.folder===f.id).length} sets</div></a>`).join('')}</div>`:'<p class="muted">Folders help you group sets by class or topic.</p>'}
-  <div class="row between"><h2>${V('Case files','Your sets')}</h2><a class="btn sm primary" href="#/new">+ ${V('Open a case','Create set')}</a></div>
-  ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:`<div class="card empty"><h3>No sets yet</h3><p class="muted">Create your first study set or import one.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">Create a set</a><a class="btn" href="#/import">Import</a></div></div>`}`;
-  const tick=()=>{const d=new Date(),c=$('#ccClock');if(c)c.innerHTML=`<b>${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</b> · ${d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'})}`};
-  tick();const ti=setInterval(tick,1000);onCleanup(()=>clearInterval(ti));
-  bindOverdue();
-  $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewHome()}};
+  const total=DB.sets.reduce((n,s)=>n+s.cards.length,0),due=dueSet().cards.length,mastered=masteredTotal();
+  const mp=total?Math.round(mastered/total*100):0,st=streakNow(),go=trainTarget(),ci=continueItem(),line=CODE[dayNum()%CODE.length];
+  const dn=DB.daily.n,goalLeft=Math.max(0,MISSION.daily-dn);
+  const brief=!DB.sets.length?'Create a set to get started. QuizCraft will tell you what to study each day.'
+    :(due?`You have ${due} card${due>1?'s':''} due for review. `:'Nothing is due for review. ')+(DB.daily.done?'Today’s goal is complete.':dn?`${goalLeft} more correct answer${goalLeft>1?'s':''} reaches today’s goal.`:`Answer ${MISSION.daily} correctly to reach today’s goal.`);
+  const recent=recentSets().slice(0,4);
+  app.innerHTML=`<div class="wrap">
+  <div class="hello"><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello">${esc(greeting())}</h1><p class="briefing">${brief}</p></div>
+  <a class="start" href="${go.href}"><span class="start-t"><span class="start-l">${esc(go.label)}</span><span class="start-s">${esc(go.sub)}</span></span><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <div class="kpis"><div class="kpi"><b>${due}</b><span>due for review</span></div><div class="kpi"><b>${st}</b><span>day streak</span></div><div class="kpi"><b>${mp}%</b><span>mastered</span></div></div>
+  ${ci?`<section class="sec"><div class="sec-h"><h2>Continue studying</h2></div><a class="resume" href="${ci.href}"><div class="lmain"><div class="lt">${esc(ci.title)}</div><div class="lm">${esc(ci.meta)}</div></div><span class="btn sm primary">Resume</span></a></section>`:''}
+  <section class="sec recent"><div class="sec-h"><h2>Recent sets</h2>${DB.sets.length?'<a href="#/library">View library</a>':''}</div>
+  ${recent.length?`<div class="list">${recent.map(setRow).join('')}</div>`:`<p class="muted">No sets yet. <a href="#/new" style="color:var(--accent)">Create one</a> or <a href="#/import" style="color:var(--accent)">import from Quizlet</a>.</p>`}</section>
+  <p class="motto"><svg width="20" height="12" viewBox="0 0 64 40" aria-hidden="true"><path d="${BAT_PATH}" fill="currentColor"/></svg><span>${esc(line)}</span></p>
+  </div>`;
+}
+function viewLibrary(q=''){
+  const sets=recentSets();
+  app.innerHTML=`<div class="wrap">
+  <div class="page-h"><div><h1>Library</h1><p class="lede">${sets.length} set${sets.length===1?'':'s'} · ${DB.sets.reduce((n,s)=>n+s.cards.length,0)} terms</p></div><div class="row"><a class="btn" href="#/import">Import</a><a class="btn primary" href="#/new">New set</a></div></div>
+  <div class="lsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="libQ" type="search" placeholder="Search sets and terms" aria-label="Search sets and terms" value="${esc(q)}"></div>
+  <div class="chips" id="libChips"><button class="chip on" data-f="">All</button>${DB.folders.map(f=>`<a class="chip" href="#/folder/${f.id}">${esc(f.name)} <span class="muted">${DB.sets.filter(s=>s.folder===f.id).length}</span></a>`).join('')}<button class="chip" id="newFolder">+ Folder</button></div>
+  <div id="libOut"></div></div>`;
+  const out=$('#libOut'),inp=$('#libQ');
+  const render=()=>{
+    const n=norm(inp.value);
+    if(!n){out.innerHTML=sets.length?`<div class="list">${sets.map(setRow).join('')}</div>`:`<div class="card empty"><h3 style="margin-top:0">Your library is empty</h3><p class="muted">Create a set or import one from Quizlet, Word or Excel.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">New set</a><a class="btn" href="#/import">Import</a></div></div>`;return}
+    const ss=sets.filter(s=>norm(s.title+' '+s.desc).includes(n)),hits=[];DB.sets.forEach(s=>s.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([s,c])}));
+    out.innerHTML=`<div class="sec-h" style="margin-top:8px"><h2>Sets</h2><span class="muted sm">${ss.length}</span></div>${ss.length?`<div class="list">${ss.map(setRow).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
+      <div class="sec-h" style="margin-top:28px"><h2>Terms</h2><span class="muted sm">${hits.length}</span></div>${hits.length?`<div class="list">${hits.slice(0,200).map(([s,c])=>`<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(c.term)}</div><div class="lm">${esc(c.def)}</div></div><span class="lm" style="max-width:35%">${esc(s.title)}</span></a>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
+  };
+  let t;inp.oninput=()=>{clearTimeout(t);t=setTimeout(()=>{render();history.replaceState(null,'',inp.value.trim()?'#/search/'+encodeURIComponent(inp.value.trim()):'#/library')},150)};
+  render();if(q){inp.focus();inp.setSelectionRange(q.length,q.length)}
+  $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewLibrary()}};
+}
+function viewProgress(){
+  rollMissions();
+  const total=DB.sets.reduce((n,s)=>n+s.cards.length,0),mastered=masteredTotal(),due=dueSet().cards.length;
+  let R=0,W=0;DB.sets.forEach(s=>s.cards.forEach(c=>{R+=c.right;W+=c.wrong}));
+  const r=rankIndex(),nxt=RANKS[r+1],prevT=r>=2?RANKS[r][1]:0,rp=nxt?Math.min(100,(mastered-prevT)/Math.max(1,nxt[1]-prevT)*100):100;
+  const rows=[],wk=unresolvedSet().cards.length;
+  if(due)rows.push([`${due} card${due>1?'s':''} due for review`,'Reviewing on time keeps them in memory','Review','#/review/due']);
+  if(wk)rows.push([`${wk} weak card${wk>1?'s':''}`,'Cards you’ve missed recently, across every set','Practice','#/learn/unresolved']);
+  weakest().forEach(w=>rows.push([esc(w.s.title),`${Math.round(w.acc*100)}% accuracy`,'Train',`#/learn/${w.s.id}`]));
+  DB.sets.map(x=>[x,examPlan(x)]).filter(x=>x[1]&&x[1].days<=30).sort((a,b)=>a[1].days-b[1].days).slice(0,3).forEach(([x,pl])=>rows.push([`Exam: ${esc(x.title)}`,`${pl.days===0?'Today':`In ${pl.days} day${pl.days>1?'s':''}`} · ${pl.left?`${pl.done}/${pl.per} mastered today`:'ready'}`,'Study',`#/learn/${x.id}`]));
+  app.innerHTML=`<div class="wrap">
+  <div class="page-h"><div><h1>Progress</h1><p class="lede">${mastered} of ${total} cards mastered</p></div></div>
+  <div class="kpis k4"><div class="kpi"><b>${streakNow()}</b><span>day streak</span></div><div class="kpi"><b>${total?Math.round(mastered/total*100):0}%</b><span>mastered</span></div><div class="kpi"><b>${R+W?Math.round(R/(R+W)*100):0}%</b><span>accuracy</span></div><div class="kpi"><b>${(DB.xp||0).toLocaleString()}</b><span>XP</span></div></div>
+  <section class="sec"><div class="sec-h"><h2>Goals</h2></div><div class="goals">
+    ${[['Daily goal',`Answer ${MISSION.daily} questions correctly today`,DB.daily.n,MISSION.daily,MISSION.dailyXP,DB.daily.done],['Weekly goal',`Answer ${MISSION.weekly} questions correctly this week`,DB.weekly.n,MISSION.weekly,MISSION.weeklyXP,DB.weekly.done]].map(([t,d,n,m,xp,done])=>`
+    <div class="goalrow goal"><div class="goal-top"><div><b>${t}</b><div class="muted sm">${d}</div></div><span class="goal-xp ${done?'done':''}">${done?'✓ Done':`+${xp} XP`}</span></div>
+    <div class="goal-bar"><div class="bar"><i class="b-learn" style="width:${Math.min(100,n/m*100)}%"></i></div><span class="goal-n">${Math.min(n,m)}/${m}</span></div></div>`).join('')}
+  </div></section>
+  <section class="sec"><div class="sec-h"><h2>Rank</h2><a href="#/achievements">Ranks & achievements</a></div>
+    <a class="card rankrow" href="#/achievements">${rankBadge(r,40)}<div class="lmain"><div class="row between"><b>${RANKS[r][0]}</b><span class="muted sm">${Object.keys(DB.ach).length}/${ACH.length} achievements</span></div><div class="bar"><i class="b-learn" style="width:${r===0?0:rp}%"></i></div><div class="muted sm" style="margin-top:6px">${!nxt?'You’ve reached the top rank.':r===0?'Answer one question correctly to become a Recruit.':`${Math.max(0,nxt[1]-mastered)} more mastered card${nxt[1]-mastered===1?'':'s'} to reach ${nxt[0]}`}</div></div></a></section>
+  <section class="sec needs"><div class="sec-h"><h2>Needs attention</h2><a href="#/detective">Weak spots report</a></div>
+    <div class="list">${rows.length?rows.map(([t,d,b,h])=>`<div class="lrow"><div class="lmain"><div class="lt">${t}</div><div class="lm">${d}</div></div><a class="btn sm" href="${h}">${b}</a></div>`).join(''):`<div class="lrow"><div class="lmain"><div class="lt">All caught up</div><div class="lm">Nothing due and no weak spots right now.</div></div></div>`}</div></section>
+  ${DB.sets.length?`<section class="sec"><div class="sec-h"><h2>By set</h2></div><div class="list">${recentSets().map(setRow).join('')}</div></section>`:''}
+  </div>`;
 }
 function viewAchievements(){setTimeout(()=>bindEnvPicker(app),0);
   const r=rankIndex(),m=masteredTotal();
-  app.innerHTML=`<a class="btn ghost sm" href="#/">← Dashboard</a>
+  app.innerHTML=`<a class="btn ghost sm" href="#/progress">← Progress</a>
   <h1 style="margin-top:8px">Ranks & achievements</h1><p class="muted">${(DB.xp||0).toLocaleString()} XP earned · ${m} cards mastered · ${Object.keys(DB.ach).length}/${ACH.length} achievements</p>
   <h2>Ranks</h2><div class="card ladder">${RANKS.slice(1).map(([n,t],k)=>{const i=k+1;return `<div class="rung ${i===r?'cur':i<r?'done':''}">${rankBadge(i,36)}<div style="flex:1"><b>${n}</b><div class="muted sm">${i===1?'Complete your first study session':`Master ${t.toLocaleString()} cards`}</div></div>${i===r?'<span class="pill">Current</span>':i<r?'<span class="muted sm">✓</span>':`<span class="muted sm">${Math.max(0,t-m)} to go</span>`}</div>`}).join('')}</div>
   <h2>Achievements</h2><div class="grid">${ACH.map(([id,n,d])=>{const t=DB.ach[id];return `<div class="card achcard ${t?'got':''}"><span class="achic">${icon(t?'check':'clock',26)}</span><div><b>${n}</b><div class="muted sm">${d}</div>${t?`<div class="sm" style="color:var(--ok)">Unlocked ${new Date(t).toLocaleDateString()}</div>`:''}</div></div>`}).join('')}</div>
-  <h2>Environments</h2><p class="muted" style="margin-top:-6px">Backgrounds for the Midnight theme. Each rank unlocks a new one.</p>${envPicker()}
+  <h2>Environments</h2><p class="muted" style="margin-top:-6px">Animated backgrounds for the Midnight theme. Each rank unlocks a new one. Picking one switches you to Midnight.</p>${envPicker()}
   <h2>How XP works</h2><div class="card sm"><p style="margin-top:0">+15 XP for a correct answer on the first try (+10 if you missed it in the last 10 minutes) · +25 when a card becomes mastered · +${MISSION.dailyXP} for the daily goal · +${MISSION.weeklyXP} for the weekly goal · +50 for each achievement.</p><p class="muted" style="margin-bottom:0">Flipping through cards without answering earns nothing, so XP tracks what you actually remember.</p></div>`;
 }
 /* ========== folder ========== */
 function viewFolder(id){
   const f=DB.folders.find(f=>f.id===id);if(!f)return notFound();
   const sets=DB.sets.filter(s=>s.folder===id);
-  app.innerHTML=`<a class="btn ghost sm" href="#/">← Home</a>
-  <div class="row between" style="margin-top:8px"><h1>📁 ${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
+  app.innerHTML=`<a class="btn ghost sm" href="#/library">← Library</a>
+  <div class="row between" style="margin-top:8px"><h1>${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
   <p class="muted">${sets.length} sets · ${sets.reduce((n,s)=>n+s.cards.length,0)} terms</p>
   ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<div class="card empty muted">This folder is empty.</div>'}`;
   $('#ren').onclick=async()=>{const n=await askText('Rename folder',f.name);if(n){f.name=n;save();viewFolder(id)}};
-  $('#del').onclick=async()=>{if(await confirmBox(`Delete the folder “${esc(f.name)}”? The sets inside will be kept.`)){DB.sets.forEach(s=>{if(s.folder===id)s.folder=''});DB.folders=DB.folders.filter(x=>x.id!==id);save();location.hash='#/'}};
+  $('#del').onclick=async()=>{if(await confirmBox(`Delete the folder “${esc(f.name)}”? The sets inside will be kept.`)){DB.sets.forEach(s=>{if(s.folder===id)s.folder=''});DB.folders=DB.folders.filter(x=>x.id!==id);save();location.hash='#/library'}};
   $('#addTo').onclick=()=>{
     const others=DB.sets.filter(s=>s.folder!==id);
     if(!others.length)return toast('All your sets are already in this folder');
@@ -893,20 +1065,6 @@ function viewFolder(id){
     $('#mO').onclick=()=>{$$('.modal-card input:checked').forEach(i=>{getSet(i.value).folder=id});save();closeModal(true);viewFolder(id)};
   };
 }
-
-/* ========== search ========== */
-function viewSearch(q){
-  const inp=$('#globalSearch');if(document.activeElement!==inp)inp.value=q;
-  const n=norm(q);
-  if(!n){app.innerHTML='<p class="muted">Type to search your sets and terms.</p>';return}
-  const sets=DB.sets.filter(s=>norm(s.title+' '+s.desc).includes(n));
-  const hits=[];DB.sets.forEach(s=>s.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([s,c])}));
-  app.innerHTML=`<h1>Results for “${esc(q)}”</h1>
-  <h2>Sets (${sets.length})</h2>${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
-  <h2>Terms (${hits.length})</h2>${hits.length?`<div class="card terms" style="padding:0">${hits.slice(0,200).map(([s,c])=>`<div class="t"><div class="tt">${nl(c.term)}</div><div>${nl(c.def)}</div><a class="pill" href="#/set/${s.id}">${esc(s.title)}</a></div>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
-}
-let searchT;
-$('#globalSearch').addEventListener('input',e=>{clearTimeout(searchT);const v=e.target.value;searchT=setTimeout(()=>{if(v.trim())location.hash='#/search/'+encodeURIComponent(v.trim());else if(location.hash.startsWith('#/search'))location.hash='#/'},250)});
 
 /* ========== set page ========== */
 function viewSet(s){
@@ -921,7 +1079,7 @@ function viewSet(s){
     <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}
     <div class="casestats"><div><b>${s.cards.length}</b><small>${V('evidence items','terms')}</small></div><div><b>${pct}%</b><small>${V('evidence verified','mastered')}</small></div><div><b>${unres}</b><small>${V('unresolved','to fix')}</small></div><div><b>${due}</b><small>due now</small></div></div>
     ${(()=>{const pl=examPlan(s);return `<div class="planner noprint">${icon('cal',18)}<label for="examD">Exam date</label><input type="date" id="examD" value="${s.exam||''}" min="${ymd()}">${pl?`<span>${pl.days===0?'Exam today':`${pl.days} day${pl.days>1?'s':''} left`} · ${pl.left?`master <b>${pl.per}</b> a day · today <b>${pl.done}/${pl.per}</b>`:'everything mastered'}</span>`:'<span class="muted">Set a date and QuizCraft splits the work into daily targets.</span>'}</div>`})()}
-    <div class="row noprint"><a class="btn primary big" href="${contHref}">${due?V('Review overdue evidence','Review due cards'):cl?V('Re-examine the case','Take a test'):V('Continue investigation','Continue studying')}</a><a class="btn" href="#/edit/${s.id}">✏️ Edit</a><button class="btn" id="shareBtn">🔗 Share</button><button class="btn" id="moreBtn">⋯</button></div>
+    <div class="row noprint"><a class="btn primary big" href="${contHref}">${due?V('Review overdue evidence','Review due cards'):cl?V('Re-examine the case','Take a test'):V('Continue investigation','Continue studying')}</a><a class="btn" href="#/edit/${s.id}">Edit</a><button class="btn" id="shareBtn">Share</button><button class="btn" id="moreBtn">⋯</button></div>
   </div>
   <div class="modes noprint">${modes.map(m=>`<a class="mode" href="#/${m[0]}/${s.id}">${icon(m[1])}${m[2]}<small>${m[3]}</small></a>`).join('')}</div>
   <div class="card noprint"><div class="row between"><strong>Your progress</strong><button class="btn sm ghost" id="resetP">Reset progress</button></div>${barHtml(p,true)}${legendHtml(p)}</div>
@@ -946,14 +1104,14 @@ function viewSet(s){
   };
   $('#moreBtn').onclick=()=>{
     modal(`<h3>${esc(s.title)}</h3><div class="menu-list">
-      <button class="btn" data-m="copy">📋 Copy as text (term ⇥ definition)</button>
-      <button class="btn" data-m="txt">⬇ Download .txt</button>
-      <button class="btn" data-m="csv">⬇ Download .csv (Excel / Sheets)</button>
-      <button class="btn" data-m="json">⬇ Download set backup (.json, keeps images)</button>
-      <button class="btn" data-m="dup">🧬 Duplicate set</button>
-      <button class="btn" data-m="folder">📁 Move to folder</button>
-      <button class="btn" data-m="print">🖨 Print</button>
-      <button class="btn danger" data-m="del">🗑 Delete set</button></div>`);
+      <button class="btn" data-m="copy">Copy as text (term ⇥ definition)</button>
+      <button class="btn" data-m="txt">Download .txt</button>
+      <button class="btn" data-m="csv">Download .csv (Excel / Sheets)</button>
+      <button class="btn" data-m="json">Download set backup (.json, keeps images)</button>
+      <button class="btn" data-m="dup">Duplicate set</button>
+      <button class="btn" data-m="folder">Move to folder</button>
+      <button class="btn" data-m="print">Print</button>
+      <button class="btn danger" data-m="del">Delete set</button></div>`);
     $('.menu-list').onclick=async e=>{
       const m=e.target.closest('[data-m]')?.dataset.m;if(!m)return;
       const text=s.cards.map(c=>`${c.term.replace(/[\t\n]+/g,' ')}\t${c.def.replace(/[\t\n]+/g,' ')}`).join('\n');
@@ -965,7 +1123,7 @@ function viewSet(s){
       if(m==='dup'){const d=fixSet(structuredClone(s));d.id=uid();d.title=s.title+' (copy)';d.created=d.updated=Date.now();d.cards.forEach(c=>c.id=uid());DB.sets.push(d);save();closeModal(true);location.hash='#/set/'+d.id;toast('Set duplicated')}
       if(m==='print'){closeModal(true);$('#filt').value='all';renderTerms();setTimeout(()=>print(),100)}
       if(m==='folder'){modal(`<h3>Move to folder</h3><select id="mvF"><option value="">No folder</option>${DB.folders.map(f=>`<option value="${f.id}" ${s.folder===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Move</button></div>`);$('#mC').onclick=()=>closeModal();$('#mO').onclick=()=>{s.folder=$('#mvF').value;save();closeModal(true);viewSet(s)}}
-      if(m==='del'){if(await confirmBox(`Delete “${esc(s.title)}” and all its progress? This can’t be undone.`)){DB.sets=DB.sets.filter(x=>x.id!==s.id);saveNow();location.hash='#/';toast('Set deleted')}}
+      if(m==='del'){if(await confirmBox(`Delete “${esc(s.title)}” and all its progress? This can’t be undone.`)){DB.sets=DB.sets.filter(x=>x.id!==s.id);saveNow();location.hash='#/library';toast('Set deleted')}}
     };
   };
 }
@@ -1691,7 +1849,7 @@ function viewDetective(){
   const unres=all.filter(o=>isUnresolved(o.c));
   const report=answered.filter(o=>o.c.wrong>0).sort((a,b)=>(b.c.wrong-b.c.right*.5)-(a.c.wrong-a.c.right*.5)).slice(0,20);
   const weak=weakest();
-  app.innerHTML=`<a class="btn ghost sm" href="#/">← Dashboard</a>
+  app.innerHTML=`<a class="btn ghost sm" href="#/progress">← Progress</a>
   <h1 style="margin-top:8px">${V('Detective Mode','Weak spots')}</h1>
   <p class="muted">${V('Every mistake is evidence. This report finds the cards you keep missing so you can close them out.','The cards you miss most, across every set.')}</p>
   <div class="casestats card" style="margin:14px 0">
@@ -1745,31 +1903,44 @@ async function viewShare(code){
 }
 
 /* ========== settings ========== */
+function syncLineText(){return (user?user.email+' · ':'')+(user?({ok:'Synced across your devices',busy:'Syncing…',error:'Last sync failed. It will retry automatically.',offline:'Offline. Changes upload when you reconnect.'})[syncState]||'Signed in':sb?'Not signed in. Your sets are saved on this device only.':'Cloud sync is unavailable right now.')}
 function viewSettings(){
-  const size=new Blob([JSON.stringify(DB)]).size;
-  app.innerHTML=`<h1>Settings</h1>
-  <h2>Account & sync</h2>
-  <div class="card"><div class="opt" style="border:0"><span>${user?`☁️ Signed in as <b>${esc(user.email)}</b> — your sets sync across devices`:sb?'Not signed in — your sets are only saved on this device':'Cloud sync is unavailable right now (are you offline?)'}</span>${sb?`<button class="btn sm ${user?'':'primary'}" id="acctBtn">${user?'Manage':'Sign in to sync'}</button>`:''}</div></div>
-  <h2>Environment</h2>${envPicker()}
-  <h2>Preferences</h2>
-  <div class="card">
-    <label class="opt"><span>Theme</span><select id="sTheme"><option value="midnight">Midnight (city at night)</option><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match my device</option></select></label>
+  const size=new Blob([JSON.stringify(DB)]).size,nm=firstName()||'You';
+  app.innerHTML=`<div class="wrap">
+  <div class="page-h"><div class="prof"><span class="avatar">${firstName()?esc(nm[0].toUpperCase()):`<svg width="28" height="18" viewBox="0 0 64 40" aria-hidden="true"><path d="${BAT_PATH}" fill="currentColor"/></svg>`}</span><div><h1 style="font-size:24px">${esc(DB.settings.name||(user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'Your profile')}</h1><div class="muted sm" id="syncStat">${esc(syncLineText())}</div></div></div>${sb?`<button class="btn ${user?'':'primary'}" id="acctBtn">${user?'Account & sync':'Sign in to sync'}</button>`:''}</div>
+  <section class="sec" style="margin-top:8px"><div class="sec-h"><h2>General</h2></div><div class="card plist">
+    <label class="opt"><span>Name <span class="muted sm">(used in your greeting)</span></span><input id="sName" style="max-width:200px" placeholder="${esc(firstName()||'Your name')}" value="${esc(DB.settings.name||'')}"></label>
+    <label class="opt"><span>Theme</span><select id="sTheme" style="max-width:240px"><option value="charcoal">Charcoal</option><option value="midnight">Midnight city (animated)</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Match my device</option></select></label>
+    <div class="opt"><span>Study sounds <span class="muted sm">(rain, thunder, hum)</span></span><button class="btn sm" id="sAmb">${DB.settings.amb.on?'On':'Off'} · Adjust</button></div>
+  </div></section>
+  <section class="sec"><div class="sec-h"><h2>Studying</h2></div><div class="card plist">
     <label class="opt"><span>Highlight key terms <span class="muted sm">(underline other terms from the set inside definitions)</span></span><input type="checkbox" id="sVision"></label>
     <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
-    <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:180px"></label>
-    <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">🔊 Play</button></div>
+    <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:160px"></label>
+    <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">Play</button></div>
+  </div></section>
+  <section class="sec"><div class="sec-h"><h2>Backgrounds</h2><a href="#/achievements">Ranks & achievements</a></div>
+    <details class="more"><summary>Animated city backgrounds you unlock by ranking up (Midnight theme)</summary><div style="margin-top:10px">${envPicker()}</div></details></section>
+  <section class="sec"><div class="sec-h"><h2>Your data</h2></div><div class="card plist">
+    <div class="opt"><span class="sm muted">${user?'Saved in this browser and synced to your account':'Saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net.</span></div>
+    <div class="opt"><span>Back up everything</span><button class="btn sm" id="sExport">Export .json</button></div>
+    <div class="opt"><span>Restore a backup</span><label class="btn sm">Choose file<input type="file" id="sImport" accept=".json,application/json" hidden></label></div>
+    <div class="opt"><span>Import sets from Quizlet, Word or Excel</span><a class="btn sm" href="#/import">Import</a></div>
+    <div class="opt"><span>Delete all data</span><button class="btn sm danger" id="sWipe">Delete</button></div>
+  </div></section>
+  <section class="sec"><div class="sec-h"><h2>Help</h2></div><div class="card plist">
+    <div class="opt"><span>Take the quick tour again</span><button class="btn sm" id="sTour">Replay tour</button></div>
+    <div class="opt"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add starter sets</button></div>
   </div>
-  <h2>Your data</h2>
-  <div class="card">
-    <p class="muted sm" style="margin-top:0">${user?'Your sets are saved in this browser and synced to your account':'Everything is saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net${user?'':', and a way to move your sets to another device'}.</p>
-    <div class="row"><button class="btn primary" id="sExport">⬇ Export everything (.json)</button><label class="btn">⬆ Restore backup<input type="file" id="sImport" accept=".json,application/json" hidden></label><button class="btn danger" id="sWipe">Delete all data</button></div>
-  </div>
-  <h2>Help</h2><div class="card"><div class="opt" style="border:0"><span>Take the quick tour of QuizCraft again</span><button class="btn sm" id="sTour">Replay tour</button></div><div class="opt" style="border:0"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add starter sets</button></div></div>
-  <h2>Keyboard shortcuts</h2>
-  <div class="card kbd-list">
-    <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick a multiple-choice answer</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
+  <details class="more" style="margin-top:14px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
+    <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick an answer or rate a card</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
+  </div></details>
+  <p style="margin-top:28px"><a class="classic" href="archive/v1/">Open the classic QuizCraft design</a></p></section>
   </div>`;
-  if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};bindEnvPicker(app);
+  if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};
+  bindEnvPicker(app);
+  $('#sAmb').onclick=e=>{e.stopPropagation();hideAmbHint();ambPanel()};
+  $('#sName').onchange=e=>{DB.settings.name=e.target.value.trim();save();toast(DB.settings.name?'Name saved':'Name cleared')};
   $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
@@ -1802,9 +1973,9 @@ function noteChanges(){ // stamp local edit times so the newest edit wins a conf
 }
 function scheduleSync(ms=2500){clearTimeout(syncT);syncT=setTimeout(sync,ms)}
 function setSync(st,msg){
-  syncState=st;const b=$('#syncBtn');if(!b)return;
-  const [i,t,c]=({off:['','Sign in',''],busy:['⟳','Syncing…',''],ok:['✓','Synced','ok'],error:['⚠','Sync error','bad'],offline:['⚠','Offline','bad']})[user?st:'off'];
-  b.innerHTML=`${i?i+' ':''}${t}`;b.className='btn sm desk '+(c?'sync-'+c:'');b.title=msg||t;if(window.mMenuRefresh)mMenuRefresh();
+  syncState=st;const warn=!!user&&(st==='error'||st==='offline');
+  $$('[data-nav=profile]').forEach(a=>{a.classList.toggle('sync-warn',warn);a.title=warn?(st==='offline'?'Offline':'Sync error'):''});
+  const el=$('#syncStat');if(el)el.textContent=syncLineText();
 }
 async function sync(){
   if(!sb||!user)return;
@@ -1865,7 +2036,7 @@ async function sync(){
 function refreshView(){
   if(!$('#modal').hidden)return;
   const v=location.hash.replace(/^#\/?/,'').split('/')[0];
-  if(['','set','folder','search','settings'].includes(v)){const y=scrollY;route();scrollTo(0,y)}
+  if(['','set','folder','search','settings','library','progress','profile'].includes(v)){const y=scrollY;route();scrollTo(0,y)}
   else toast('Synced new changes from your other devices');
 }
 function authModal(){
@@ -1904,12 +2075,12 @@ function initSync(){
     const was=user?.id;user=session?.user||null;
     setSync(user?(syncState==='off'?'busy':syncState):'off');
     if(ev==='PASSWORD_RECOVERY')setTimeout(newPasswordModal,80);
-    if(user&&user.id!==was)setTimeout(sync,0);
+    if(user&&user.id!==was){setTimeout(sync,0);const h=$('#hello');if(h)h.textContent=greeting()}
+    if((user?.id||null)!==(was||null)&&/^#\/(profile|settings)/.test(location.hash)&&$('#modal').hidden)viewSettings();
     if(!user)clearTimeout(syncT);
   });
   sb.auth.getSession().then(()=>{if(AUTH_IN_URL||/access_token=/.test(location.hash)){history.replaceState(null,'',location.pathname+'#/');route()}});
 }
-$('#syncBtn').onclick=()=>authModal();
 setInterval(()=>{if(user&&document.visibilityState==='visible')sync()},60000);
 document.addEventListener('visibilitychange',()=>{if(!user)return;if(document.visibilityState==='visible')scheduleSync(300);else sync()});
 addEventListener('online',()=>{if(user)sync()});
@@ -1940,39 +2111,19 @@ function celebrate(){
     if(k<2.4)requestAnimationFrame(f);else c.remove()})(t0);
 }
 
-/* ========== mobile header: menu + search ========== */
-function mMenuRefresh(){
-  const p=$('#mPanel');if(!p||p.hidden)return;
-  const syncTxt=user?({ok:'✓ Synced',busy:'Syncing…',error:'⚠ Error',offline:'Offline'})[syncState]||'':'Sign in';
-  const tname=({midnight:'Midnight',light:'Light',dark:'Dark',system:'Device'})[DB.settings.theme];
-  p.innerHTML=`<a href="#/new">${icon('pencil',20)} Create a set</a><a href="#/import">${icon('stack',20)} Import</a><hr>
-    <a href="#/detective">${icon('test',20)} ${V('Detective Mode','Weak spots')}</a><a href="#/achievements">${icon('check',20)} Ranks & achievements</a><hr>
-    <button class="mi" id="mSync">${icon('cloud',20)} ${user?'Account & sync':'Sign in to sync'}${user?`<span class="mstat">${syncTxt}</span>`:''}</button>
-    <button class="mi" id="mTheme">${icon('half',20)} Theme<span class="mstat">${tname}</span></button>
-    <a href="#/settings">${icon('gear',20)} Settings</a><button class="mi" id="mTour">${icon('target',20)} Take the tour</button>`;
-  $('#mTour').onclick=()=>{closeMMenu();startTour()};
-  $('#mSync').onclick=()=>{closeMMenu();authModal()};
-  $('#mTheme').onclick=()=>{$('#themeBtn').click();mMenuRefresh()};
-}
-function openMMenu(){const p=$('#mPanel');p.hidden=false;$('#mMenu').setAttribute('aria-expanded','true');$('#ambPanel').hidden=true;hideAmbHint();mMenuRefresh()}
-function closeMMenu(){const p=$('#mPanel');if(p)p.hidden=true;const b=$('#mMenu');if(b)b.setAttribute('aria-expanded','false')}
-$('#mMenu').onclick=()=>{$('#mPanel').hidden?openMMenu():closeMMenu()};
-$('#mPanel').addEventListener('click',e=>{if(e.target.closest('a'))closeMMenu()});
-document.addEventListener('mousedown',e=>{if(!$('#mPanel').hidden&&!e.target.closest('#mPanel,#mMenu'))closeMMenu()});
-$('#mSearch').onclick=()=>{const t=$('.top');t.classList.toggle('searching');if(t.classList.contains('searching'))$('#globalSearch').focus();else{$('#globalSearch').value='';if(location.hash.startsWith('#/search'))location.hash='#/'}};
-addEventListener('hashchange',()=>{closeMMenu();if(!location.hash.startsWith('#/search'))$('.top').classList.remove('searching')});
+/* ========== navigation helpers ========== */
+const closeMMenu=()=>{};
 
 /* ========== first-visit tour ========== */
 const vis=sel=>{const el=[...document.querySelectorAll(sel)].find(e=>e.offsetParent!==null&&e.getBoundingClientRect().width>0);return el||null};
 const TOUR=[
-  {t:'Welcome to QuizCraft',d:'Study with flashcards, quizzes and quick games. Here’s a one-minute tour of how it works.'},
-  {sel:'.rankcard',t:'Your rank and XP',d:'Earn XP for correct answers and for mastering cards. Rank up to unlock new backgrounds.'},
-  {sel:'.go',t:'Your next step',d:'This button always picks the most useful thing to study right now. Tap it whenever you’re not sure where to start.'},
-  {sel:'.goals',t:'Daily and weekly goals',d:'Answer enough questions correctly to hit your goals and earn bonus XP.'},
-  {sel:'.attn',t:'Needs attention',d:'Cards that are due for review or that you keep missing show up here, each with a one-tap fix.'},
-  {sel:'.setcard[href^="#/set/"]',t:'Your study sets',d:'Open a set to study it with Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam. Two starter sets, Nursing and IT, are ready to try.'},
-  {sel:'.top a[href="#/new"].desk, #mMenu',t:'Make your own sets',d:'Create a set from scratch, or import one from Quizlet, Word or Excel.'},
-  {sel:'#syncBtn, #mMenu',t:'Sync your devices',d:'Sign in with Google or email to keep your sets and progress on every device.'},
+  {t:'Welcome to QuizCraft',d:'A quiet place to study. Here’s a one-minute tour of how it works.'},
+  {sel:'.start',t:'Start training',d:'This button always picks what to study next: due reviews first, then the set you’re learning. One tap and you’re in.'},
+  {sel:'.kpis',t:'Your day at a glance',d:'Cards due for review, your study streak, and how much of your library you’ve mastered.'},
+  {sel:'.recent',t:'Your sets',d:'Two starter sets, Nursing and IT, are ready to try. Open a set to use Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam.'},
+  {sel:'.nav [data-nav=library], #tabbar [data-nav=library]',t:'Library',d:'All your sets and folders. Create a set, import from Quizlet, Word or Excel, and search every term.'},
+  {sel:'.nav [data-nav=progress], #tabbar [data-nav=progress]',t:'Progress',d:'Daily and weekly goals, your rank and XP, achievements, and the cards that need more work.'},
+  {sel:'.nav [data-nav=profile], #tabbar [data-nav=profile]',t:'Profile',d:'Sign in with Google to sync your devices, change the theme, and back up your data.'},
   {sel:'#ambBtn',t:'Study sounds',d:'Rain and thunder play while you study. Turn them on or off here anytime.'},
 ];
 let tourI=0;
@@ -2003,9 +2154,8 @@ function tourStep(){
 }
 /* ========== theme & boot ========== */
 const mq=matchMedia('(prefers-color-scheme: dark)');
-function applyTheme(){const t=DB.settings.theme;document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t;$('#themeBtn').title='Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark',system:'Match device'})[t]}
+function applyTheme(){const t=DB.settings.theme||'charcoal';document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t}
 mq.addEventListener?.('change',applyTheme);
-$('#themeBtn').onclick=()=>{const order=['midnight','light','dark'],cur=document.documentElement.dataset.theme;DB.settings.theme=order[(order.indexOf(cur)+1)%3];save();applyTheme();toast('Theme: '+({midnight:'Midnight',light:'Light',dark:'Dark'})[DB.settings.theme])};
 buildCity();
 applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};
 const firstVisit=!DB.settings.tourDone&&DB.settings.newUser;if(firstVisit){const sh=showAmbHint;showAmbHint=()=>{};ambAutostart();showAmbHint=sh;setTimeout(startTour,700)}else ambAutostart();
