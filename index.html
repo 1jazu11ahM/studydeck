@@ -254,6 +254,37 @@ a.stat:hover{border-color:var(--accent)}
 @keyframes strike{0%{background:rgba(220,230,255,0)}8%{background:rgba(220,230,255,.35)}16%{background:rgba(220,230,255,.04)}24%{background:rgba(220,230,255,.22)}100%{background:rgba(220,230,255,0)}}
 .city2{position:absolute;left:0;right:0;bottom:0;width:100%;height:42vh;min-height:220px;will-change:transform}
 @media (max-width:760px){.cc-grid{grid-template-columns:1fr}.rankcard{min-width:0;max-width:none}}
+
+.casehead{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:22px;border-top:3px solid var(--margin)}
+.casehead h1{margin:0}
+.casestats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.casestats>div{display:flex;flex-direction:column}
+.casestats b{font-size:30px;line-height:1.1;font-weight:700}
+.casestats small{color:var(--muted)}
+[data-theme=midnight] .casestats b{font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-weight:900;font-size:38px}
+.stamp{position:absolute;top:22px;right:-6px;transform:rotate(8deg);border:3px solid var(--bad);color:var(--bad);padding:4px 16px;font-weight:800;font-size:20px;letter-spacing:.08em;text-transform:uppercase;border-radius:6px;opacity:.85;mix-blend-mode:normal;animation:stampin .5s cubic-bezier(.2,1.6,.4,1)}
+[data-theme=midnight] .stamp{border-color:var(--accent);color:var(--accent);font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;font-size:26px}
+@keyframes stampin{from{transform:rotate(8deg) scale(2.2);opacity:0}}
+.mini-stamp{position:absolute;top:24px;right:10px;transform:rotate(6deg);border:2px solid var(--ok);color:var(--ok);font-size:11px;font-weight:800;padding:1px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em}
+.setcard{position:relative}
+mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accent);padding:0 1px}
+[data-theme=midnight] mark.dv{color:var(--accent);border-bottom-color:transparent;text-shadow:0 0 12px rgba(242,194,48,.45)}
+.rates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}
+.rates .btn{padding:12px 8px}
+.face.front.interro .ftxt::after{content:'▍';margin-left:4px;color:var(--accent);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flash.flipped .face.back::after{content:'';position:absolute;left:0;right:0;top:0;height:30%;background:linear-gradient(transparent,color-mix(in srgb,var(--accent) 28%,transparent),transparent);animation:scan .75s ease-out forwards;pointer-events:none}
+@keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(340%);opacity:0}}
+.xpfloat{position:absolute;right:16px;margin-top:-34px;animation:floatup .6s ease-out forwards}
+#fctl{position:relative}
+@keyframes floatup{to{transform:translateY(-22px);opacity:0}}
+.transmission{display:flex;gap:14px;align-items:center;padding:12px 16px;margin-bottom:16px;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card));position:relative;overflow:hidden}
+.transmission::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 3px,color-mix(in srgb,var(--accent) 7%,transparent) 3px 4px);pointer-events:none;animation:txscan 4s linear infinite}
+@keyframes txscan{to{background-position:0 40px}}
+.tx-dot{width:10px;height:10px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 0 var(--bad);animation:txpulse 1.4s infinite;flex:none}
+@keyframes txpulse{70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.nowrap{white-space:nowrap}
+@media (max-width:700px){.casestats{grid-template-columns:repeat(2,minmax(0,1fr))}.rates{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #modal{position:fixed;inset:0;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
 #modal[hidden]{display:none}
 .modal-card{max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
@@ -333,7 +364,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'midnight',themeV2:1,autoSpeak:false,rate:1,vocab:true,vision:true},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -347,11 +378,57 @@ function load(){
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
+if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
+const V=(det,plain)=>DB.settings.vocab?det:plain;
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
 function saveNow(){clearTimeout(saveT);try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast('Could not save — browser storage may be full. Export a backup in Settings.')}if(typeof user!=='undefined'&&user&&!inSync)scheduleSync()}
 addEventListener('pagehide',saveNow);
-const getSet=id=>DB.sets.find(s=>s.id===id);
+const isUnresolved=c=>c.wrong>0&&(status(c)==='learn'||c.wrong>=c.right);
+function unresolvedSet(){
+  const cards=[];DB.sets.forEach(x=>x.cards.forEach(c=>{if(isUnresolved(c))cards.push(c)}));
+  if(!DB.unresOpts)DB.unresOpts={answer:'term',starred:false,front:'term',written:true,track:true};
+  return{id:'unresolved',virtual:true,title:V('Unresolved evidence','Cards to fix'),desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:0,updated:0,studied:0,cards,opts:DB.unresOpts};
+}
+const getSet=id=>id==='unresolved'?unresolvedSet():DB.sets.find(s=>s.id===id);
+function caseNo(s){let h=0;for(const ch of String(s.id))h=(h*31+ch.charCodeAt(0))>>>0;return String(h%9000+1000)}
+const isClosed=s=>s.cards.length>0&&s.cards.every(c=>status(c)==='master');
+const STAT_WORD=()=>V({new:'unexamined',learn:'in progress',master:'verified'},{new:'new',learn:'learning',master:'mastered'});
+/* detective vision: highlight other terms of the set inside a definition */
+const reEsc=t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function visionRe(s){
+  if(!DB.settings.vision)return null;
+  const ts=[...new Set(s.cards.map(c=>String(c.term||'').trim()).filter(t=>t.length>=3&&t.length<=40))].sort((a,b)=>b.length-a.length).slice(0,80);
+  if(!ts.length)return null;
+  try{return new RegExp('(?<![\\p{L}\\p{N}])('+ts.map(reEsc).join('|')+')(?![\\p{L}\\p{N}])','giu')}catch(e){return null}
+}
+function dvHtml(text,re,own){
+  if(!re||!text)return nl(text);
+  const ownN=norm(own);let out='',last=0;text=String(text);re.lastIndex=0;let m;
+  while((m=re.exec(text))){if(norm(m[0])===ownN)continue;out+=nl(text.slice(last,m.index))+`<mark class="dv">${esc(m[0])}</mark>`;last=m.index+m[0].length}
+  return out+nl(text.slice(last));
+}
+function connections(s){
+  const out=[],seenK=new Set();
+  const others=DB.sets.filter(x=>x.id!==s.id);if(!others.length)return out;
+  s.cards.forEach(c=>{
+    const tn=norm(c.term);if(tn.length<3)return;
+    others.forEach(o=>o.cards.forEach(d=>{
+      const dn=norm(d.term);if(dn.length<3)return;
+      const hit=dn===tn||(' '+norm(c.def)+' ').includes(' '+dn+' ')||(' '+norm(d.def)+' ').includes(' '+tn+' ');
+      const k=c.id+d.id;if(hit&&!seenK.has(k)&&out.length<12){seenK.add(k);out.push({c,d,o})}
+    }));
+  });
+  return out;
+}
+function overdueHtml(sets){
+  if(sessionStorage.getItem('txOff'))return '';
+  const lim=Date.now()-DAY;let n=0,best=null,bn=0;
+  sets.forEach(x=>{const k=x.cards.filter(c=>c.right+c.wrong>0&&c.due<lim).length;n+=k;if(k>bn){bn=k;best=x}});
+  if(!n)return '';
+  return `<div class="transmission noprint"><span class="tx-dot"></span><div style="flex:1"><b>Incoming transmission</b><div class="sm">${n} ${V('piece'+(n>1?'s':'')+' of evidence','card'+(n>1?'s':''))} overdue for review by more than a day.</div></div><a class="btn sm primary" href="#/review/${best.id}">Review now</a><button class="ico" id="txX" title="Dismiss">✕</button></div>`;
+}
+function bindOverdue(){const x=$('#txX');if(x)x.onclick=()=>{try{sessionStorage.setItem('txOff','1')}catch(e){}x.closest('.transmission').remove()}}
 function fixSet(s){s.opts=Object.assign({answer:'term',starred:false,front:'term',written:true,track:false},s.opts||{});s.cards=(s.cards||[]).map(c=>Object.assign(newCard(),c));return s}
 DB.sets.forEach(fixSet);
 
@@ -411,6 +488,7 @@ function queueProgress(){clearTimeout(progT);progT=setTimeout(checkProgress,350)
 function checkProgress(){
   let changed=false;
   ACH.forEach(([id,name,desc,test])=>{if(!DB.ach[id]&&test()){DB.ach[id]=Date.now();DB.xp+=50;changed=true;announce('check','Achievement unlocked: '+name,desc+' · +50 XP')}});
+  DB.sets.forEach(x=>{if(x.cards.length>=3&&!x.closedAt&&isClosed(x)){x.closedAt=Date.now();DB.xp+=250;changed=true;announce('check',V('Case closed: ','Set mastered: ')+x.title,'+250 XP');celebrate()}});
   const r=rankIndex();
   if(r>(DB.rank||0)){DB.rank=r;changed=true;if(r>=2){announce('rank','Promoted to '+RANKS[r][0],'Your new rank is in the Command Center',r);celebrate()}}
   else if(r<(DB.rank||0)){DB.rank=r;changed=true}
@@ -440,7 +518,7 @@ const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/DAY)
 const dueCards=s=>{const n=Date.now();return s.cards.filter(c=>c.right+c.wrong>0&&c.due<=n)};
 function progress(s){const p={new:0,learn:0,master:0};s.cards.forEach(c=>p[status(c)]++);return p}
 function barHtml(p,big){const t=(p.new+p.learn+p.master)||1;return `<div class="bar ${big?'big':''}" title="${p.master} mastered · ${p.learn} learning · ${p.new} not studied"><i class="b-master" style="width:${p.master/t*100}%"></i><i class="b-learn" style="width:${p.learn/t*100}%"></i></div>`}
-function legendHtml(p){return `<div class="row legend"><span><i class="dot b-new"></i>Not studied ${p.new}</span><span><i class="dot b-learn"></i>Still learning ${p.learn}</span><span><i class="dot b-master"></i>Mastered ${p.master}</span></div>`}
+function legendHtml(p){const w=DB.settings.vocab;return `<div class="row legend"><span><i class="dot b-new"></i>${w?'Unexamined':'Not studied'} ${p.new}</span><span><i class="dot b-learn"></i>${w?'In progress':'Still learning'} ${p.learn}</span><span><i class="dot b-master"></i>${w?'Verified':'Mastered'} ${p.master}</span></div>`}
 function ymd(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function touch(s){
   s.studied=Date.now();
@@ -579,6 +657,7 @@ function route(){
   app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');
   if(v!=='search')$('#globalSearch').value='';
   const needSet={set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
+  if(id==='unresolved'&&(v==='set'||v==='edit')){location.replace('#/detective');return}
   if(needSet[v]){const s=getSet(id);if(!s)return notFound();document.title=s.title+' · QuizCraft';return needSet[v](s)}
   document.title='QuizCraft';
   switch(v||''){
@@ -588,6 +667,7 @@ function route(){
     case 'import':return viewImport();
     case 'settings':return viewSettings();
     case 'achievements':return viewAchievements();
+    case 'detective':return viewDetective();
     case 'search':return viewSearch(decodeURIComponent(id||''));
     default:return notFound();
   }
@@ -596,7 +676,7 @@ addEventListener('hashchange',route);
 function notFound(){app.innerHTML=`<div class="card empty"><div style="font-size:48px">🔍</div><h2>We couldn't find that</h2><p class="muted">It may have been deleted.</p><a class="btn primary" href="#/">Go home</a></div>`}
 
 /* ========== home ========== */
-function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder);return `<a class="card setcard" href="#/set/${s.id}"><div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} terms${f?' · 📁 '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
+function setCardHtml(s){const f=DB.folders.find(f=>f.id===s.folder),cl=isClosed(s);return `<a class="card setcard" href="#/set/${s.id}">${cl?`<span class="mini-stamp">${V('Closed','Mastered')}</span>`:''}${DB.settings.vocab?`<div class="muted sm">Case #${caseNo(s)}</div>`:''}<div class="ttl">${esc(s.title||'Untitled')}</div><div class="muted sm">${s.cards.length} ${V('evidence','terms')}${f?' · '+esc(f.name):''}</div>${barHtml(progress(s))}</a>`}
 function continueTarget(){
   const due=DB.sets.map(s=>[s,dueCards(s).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
   if(due.length)return{href:'#/review/'+due[0][0].id,label:`Review ${due[0][1]} overdue card${due[0][1]>1?'s':''}`,sub:due[0][0].title};
@@ -616,7 +696,7 @@ function viewHome(){
   const rp=nxt?Math.min(100,(mastered-prevT)/Math.max(1,nxt[1]-prevT)*100):100;
   const dn=dayNum(),line=CODE[dn%CODE.length],prompt=PROMPTS[dn%PROMPTS.length],today=ymd(),refl=DB.refl[today]||'';
   const nAch=Object.keys(DB.ach).length;
-  app.innerHTML=`
+  app.innerHTML=`${overdueHtml(DB.sets)}
   <div class="cc-head">
     <div><h1 class="cc-title">Command Center</h1><div class="clock" id="ccClock"></div></div>
     <a class="card rankcard" href="#/achievements" title="Ranks and achievements">${rankBadge(r)}<div style="flex:1;min-width:0"><div class="rank-name">${RANKS[r][0]}</div><div class="muted sm">${(DB.xp||0).toLocaleString()} XP${nxt?` · ${Math.max(0,nxt[1]-mastered)} more mastered cards to ${nxt[0]}`:' · highest rank'}</div><div class="bar"><i class="b-master" style="width:${r===0?0:rp}%"></i></div></div></a>
@@ -626,6 +706,7 @@ function viewHome(){
       <a class="go" href="${go.href}"><span class="go-l">${esc(go.label)}</span><span class="go-s">${esc(go.sub)}</span></a>
       <div class="brief-rows">
         <div class="brow"><span>${icon('clock',18)} Due for review</span><b>${due}</b></div>
+        <a class="brow" href="#/detective"><span>${icon('test',18)} ${V('Detective Mode · unresolved evidence','Weak cards to fix')}</span><b>${unresolvedSet().cards.length}</b></a>
         ${weak.length?weak.map(w=>`<a class="brow" href="#/learn/${w.s.id}"><span>${icon('target',18)} Weak spot: ${esc(w.s.title)}</span><b>${Math.round(w.acc*100)}% accuracy</b></a>`).join(''):`<div class="brow muted"><span>${icon('target',18)} Weak spots appear once you've answered a few questions</span></div>`}
         <div class="mission"><div class="row between sm"><span><b>Daily mission</b> · verify ${MISSION.daily} pieces of evidence</span><span>${DB.daily.done?'✓ complete':`${DB.daily.n}/${MISSION.daily} · +${MISSION.dailyXP} XP`}</span></div><div class="bar"><i class="b-master" style="width:${Math.min(100,DB.daily.n/MISSION.daily*100)}%"></i></div></div>
         <div class="mission"><div class="row between sm"><span><b>Weekly challenge</b> · ${MISSION.weekly} correct answers</span><span>${DB.weekly.done?'✓ complete':`${DB.weekly.n}/${MISSION.weekly} · +${MISSION.weeklyXP} XP`}</span></div><div class="bar"><i class="b-learn" style="width:${Math.min(100,DB.weekly.n/MISSION.weekly*100)}%"></i></div></div>
@@ -647,10 +728,11 @@ function viewHome(){
   </div>
   <div class="row between"><h2>Folders</h2><button class="btn sm" id="newFolder">+ New folder</button></div>
   ${DB.folders.length?`<div class="grid">${DB.folders.map(f=>`<a class="card setcard" href="#/folder/${f.id}"><div class="ttl">${esc(f.name)}</div><div class="muted sm">${DB.sets.filter(s=>s.folder===f.id).length} sets</div></a>`).join('')}</div>`:'<p class="muted">Folders help you group sets by class or topic.</p>'}
-  <div class="row between"><h2>Your sets</h2><a class="btn sm primary" href="#/new">+ Create set</a></div>
+  <div class="row between"><h2>${V('Case files','Your sets')}</h2><a class="btn sm primary" href="#/new">+ ${V('Open a case','Create set')}</a></div>
   ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:`<div class="card empty"><h3>No sets yet</h3><p class="muted">Create your first study set or import one.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new">Create a set</a><a class="btn" href="#/import">Import</a></div></div>`}`;
   const tick=()=>{const d=new Date(),c=$('#ccClock');if(c)c.innerHTML=`Nocturne City · <b>${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</b> · ${d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'})}`};
   tick();const ti=setInterval(tick,1000);onCleanup(()=>clearInterval(ti));
+  bindOverdue();
   $('#reflS').onclick=()=>{const v=$('#reflT').value.trim();if(v)DB.refl[today]=v;else delete DB.refl[today];save();queueProgress();$('#reflM').textContent=`Saved · ${Object.keys(DB.refl).length} reflection${Object.keys(DB.refl).length===1?'':'s'}`;toast('Reflection saved')};
   $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewHome()}};
 }
@@ -699,23 +781,29 @@ $('#globalSearch').addEventListener('input',e=>{clearTimeout(searchT);const v=e.
 function viewSet(s){
   const p=progress(s),due=dueCards(s).length,f=DB.folders.find(f=>f.id===s.folder);
   const modes=[['flash','cards','Flashcards','Flip & review'],['learn','target','Learn','Adaptive rounds'],['write','pencil','Write','Type the answers'],['spell','sound','Spell','Listen & type'],['test','test','Test','Practice exam'],['match','match','Match','Beat the clock'],['gravity','comet','Gravity','Arcade typing'],['review','clock','Review',due?`${due} due now`:'Spaced repetition']];
-  app.innerHTML=`
-  <div class="row between" style="align-items:flex-start">
-    <div style="flex:1;min-width:240px"><h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}<div class="muted sm">${s.cards.length} terms${f?` · <a href="#/folder/${f.id}">📁 ${esc(f.name)}</a>`:''} · created ${new Date(s.created).toLocaleDateString()}</div></div>
-    <div class="row noprint"><a class="btn" href="#/edit/${s.id}">✏️ Edit</a><button class="btn" id="shareBtn">🔗 Share</button><button class="btn" id="moreBtn">⋯</button></div>
+  const cl=isClosed(s),pct=s.cards.length?Math.round(p.master/s.cards.length*100):0,unres=s.cards.filter(isUnresolved).length,SW=STAT_WORD();
+  const contHref=due?`#/review/${s.id}`:cl?`#/test/${s.id}`:`#/learn/${s.id}`;
+  app.innerHTML=`${overdueHtml([s])}
+  <div class="card casehead">
+    ${cl?`<div class="stamp">${V('Case closed','Mastered')}</div>`:''}
+    <div class="muted sm">${DB.settings.vocab?`${cl?'Closed case':'Active investigation'} · Case #${caseNo(s)} · Classification: ${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a>`:'unfiled'}`:`${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}created ${new Date(s.created).toLocaleDateString()}`}</div>
+    <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:0 0 6px">${nl(s.desc)}</p>`:''}
+    <div class="casestats"><div><b>${s.cards.length}</b><small>${V('evidence items','terms')}</small></div><div><b>${pct}%</b><small>${V('evidence verified','mastered')}</small></div><div><b>${unres}</b><small>${V('unresolved','to fix')}</small></div><div><b>${due}</b><small>due now</small></div></div>
+    <div class="row noprint"><a class="btn primary big" href="${contHref}">${due?V('Review overdue evidence','Review due cards'):cl?V('Re-examine the case','Take a test'):V('Continue investigation','Continue studying')}</a><a class="btn" href="#/edit/${s.id}">✏️ Edit</a><button class="btn" id="shareBtn">🔗 Share</button><button class="btn" id="moreBtn">⋯</button></div>
   </div>
   <div class="modes noprint">${modes.map(m=>`<a class="mode" href="#/${m[0]}/${s.id}">${icon(m[1])}${m[2]}<small>${m[3]}</small></a>`).join('')}</div>
   <div class="card noprint"><div class="row between"><strong>Your progress</strong><button class="btn sm ghost" id="resetP">Reset progress</button></div>${barHtml(p,true)}${legendHtml(p)}</div>
-  <div class="row between"><h2>Terms in this set (${s.cards.length})</h2><select id="filt" style="width:auto" class="noprint"><option value="all">All terms</option><option value="starred">★ Starred</option><option value="new">Not studied</option><option value="learn">Still learning</option><option value="master">Mastered</option></select></div>
+  <div class="row between"><h2>${V('Evidence in this case','Terms in this set')} (${s.cards.length})</h2><select id="filt" style="width:auto" class="noprint"><option value="all">All</option><option value="starred">★ Starred</option><option value="new">${SW.new[0].toUpperCase()+SW.new.slice(1)}</option><option value="learn">${SW.learn[0].toUpperCase()+SW.learn.slice(1)}</option><option value="master">${SW.master[0].toUpperCase()+SW.master.slice(1)}</option></select></div>
   <div class="card terms" id="terms" style="padding:0"></div>
+  ${(()=>{const cx=connections(s);return cx.length?`<h2>${V('Linked cases','Related cards in other sets')}</h2><div class="card terms" style="padding:0">${cx.map(x=>`<div class="t"><div class="tt">${nl(x.c.term)}</div><div>↔ <b>${nl(x.d.term)}</b> <span class="muted sm">${esc(String(x.d.def).slice(0,90))}</span></div><a class="pill" href="#/set/${x.o.id}">${esc(x.o.title)}</a></div>`).join('')}</div>`:''})()}
   <div class="row noprint" style="justify-content:center;margin-top:16px"><a class="btn" href="#/edit/${s.id}">Add or remove terms</a></div>`;
-  const tag={new:'<span class="st-tag st-new">new</span>',learn:'<span class="st-tag st-learn">learning</span>',master:'<span class="st-tag st-master">mastered</span>'};
+  const tag={new:`<span class="st-tag st-new">${SW.new}</span>`,learn:`<span class="st-tag st-learn">${SW.learn}</span>`,master:`<span class="st-tag st-master">${SW.master}</span>`};const vre=visionRe(s);
   const renderTerms=()=>{
     const fv=$('#filt').value;
     const cs=s.cards.filter(c=>fv==='all'||(fv==='starred'?c.starred:status(c)===fv));
-    $('#terms').innerHTML=cs.length?cs.map(c=>`<div class="t"><div class="tt">${nl(c.term)}${tag[status(c)]}</div><div>${nl(c.def)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div class="row noprint" style="gap:0">${sayBtn(c.term,s.termLang)}${starBtn(s,c)}</div></div>`).join(''):'<div class="empty muted">No terms match this filter.</div>';
+    $('#terms').innerHTML=cs.length?cs.map(c=>`<div class="t"><div class="tt">${nl(c.term)}${tag[status(c)]}</div><div>${dvHtml(c.def,vre,c.term)}${c.img?`<img class="thumb" src="${esc(c.img)}" alt="">`:''}</div><div class="row noprint" style="gap:0">${sayBtn(c.term,s.termLang)}${starBtn(s,c)}</div></div>`).join(''):'<div class="empty muted">No terms match this filter.</div>';
   };
-  $('#filt').onchange=renderTerms;renderTerms();
+  $('#filt').onchange=renderTerms;renderTerms();bindOverdue();
   $('#resetP').onclick=async()=>{if(await confirmBox('Reset all progress for this set? Stars are kept.','Reset')){s.cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));save();viewSet(s)}};
   $('#shareBtn').onclick=async()=>{
     const link=await shareLink(s);
@@ -838,43 +926,57 @@ function viewFlash(s,review){
     }else shell(s,'Flashcards',{front:true},emptyStudy(s));
     return;
   }
-  const track=review||s.opts.track;
+  const track=review||s.opts.track;let rated={1:0,2:0,3:0,4:0};const vre=visionRe(s);
   let deck=[...base],i=0,flipped=false,shuf=false,known=0,still=[],auto=null,dir='';
   const front=s.opts.front==='def'?'def':'term',back=front==='term'?'def':'term';
-  shell(s,review?'Review · spaced repetition':'Flashcards',{front:true},`
+  shell(s,review?'Review · spaced repetition':track?'Training':'Flashcards',{front:true},`
     <div class="flash-wrap" id="fwrap"></div>
     <div class="row between noprint" id="fctl"></div>
     <div class="prog"><i id="fprog"></i></div>
     <div class="row noprint" style="justify-content:center;margin-top:16px">
-      ${review?'':`<button class="btn sm ${track?'on':''}" id="tTrack" title="Sort cards into Know / Still learning">📊 Track progress</button>`}
+      ${review?'':`<button class="btn sm ${track?'on':''}" id="tTrack" title="Rate each card 1–4 to schedule reviews and earn XP">🎯 Training mode</button>`}
       <button class="btn sm" id="tShuf">🔀 Shuffle</button>
       <button class="btn sm" id="tAuto">▶ Autoplay</button>
     </div>
-    <p class="muted sm center noprint">Space = flip · ← → = ${track?'still learning / know':'previous / next'} · S = star</p>`);
+    <p class="muted sm center noprint">${track?'Space = reveal · 1 Didn’t know · 2 Hard · 3 Knew it · 4 Easy':'Space = flip · ← → = previous / next'} · S = star</p>`);
   const fwrap=$('#fwrap'),ctl=$('#fctl');
-  const face=(c,side)=>{const txt=sideText(c,side);return `<div class="label">${sideName(side)}</div><div class="tools">${sayBtn(txt,langOf(s,side))}${starBtn(s,c)}</div><div class="ftxt ${sizeCls(txt)}">${nl(txt)}</div>${side==='def'&&c.img?`<img src="${esc(c.img)}" alt="">`:''}`};
+  const face=(c,side,isFront)=>{const txt=sideText(c,side);return `<div class="label">${track&&isFront?V('Interrogation','Question'):sideName(side)}</div><div class="tools">${sayBtn(txt,langOf(s,side))}${starBtn(s,c)}</div><div class="ftxt ${sizeCls(txt)}">${side==='def'?dvHtml(txt,vre,c.term):nl(txt)}</div>${side==='def'&&c.img?`<img src="${esc(c.img)}" alt="">`:''}`};
   function render(){
     if(i>=deck.length)return done();
     const c=deck[i];flipped=false;
-    fwrap.innerHTML=`<div class="flash ${dir?'in-'+dir:''}" id="fc"><div class="face front">${face(c,front)}</div><div class="face back">${face(c,back)}</div></div>`;
+    fwrap.innerHTML=`<div class="flash ${dir?'in-'+dir:''}" id="fc"><div class="face front ${track?'interro':''}">${face(c,front,1)}</div><div class="face back">${face(c,back)}</div></div>`;
     $('#fc').onclick=e=>{if(!e.target.closest('button'))flip()};
-    ctl.innerHTML=track?`<button class="btn badb" id="bStill">✗ Still learning</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn okb" id="bKnow">✓ Know</button>`:`<button class="btn" id="bPrev" ${i?'':'disabled'}>← Prev</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn" id="bNext">Next →</button>`;
-    if(track){$('#bStill').onclick=()=>mark(false);$('#bKnow').onclick=()=>mark(true)}else{$('#bPrev').onclick=prev;$('#bNext').onclick=next}
+    if(track)rateBar();
+    else{ctl.innerHTML=`<button class="btn" id="bPrev" ${i?'':'disabled'}>← Prev</button><span class="muted">${i+1} / ${deck.length}</span><button class="btn" id="bNext">Next →</button>`;$('#bPrev').onclick=prev;$('#bNext').onclick=next}
     $('#fprog').style.width=(i/deck.length*100)+'%';
     if(DB.settings.autoSpeak)speak(sideText(c,front),langOf(s,front));
   }
-  function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;fc.classList.toggle('flipped',flipped);if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
+  function rateBar(){
+    if(!flipped){ctl.innerHTML=`<span></span><button class="btn primary big" id="bReveal">Reveal answer <kbd>Space</kbd></button><span class="muted">${i+1} / ${deck.length}</span>`;$('#bReveal').onclick=flip;return}
+    ctl.innerHTML=`<div class="rates">${[[1,'Didn’t know','badb'],[2,'Hard',''],[3,'Knew it','okb'],[4,'Easy','okb']].map(([k,l,c])=>`<button class="btn ${c}" data-r="${k}"><kbd>${k}</kbd> ${l}</button>`).join('')}</div>`;
+    $$('[data-r]',ctl).forEach(b=>b.onclick=()=>mark(+b.dataset.r));
+  }
+  function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;fc.classList.toggle('flipped',flipped);if(track)rateBar();if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
   const next=()=>{if(i<deck.length){i++;dir='next';render()}};
   const prev=()=>{if(i>0){i--;dir='prev';render()}};
-  function mark(ok){if(i>=deck.length)return;const c=deck[i];record(c,ok);touch(s);if(ok)known++;else still.push(c);i++;dir='next';render()}
+  function mark(r){
+    if(i>=deck.length)return;if(r===true)r=3;if(r===false)r=1;const c=deck[i];
+    if(r===1)record(c,false);
+    else if(r===2)record(c,true,{boost:0,xp:5,hard:true,dueMs:c.box>=2?DAY:10*60e3});
+    else if(r===3)record(c,true);
+    else record(c,true,{boost:2});
+    rated[r]++;touch(s);if(r>=3)known++;else still.push(c);
+    if(lastGain){const t=document.createElement('span');t.className='xpg xpfloat';t.textContent='+'+lastGain+' XP';ctl.appendChild(t)}
+    i++;dir='next';setTimeout(render,lastGain?260:0);
+  }
   function done(){
     stopAuto();$('#fprog').style.width='100%';ctl.innerHTML='';
     if(track){
-      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">${still.length?'💪':'🎉'}</div><h2>${still.length?'Keep it up!':'You know them all!'}</h2>
-        <p><b style="color:var(--ok)">${known} know</b> · <b style="color:var(--bad)">${still.length} still learning</b></p>
+      fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">${still.length?'💪':'🎉'}</div><h2>${still.length?V('Session logged','Keep it up!'):V('All evidence verified','You know them all!')}</h2>
+        <p><b style="color:var(--bad)">${rated[1]} didn’t know</b> · <b>${rated[2]} hard</b> · <b style="color:var(--ok)">${rated[3]} knew it</b> · <b style="color:var(--ok)">${rated[4]} easy</b></p>
         <div class="row" style="justify-content:center">${still.length?`<button class="btn primary" id="dAgain">Keep reviewing ${still.length} terms</button>`:''}<button class="btn" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a></div></div>`;
       if(!still.length)celebrate();
-      if(still.length)$('#dAgain').onclick=()=>{deck=shuf?shuffle(still):still;still=[];known=0;i=0;render()};
+      if(still.length)$('#dAgain').onclick=()=>{deck=shuf?shuffle(still):still;still=[];known=0;rated={1:0,2:0,3:0,4:0};i=0;render()};
     }else{
       fwrap.innerHTML=`<div class="card done-box"><div class="big-emoji">🎉</div><h2>You reviewed all ${deck.length} cards</h2><div class="row" style="justify-content:center"><button class="btn primary" id="dRestart">Restart</button><a class="btn" href="#/learn/${s.id}">Try Learn</a><a class="btn" href="#/test/${s.id}">Take a test</a></div></div>`;
     }
@@ -882,14 +984,15 @@ function viewFlash(s,review){
   }
   const stopAuto=()=>{clearInterval(auto);auto=null;const b=$('#tAuto');if(b){b.classList.remove('on');b.textContent='▶ Autoplay'}};
   $('#tShuf').onclick=e=>{shuf=!shuf;e.currentTarget.classList.toggle('on',shuf);deck=shuf?shuffle(base):[...base];i=0;still=[];known=0;render();toast(shuf?'Shuffled':'Original order')};
-  $('#tAuto').onclick=e=>{if(auto)return stopAuto();e.currentTarget.classList.add('on');e.currentTarget.textContent='⏸ Pause';auto=setInterval(()=>{if(i>=deck.length)return stopAuto();if(!flipped)flip();else if(track)mark(true);else next()},3200)};
+  $('#tAuto').onclick=e=>{if(auto)return stopAuto();e.currentTarget.classList.add('on');e.currentTarget.textContent='⏸ Pause';auto=setInterval(()=>{if(i>=deck.length)return stopAuto();if(!flipped)flip();else if(track)mark(3);else next()},3200)};
   if(!review)$('#tTrack').onclick=()=>{s.opts.track=!s.opts.track;save();route()};
   onCleanup(()=>clearInterval(auto));
   setKeys(e=>{
     if(isTyping(e)||e.ctrlKey||e.metaKey||e.altKey)return;
-    if(e.key===' '||e.key==='Enter'||e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();flip()}
-    else if(e.key==='ArrowRight'){e.preventDefault();track?mark(true):next()}
-    else if(e.key==='ArrowLeft'){e.preventDefault();track?mark(false):prev()}
+    if(e.key===' '||e.key==='Enter'||e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();if(!(track&&flipped))flip()}
+    else if(track&&flipped&&/^[1-4]$/.test(e.key)){e.preventDefault();mark(+e.key)}
+    else if(e.key==='ArrowRight'){e.preventDefault();track?(flipped?mark(3):flip()):next()}
+    else if(e.key==='ArrowLeft'){e.preventDefault();track?(flipped&&mark(1)):prev()}
     else if(e.key.toLowerCase()==='s'&&deck[i]){$('#fc .face.front [data-star]')?.click()}
   });
   render();
@@ -1223,6 +1326,29 @@ function viewGravity(s){
   intro();
 }
 
+
+/* ========== detective mode ========== */
+function viewDetective(){
+  const all=[];DB.sets.forEach(x=>x.cards.forEach(c=>all.push({c,s:x})));
+  const answered=all.filter(o=>o.c.right+o.c.wrong>0);
+  const R=answered.reduce((a,o)=>a+o.c.right,0),W=answered.reduce((a,o)=>a+o.c.wrong,0);
+  const unres=all.filter(o=>isUnresolved(o.c));
+  const report=answered.filter(o=>o.c.wrong>0).sort((a,b)=>(b.c.wrong-b.c.right*.5)-(a.c.wrong-a.c.right*.5)).slice(0,20);
+  const weak=weakest();
+  app.innerHTML=`<a class="btn ghost sm" href="#/">← Command Center</a>
+  <h1 style="margin-top:8px">${V('Detective Mode','Weak spots')}</h1>
+  <p class="muted">${V('Every mistake is evidence. This report finds the cards you keep missing so you can close them out.','The cards you miss most, across every set.')}</p>
+  <div class="casestats card" style="margin:14px 0">
+    <div><b>${unres.length}</b><small>${V('unresolved evidence','cards to fix')}</small></div>
+    <div><b>${R+W?Math.round(R/(R+W)*100):0}%</b><small>overall accuracy</small></div>
+    <div><b>${answered.length}</b><small>cards examined</small></div>
+    <div><b>${W}</b><small>total misses</small></div>
+  </div>
+  <div class="row">${unres.length?`<a class="btn primary big" href="#/learn/unresolved">${V('Study unresolved evidence','Study weak cards')}</a><a class="btn big" href="#/flash/unresolved">Rapid training (1–4)</a><a class="btn big" href="#/test/unresolved">Test me on them</a>`:`<span class="muted">Nothing unresolved right now. Miss a card in any mode and it shows up here.</span>`}</div>
+  ${weak.length?`<h2>${V('Weakest cases','Weakest sets')}</h2><div class="card terms" style="padding:0">${weak.map(w=>`<div class="t"><div class="tt">${esc(w.s.title)}</div><div>${Math.round(w.acc*100)}% accuracy · ${w.open} ${V('in progress','still learning')}</div><a class="pill" href="#/learn/${w.s.id}">Train</a></div>`).join('')}</div>`:''}
+  <h2>${V('Weakness report','Most-missed cards')}</h2>
+  ${report.length?`<div class="card terms" style="padding:0">${report.map(o=>`<div class="t"><div class="tt">${nl(o.c.term)}</div><div>${nl(o.c.def)}<div class="muted sm"><a href="#/set/${o.s.id}">${esc(o.s.title)}</a></div></div><div class="sm nowrap"><b style="color:var(--bad)">✗ ${o.c.wrong}</b> · <span style="color:var(--ok)">✓ ${o.c.right}</span></div></div>`).join('')}</div>`:'<div class="card empty muted">No misses recorded yet.</div>'}`;
+}
 /* ========== import page ========== */
 function viewImport(){
   app.innerHTML=`<h1>Import</h1>
@@ -1271,6 +1397,8 @@ function viewSettings(){
   <h2>Preferences</h2>
   <div class="card">
     <label class="opt"><span>Theme</span><select id="sTheme"><option value="midnight">Midnight (city at night)</option><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match my device</option></select></label>
+    <label class="opt"><span>Detective vocabulary <span class="muted sm">(case files, evidence, verified)</span></span><input type="checkbox" id="sVocab"></label>
+    <label class="opt"><span>Detective vision <span class="muted sm">(highlight key terms inside definitions)</span></span><input type="checkbox" id="sVision"></label>
     <label class="opt"><span>Read terms aloud automatically</span><input type="checkbox" id="sSpeak"></label>
     <label class="opt"><span>Speech speed <b id="sRateV"></b></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:180px"></label>
     <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">🔊 Play</button></div>
@@ -1288,6 +1416,9 @@ function viewSettings(){
   $('#sTheme').value=DB.settings.theme;$('#sSpeak').checked=DB.settings.autoSpeak;$('#sRate').value=DB.settings.rate;$('#sRateV').textContent=DB.settings.rate+'×';
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
+  $('#sVocab').checked=DB.settings.vocab;$('#sVision').checked=DB.settings.vision;
+  $('#sVocab').onchange=e=>{DB.settings.vocab=e.target.checked;save();toast(e.target.checked?'Detective vocabulary on':'Standard vocabulary on')};
+  $('#sVision').onchange=e=>{DB.settings.vision=e.target.checked;save()};
   $('#sRate').oninput=e=>{DB.settings.rate=+e.target.value;$('#sRateV').textContent=DB.settings.rate+'×';save()};
   $('#sExport').onclick=()=>download(`quizcraft-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');
   $('#sImport').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
