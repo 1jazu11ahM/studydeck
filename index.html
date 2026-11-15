@@ -609,7 +609,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:true}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,themeV4:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:true}},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function sampleSet(){
@@ -628,7 +628,7 @@ function load(){
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
-if(!DB.settings.themeV3){DB.settings.theme='charcoal';DB.settings.themeV3=1}
+if(!DB.settings.themeV4){DB.settings.theme='charcoal';DB.settings.themeV3=DB.settings.themeV4=1}
 if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.amb.on===undefined)DB.settings.amb.on=true;if(DB.settings.vision===undefined)DB.settings.vision=true;
 const V=(det,plain)=>plain;
 let saveT;
@@ -2005,7 +2005,7 @@ async function sync(){
         if(r.kind==='meta'){
           const d=r.data||{};
           if(metaHash()!==SY.meta.h&&(DB._metaM||0)>r.updated_at){mergeProg(d);continue}
-          DB.folders=d.folders||[];DB.best=d.best||{};DB.settings=Object.assign(DB.settings,d.settings||{});mergeProg(d);DB._metaM=r.updated_at;
+          DB.folders=d.folders||[];DB.best=d.best||{};{const ds=Object.assign({},d.settings||{});if(!ds.themeV4){delete ds.theme;delete ds.themeV3}DB.settings=Object.assign(DB.settings,ds)}mergeProg(d);DB._metaM=r.updated_at;
           SY.meta={h:hashStr(JSON.stringify(d)),m:r.updated_at};seenMeta=metaHash();applyTheme();pulled++;continue;
         }
         const x=fixSet(r.data);x._m=r.updated_at;
