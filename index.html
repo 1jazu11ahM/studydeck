@@ -494,7 +494,7 @@ function nursingSet(){
 }
 function load(){
   try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);const b=blank();return Object.assign(b,d,{settings:Object.assign(b.settings,d.settings||{}),streak:d.streak||b.streak,best:d.best||{},stats:Object.assign(b.stats,d.stats||{})})}}catch(e){}
-  const d=blank();d.sets.push(sampleSet(),nursingSet());d.settings.newUser=1;return d;
+  const d=blank(),n=nursingSet();n.updated+=1;d.sets.push(n,sampleSet());d.settings.newUser=1;return d;
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
@@ -1970,7 +1970,7 @@ const TOUR=[
   {sel:'.go',t:'Your next step',d:'This button always picks the most useful thing to study right now. Tap it whenever you’re not sure where to start.'},
   {sel:'.goals',t:'Daily and weekly goals',d:'Answer enough questions correctly to hit your goals and earn bonus XP.'},
   {sel:'.attn',t:'Needs attention',d:'Cards that are due for review or that you keep missing show up here, each with a one-tap fix.'},
-  {sel:'.setcard[href^="#/set/"]',t:'Your study sets',d:'Open a set to study it with Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam. Two starter sets, IT and Nursing, are ready to try.'},
+  {sel:'.setcard[href^="#/set/"]',t:'Your study sets',d:'Open a set to study it with Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam. Two starter sets, Nursing and IT, are ready to try.'},
   {sel:'.top a[href="#/new"].desk, #mMenu',t:'Make your own sets',d:'Create a set from scratch, or import one from Quizlet, Word or Excel.'},
   {sel:'#syncBtn, #mMenu',t:'Sync your devices',d:'Sign in with Google or email to keep your sets and progress on every device.'},
   {sel:'#ambBtn',t:'Study sounds',d:'Rain and thunder play while you study. Turn them on or off here anytime.'},
