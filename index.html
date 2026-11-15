@@ -494,7 +494,7 @@ function nursingSet(){
 }
 function load(){
   try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);const b=blank();return Object.assign(b,d,{settings:Object.assign(b.settings,d.settings||{}),streak:d.streak||b.streak,best:d.best||{},stats:Object.assign(b.stats,d.stats||{})})}}catch(e){}
-  const d=blank(),n=nursingSet();n.updated+=1;d.sets.push(n,sampleSet());d.settings.newUser=1;return d;
+  const d=blank(),n=nursingSet(),it=sampleSet();it.created=it.updated=n.updated-1000;d.sets.push(n,it);d.settings.newUser=1;return d;
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
