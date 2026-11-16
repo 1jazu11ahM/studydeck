@@ -2108,14 +2108,14 @@ function viewSettings(){
   <div class="gsec"><span class="glabel">Help</span><div class="card group">
     <div class="opt"><span>Take the tour again</span><button class="btn sm" id="sTour">Start</button></div>
     <div class="opt"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add</button></div>
-    <div class="opt"><span>Install on your phone</span><button class="btn sm" id="sInstall">How</button></div>
+    ${window.QC_IOS?'':'<div class="opt"><span>Install on your phone</span><button class="btn sm" id="sInstall">How</button></div>'}
   </div>
   <details class="more" style="margin:10px 0 0 18px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
     <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick an answer or rate a card</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
   </div></details>
   <p style="margin:30px 0 0 18px"><a class="classic" href="archive/v2/">Previous design</a> · <a class="classic" href="archive/v1/">Classic design</a></p></div>
   </div>`;
-  $('#sInstall').onclick=()=>modal(`<h3>Install QuizCraft</h3><p><b>iPhone:</b> open this site in Safari, tap the Share button, then <b>Add to Home Screen</b>.</p><p><b>Android:</b> in Chrome, tap ⋮ then <b>Install app</b>.</p><p class="muted sm">It opens full screen with its own icon and keeps working offline.</p><div class="row end"><button class="btn primary" id="mC">Done</button></div>`)||($('#mC').onclick=()=>closeModal());
+  if($('#sInstall'))$('#sInstall').onclick=()=>modal(`<h3>Install QuizCraft</h3><p><b>iPhone:</b> open this site in Safari, tap the Share button, then <b>Add to Home Screen</b>.</p><p><b>Android:</b> in Chrome, tap ⋮ then <b>Install app</b>.</p><p class="muted sm">It opens full screen with its own icon and keeps working offline.</p><div class="row end"><button class="btn primary" id="mC">Done</button></div>`)||($('#mC').onclick=()=>closeModal());
   if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};
   bindEnvPicker(app);
   $('#sAmb').onclick=e=>{e.stopPropagation();hideAmbHint();ambPanel()};
@@ -2230,7 +2230,7 @@ function authModal(){
   const msg=(t,bad)=>{const m=$('#aMsg');m.textContent=t;m.style.color=bad?'var(--bad)':'var(--ok)'};
   const vals=()=>({email:$('#aE').value.trim(),password:$('#aP').value});
   const busy=b=>$$('#authF button').forEach(x=>x.disabled=b);
-  $('#aGoogle').onclick=async()=>{saveNow();$('#aGoogle').disabled=true;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:APP_URL}});if(error){$('#aGoogle').disabled=false;msg(error.message,1)}};
+  $('#aGoogle').onclick=async()=>{saveNow();$('#aGoogle').disabled=true;if(window.QC_IOS&&window.webkit?.messageHandlers?.qc){const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:APP_URL+'auth-ios.html',skipBrowserRedirect:true}});if(error||!data?.url){$('#aGoogle').disabled=false;return msg(error?.message||'Could not start Google sign-in.',1)}window.webkit.messageHandlers.qc.postMessage({type:'oauth',url:data.url});return}const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:APP_URL}});if(error){$('#aGoogle').disabled=false;msg(error.message,1)}};
   $('#authF').onsubmit=async e=>{e.preventDefault();busy(true);const {error}=await sb.auth.signInWithPassword(vals());busy(false);if(error)return msg(error.message,1);closeModal(true);toast('Signed in — syncing your sets…')};
   $('#aUp').onclick=async()=>{if(!$('#authF').reportValidity())return;busy(true);const {data,error}=await sb.auth.signUp({...vals(),options:{emailRedirectTo:APP_URL}});busy(false);if(error)return msg(error.message,1);if(data.session){closeModal(true);toast('Account created — syncing your sets…')}else msg('Check your email and click the confirmation link, then sign in here.')};
   $('#aForgot').onclick=async()=>{const email=$('#aE').value.trim();if(!email)return msg('Type your email first.',1);busy(true);const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:APP_URL});busy(false);msg(error?error.message:'If that email has an account, a reset link is on its way.',!!error)};
@@ -2249,6 +2249,16 @@ function newPasswordModal(){
 }
 function initSync(){
   if(sb||!window.supabase||!/^https:/.test(SB_URL))return;
+  // iPhone app: Google sign-in runs in Apple's secure sheet, then hands the result back here
+  window.qcAuthCallback=async href=>{
+    const b=$('#aGoogle');if(b)b.disabled=false;
+    if(!href){return}
+    try{const u=new URL(href),h=new URLSearchParams(u.hash.slice(1)),q=u.searchParams,err=q.get('error_description')||h.get('error_description');
+      if(err)throw new Error(err);
+      let r;if(q.get('code'))r=await sb.auth.exchangeCodeForSession(q.get('code'));else if(h.get('access_token'))r=await sb.auth.setSession({access_token:h.get('access_token'),refresh_token:h.get('refresh_token')});else throw new Error('Sign-in was not completed.');
+      if(r.error)throw r.error;closeModal(true);toast('Signed in');
+    }catch(e){toast(e.message||'Sign-in failed')}
+  };
   sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange((ev,session)=>{
     const was=user?.id;user=session?.user||null;

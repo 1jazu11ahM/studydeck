@@ -1,0 +1,48 @@
+name: Build iPhone app (unsigned IPA)
+
+on:
+  push:
+    paths: ['ios/**', '.github/workflows/build-ios.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app (unsigned)
+        run: |
+          xcodebuild -project QuizCraft.xcodeproj \
+            -target QuizCraft \
+            -configuration Release \
+            -sdk iphoneos \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir Payload
+          cp -R build/Release-iphoneos/QuizCraft.app Payload/
+          zip -qr QuizCraft.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QuizCraft-ipa
+          path: ios/QuizCraft.ipa
+
+      - name: Publish to Releases (direct .ipa download link)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ios-latest --yes --cleanup-tag || true
+          gh release create ios-latest QuizCraft.ipa \
+            --title "QuizCraft for iPhone (latest build)" \
+            --notes "Download QuizCraft.ipa and drag it into Sideloadly. The app loads the live QuizCraft site, so website updates appear without reinstalling."
