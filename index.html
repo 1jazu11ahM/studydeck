@@ -660,7 +660,9 @@ a.opt{color:var(--text)}a.opt:hover span{color:var(--accent)}
 .planrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .planrow input{width:auto}
 /* swipe-to-rate */
-.swipe{position:relative;transform-style:preserve-3d;touch-action:pan-y}
+.swipe{position:relative;transform-style:preserve-3d;touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{overflow-x:clip}
+main{overflow-x:clip}
 .swipe.drag{transition:none}
 .swipe.fly{transition:transform .3s cubic-bezier(.3,.6,.4,1),opacity .3s}
 .swipe.back{transition:transform .3s cubic-bezier(.2,.9,.3,1.2)}
@@ -823,7 +825,7 @@ const status=c=>c.box>=3?'master':(c.right+c.wrong===0?'new':'learn');
 const INTERVALS=[0,0,1,3,7,16,35]; // days, indexed by box
 let lastGain=0;
 function record(c,ok,opt={}){
-  const was=status(c),now=Date.now();lastGain=0;
+  const was=status(c),now=Date.now();lastGain=0;haptic(ok?'success':'error');
   DB.stats.answers++;if(new Date().getHours()<4)DB.stats.owl=1;
   if(ok){
     const firstTry=!(c._lw&&now-c._lw<10*60e3);
@@ -880,7 +882,7 @@ function checkProgress(){
   if(changed)save();
 }
 const annQ=[];let annBusy=false;
-function announce(ic,title,sub,r){annQ.push({ic,title,sub,r});if(!annBusy)nextAnn()}
+function announce(ic,title,sub,r){annQ.push({ic,title,sub,r});haptic('celebrate');if(!annBusy)nextAnn()}
 function nextAnn(){
   const a=annQ.shift();const bar=$('#achbar');if(!a||!bar){annBusy=false;return}annBusy=true;
   bar.innerHTML=`<span class="achic">${a.ic==='rank'?rankBadge(a.r,34):icon(a.ic,26)}</span><span><b>${esc(a.title)}</b><small>${esc(a.sub)}</small></span>`;
@@ -1405,7 +1407,7 @@ function viewFlash(s,review){
     ctl.innerHTML=`<div class="rates">${[[1,'Didn’t know','badb'],[2,'Hard',''],[3,'Knew it','okb'],[4,'Easy','okb']].map(([k,l,c])=>`<button class="btn ${c}" data-r="${k}"><kbd>${k}</kbd> ${l}</button>`).join('')}</div>`;
     $$('[data-r]',ctl).forEach(b=>b.onclick=()=>mark(+b.dataset.r));
   }
-  function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;fc.classList.toggle('flipped',flipped);if(track)rateBar();if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
+  function flip(){const fc=$('#fc');if(!fc)return;flipped=!flipped;haptic('light');fc.classList.toggle('flipped',flipped);if(track)rateBar();if(flipped&&DB.settings.autoSpeak){const c=deck[i];speak(sideText(c,back),langOf(s,back))}}
   const next=()=>{if(i<deck.length){i++;dir='next';render()}};
   const prev=()=>{if(i>0){i--;dir='prev';render()}};
   function mark(r){
@@ -1448,21 +1450,43 @@ function viewFlash(s,review){
 }
 
 let snapBack=()=>{};
+/* haptics: native taptic engine in the iPhone app, vibration on Android, nothing elsewhere */
+let hapT=0;
+function haptic(kind='light'){
+  if(DB.settings.haptics===false)return;
+  const now=Date.now();if(now-hapT<70&&kind!=='success'&&kind!=='error')return;hapT=now;
+  try{
+    if(window.QC_IOS&&window.webkit?.messageHandlers?.qc)return window.webkit.messageHandlers.qc.postMessage({type:'haptic',style:kind});
+    if(navigator.vibrate&&matchMedia('(pointer:coarse)').matches)navigator.vibrate({tick:6,light:10,medium:18,success:[14],error:[22,50,22],celebrate:[16,60,16,60,28]}[kind]||10);
+  }catch(_){}
+}
 function bindSwipe(el,{left,right,lr,ll}){
   if(!el)return;
   el.insertAdjacentHTML('beforeend',(lr?`<span class="swl r">${lr}</span>`:'')+(ll?`<span class="swl l">${ll}</span>`:''));
-  let x0=null,y0=0,dx=0,moved=false,pid=null;const L=$('.swl.l',el),Rr=$('.swl.r',el);
-  const set=x=>{el.style.transform=x?`translateX(${x}px) rotate(${x/24}deg)`:'';if(Rr)Rr.style.opacity=Math.max(0,Math.min(1,x/90));if(L)L.style.opacity=Math.max(0,Math.min(1,-x/90))};
-  snapBack=()=>{el.classList.remove('drag');el.classList.add('back');set(0);setTimeout(()=>el.classList.remove('back'),320)};
-  el.addEventListener('pointerdown',e=>{if(e.target.closest('button')||e.button>0)return;x0=e.clientX;y0=e.clientY;dx=0;moved=false;pid=e.pointerId});
-  el.addEventListener('pointermove',e=>{if(x0===null||e.pointerId!==pid)return;dx=e.clientX-x0;const dy=e.clientY-y0;
-    if(!moved){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.2){moved=true;el.classList.add('drag');try{el.setPointerCapture(pid)}catch(_){}}else return}
-    set(dx)});
-  const end=()=>{if(x0===null)return;x0=null;if(!moved)return;el.classList.remove('drag');
-    const go=dx>100?right:dx<-100?left:null;
-    if(go){el.classList.add('fly');set(dx>0?innerWidth:-innerWidth);el.style.opacity='0';setTimeout(go,170)}else snapBack()};
-  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
-  el.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+  const L=$('.swl.l',el),Rr=$('.swl.r',el),TH=Math.min(110,innerWidth*.26);
+  let x0=null,y0=0,dx=0,mode=null,armed=0,quietUntil=0;
+  const set=x=>{el.style.transform=x?`translateX(${x}px) rotate(${x/24}deg)`:'';if(Rr)Rr.style.opacity=Math.max(0,Math.min(1,x/TH));if(L)L.style.opacity=Math.max(0,Math.min(1,-x/TH))};
+  snapBack=()=>{el.classList.remove('drag');el.classList.add('back');el.style.opacity='';set(0);setTimeout(()=>el.classList.remove('back'),320)};
+  const start=(x,y)=>{x0=x;y0=y;dx=0;mode=null;armed=0};
+  // returns true once the gesture is a horizontal swipe (so the page shouldn't scroll)
+  const move=(x,y)=>{if(x0===null)return false;dx=x-x0;const dy=y-y0;
+    if(!mode){if(Math.abs(dx)<8&&Math.abs(dy)<8)return false;mode=Math.abs(dx)>Math.abs(dy)?'x':'y';if(mode==='x')el.classList.add('drag')}
+    if(mode!=='x')return false;
+    set(dx);const a=dx>TH?1:dx<-TH?-1:0;if(a!==armed){armed=a;if(a)haptic('tick')}
+    return true};
+  const end=()=>{if(x0===null)return;x0=null;if(mode!=='x')return;quietUntil=Date.now()+400;el.classList.remove('drag');
+    const go=dx>TH?right:dx<-TH?left:null;
+    if(go){el.classList.add('fly');set(dx>0?innerWidth*1.2:-innerWidth*1.2);el.style.opacity='0';setTimeout(go,170)}else snapBack()};
+  // touch (phones): claim horizontal drags so the browser doesn't turn them into scrolling
+  el.addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('button')){x0=null;return}start(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+  el.addEventListener('touchmove',e=>{if(e.touches.length!==1)return;if(move(e.touches[0].clientX,e.touches[0].clientY)&&e.cancelable)e.preventDefault()},{passive:false});
+  el.addEventListener('touchend',end);el.addEventListener('touchcancel',()=>{if(mode==='x'){x0=null;snapBack()}else x0=null});
+  // mouse / trackpad (computers)
+  el.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button>0||e.target.closest('button'))return;start(e.clientX,e.clientY)});
+  el.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const was=mode;if(move(e.clientX,e.clientY)&&was!=='x')try{el.setPointerCapture(e.pointerId)}catch(_){}});
+  el.addEventListener('pointerup',e=>{if(e.pointerType==='mouse')end()});
+  // a drag is not a tap: don't flip the card afterwards
+  el.addEventListener('click',e=>{if(Date.now()<quietUntil){e.stopPropagation();e.preventDefault()}},true);
 }
 /* ========== shared question renderer ========== */
 function presentQ(stage,s,c,q,type,next,label='',onAnswer){
@@ -2091,9 +2115,10 @@ function viewSettings(){
   <div class="gsec"><span class="glabel">Studying</span><div class="card group">
     <label class="opt"><span>Highlight key terms</span><input type="checkbox" id="sVision"></label>
     <label class="opt"><span>Read aloud automatically</span><input type="checkbox" id="sSpeak"></label>
+    <label class="opt"><span>Haptic feedback</span><input type="checkbox" id="sHap"></label>
     <label class="opt"><span>Speech speed <span class="muted" id="sRateV"></span></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:150px"></label>
     <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">${icon('sound',16)} Play</button></div>
-  </div><div class="gnote">Highlighting underlines other terms from the same set when they appear inside a definition.</div></div>
+  </div><div class="gnote">Highlighting underlines other terms from the same set inside definitions. Haptics work in the iPhone app and on Android phones.</div></div>
   <div class="gsec"><span class="glabel">Progress</span><div class="card group">
     <a class="opt" href="#/achievements"><span>Ranks & achievements</span>${chev}</a>
     <a class="opt" href="#/detective"><span>Weak spots report</span>${chev}</a>
@@ -2124,6 +2149,7 @@ function viewSettings(){
   $('#sTheme').onchange=e=>{DB.settings.theme=e.target.value;save();applyTheme()};
   $('#sSpeak').onchange=e=>{DB.settings.autoSpeak=e.target.checked;save()};
   $('#sVision').checked=DB.settings.vision;
+  $('#sHap').checked=DB.settings.haptics!==false;$('#sHap').onchange=e=>{DB.settings.haptics=e.target.checked;save();if(e.target.checked)haptic('success')};
   $('#sVision').onchange=e=>{DB.settings.vision=e.target.checked;save()};
   $('#sRate').oninput=e=>{DB.settings.rate=+e.target.value;$('#sRateV').textContent=DB.settings.rate+'×';save()};
   $('#sExport').onclick=()=>download(`quizcraft-backup-${ymd()}.json`,JSON.stringify(DB),'application/json');

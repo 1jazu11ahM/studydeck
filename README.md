@@ -47,9 +47,9 @@ Click **☁️ Sign in** to create an account. Your sets, progress, folders and 
 - The classic design is archived at [`archive/v1/`](archive/v1/) and tagged `v1-classic` in git. Both designs read the same saved data, so you can switch between them freely.
 - To fully revert: `git checkout v1-classic -- index.html`.
 
-## Planned
+## Haptics
 
-- **Haptics:** a light vibration on correct and wrong answers (Android via `navigator.vibrate`; iPhone Safari doesn't allow it from websites yet).
+Correct and wrong answers, card flips, swipe thresholds and achievements give haptic feedback: the Taptic Engine in the iPhone app, vibration on Android. Turn it off in Profile → Studying. (iPhone Safari doesn't allow websites to vibrate.)
 
 ## iPhone app
 

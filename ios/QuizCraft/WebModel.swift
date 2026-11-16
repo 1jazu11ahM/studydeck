@@ -120,8 +120,32 @@ extension WebModel: WKScriptMessageHandler {
             if let s = body["url"] as? String, let url = URL(string: s) { startSignIn(url) }
         case "open":
             if let s = body["url"] as? String, let url = URL(string: s) { UIApplication.shared.open(url) }
+        case "haptic":
+            Haptics.play(body["style"] as? String ?? "light")
         default:
             break
+        }
+    }
+}
+
+/// Taptic Engine feedback requested by the page (correct/wrong answers, card flips, swipes).
+enum Haptics {
+    private static let selection = UISelectionFeedbackGenerator()
+    private static let light = UIImpactFeedbackGenerator(style: .light)
+    private static let medium = UIImpactFeedbackGenerator(style: .medium)
+    private static let notify = UINotificationFeedbackGenerator()
+
+    static func play(_ style: String) {
+        switch style {
+        case "tick": selection.selectionChanged()
+        case "light": light.impactOccurred()
+        case "medium": medium.impactOccurred()
+        case "success": notify.notificationOccurred(.success)
+        case "error": notify.notificationOccurred(.error)
+        case "celebrate":
+            notify.notificationOccurred(.success)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { medium.impactOccurred(intensity: 0.8) }
+        default: light.impactOccurred()
         }
     }
 }
