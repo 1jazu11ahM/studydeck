@@ -50,3 +50,11 @@ Click **☁️ Sign in** to create an account. Your sets, progress, folders and 
 ## Planned
 
 - **Haptics:** a light vibration on correct and wrong answers (Android via `navigator.vibrate`; iPhone Safari doesn't allow it from websites yet).
+
+## iPhone app
+
+`ios/` holds a small native SwiftUI app that loads the live site, so website updates appear without reinstalling. It adds Google sign-in through Apple's secure sheet, sound in silent mode, a launch screen, saving exports through the share sheet, and an offline screen.
+
+- Every change under `ios/` triggers **Build iPhone app** in GitHub Actions, which publishes an unsigned `QuizCraft.ipa` to the [`ios-latest` release](https://github.com/1jazu11ahM/studydeck/releases/tag/ios-latest).
+- Install it with Sideloadly on Windows. With a free Apple ID the app must be re-signed every 7 days.
+- If the Mac build machine is busy, run the workflow by hand from the Actions tab and pick another runner (`macos-15`, `macos-26`).
