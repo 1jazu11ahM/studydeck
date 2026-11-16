@@ -4,13 +4,17 @@ on:
   push:
     paths: ['ios/**', '.github/workflows/build-ios.yml']
   workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Mac runner label (try macos-15 or macos-15-intel if one is busy)'
+        default: 'macos-14'
 
 permissions:
   contents: write
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: ${{ github.event.inputs.runner || 'macos-14' }}
     defaults:
       run:
         working-directory: ios
