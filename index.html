@@ -331,8 +331,12 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 #mPanel hr{border:0;border-top:1px solid var(--line);margin:6px 4px}
 #mPanel .mstat{margin-left:auto;font-size:13px;font-weight:500;color:var(--muted)}
 #mMenu[aria-expanded=true]{background:var(--accent-soft);color:var(--accent)}
-#ambPanel{position:fixed;top:64px;right:16px;z-index:40;width:300px;padding:16px}
+#ambPanel{position:fixed;top:64px;right:16px;z-index:40;width:330px;padding:16px;max-height:calc(100vh - 80px);overflow:auto;overscroll-behavior:contain}
 #ambPanel input[type=range]{width:140px}
+#ambPanel .amb-row>span{white-space:nowrap}
+.amb-row span{display:flex;flex-direction:column}.amb-row small{font-size:12px;line-height:1.2}.amb-row small:empty{display:none}
+.chip.mine{display:inline-flex;align-items:center;gap:2px;padding-right:4px}.chip.mine .x{border:0;background:none;color:var(--muted);font:inherit;font-size:16px;line-height:1;padding:0 6px;cursor:pointer;min-height:24px}
+.amb-pre .chip{min-height:34px}
 .envl{display:none;position:absolute;inset:0}
 .envsvg{position:absolute;left:0;right:0;bottom:0;width:100%;height:46vh;min-height:220px}
 .envsvg.top{top:0;bottom:auto;height:42vh}
@@ -689,7 +693,7 @@ main{overflow-x:clip}
   .modal-card{position:relative}
   .modal-card.dragging{transition:none}
   .modal-card.closing{transition:transform .25s ease-in;transform:translateY(100%)!important}
-  #ambPanel{left:0;right:0;top:auto!important;bottom:0;width:auto;border-radius:20px 20px 0 0!important;padding:26px 20px calc(20px + env(safe-area-inset-bottom));animation:sheetup .34s cubic-bezier(.2,.9,.25,1);z-index:55}
+  #ambPanel{left:0;right:0;top:auto!important;bottom:0;width:auto;max-height:86vh;border-radius:20px 20px 0 0!important;padding:26px 20px calc(20px + env(safe-area-inset-bottom));animation:sheetup .34s cubic-bezier(.2,.9,.25,1);z-index:55}
   .menu-list .btn{justify-content:flex-start;min-height:50px}
 }
 @keyframes sheetup{from{transform:translateY(100%)}}
@@ -880,7 +884,7 @@ const isTyping=e=>/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
 
 /* ========== storage ========== */
 const KEY='studydeck.v1';
-function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,themeV4:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:false},ambV2:1,retention:.9},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0},log:{}}}
+function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,themeV4:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.6,fire:0,cafe:0,thunder:.3,hum:0,v2:1,mine:[],on:false},ambV2:1,retention:.9},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0},log:{}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
 function starterSet(){
@@ -907,7 +911,7 @@ if(!DB.log){DB.log={};const t=ymd();
   if(DB.streak&&DB.streak.count&&DB.streak.last){const L=new Date(DB.streak.last+'T12:00');for(let k=0;k<Math.min(DB.streak.count,120);k++)DB.log[ymd(new Date(L-k*DAY))]={r:0,w:0,s:1}}
   if(DB.daily&&DB.daily.d===t&&DB.daily.n)DB.log[t]={r:DB.daily.n,w:0}}
 if(!DB.settings.themeV4){DB.settings.theme='charcoal';DB.settings.themeV3=DB.settings.themeV4=1}
-if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};if(DB.settings.amb.on===undefined)DB.settings.amb.on=false;if(!DB.settings.ambV2){DB.settings.amb.on=false;DB.settings.ambV2=1}if(DB.settings.vision===undefined)DB.settings.vision=true;
+if(DB.settings.vocab===undefined)DB.settings.vocab=true;if(!DB.settings.env)DB.settings.env='city';if(!DB.settings.amb)DB.settings.amb={rain:.5,thunder:.6,hum:.15};{const a=DB.settings.amb;if(a.fire==null)a.fire=0;if(a.cafe==null)a.cafe=0;if(!a.v2){a.v2=1;a.hum=0;a.thunder=Math.min(a.thunder??.3,.3);if(a.rain==null)a.rain=.6}if(!Array.isArray(a.mine))a.mine=[]}if(DB.settings.amb.on===undefined)DB.settings.amb.on=false;if(!DB.settings.ambV2){DB.settings.amb.on=false;DB.settings.ambV2=1}if(DB.settings.vision===undefined)DB.settings.vision=true;
 const V=(det,plain)=>plain;
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,200)}
@@ -2306,7 +2310,8 @@ function ambGraph(ctx,dest){
   const G={ctx},sr=ctx.sampleRate,len=sr*6;
   const lim=ctx.createDynamicsCompressor();lim.threshold.value=-3;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.002;lim.release.value=.25;lim.connect(dest);
   const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;comp.connect(lim);
-  G.out=ctx.createGain();G.out.gain.value=.75;G.out.connect(comp);
+  G.master=ctx.createGain();G.master.gain.value=0;G.master.connect(comp);
+  G.out=ctx.createGain();G.out.gain.value=.75;G.out.connect(G.master);
   const mk=fn=>{const b=ctx.createBuffer(2,len,sr);for(let ch=0;ch<2;ch++)fn(b.getChannelData(ch));return b};
   G.white=mk(d=>{for(let i=0;i<len;i++)d[i]=Math.random()*2-1});
   G.pink=mk(d=>{let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926}});
@@ -2371,14 +2376,49 @@ function thunderAt(G,t,v,dist){
   g.gain.exponentialRampToValueAtTime(.0001,Math.max(tk+1.5,start+dur));
   n.connect(lp).connect(sh).connect(g).connect(pan);n.start(t,Math.random()*4);n.stop(Math.max(tk+1.6,start+dur)+.1);
 }
+/* Real recordings (CC0 / public domain, from Freesound — see sounds/CREDITS.md).
+   Each file is a seamless loop followed by 0.4 s of its own beginning, so the loop runs from 0.1 s to 0.1 s + len. */
+const SOUNDS={rain:{url:'sounds/rain.mp3',len:46,gain:3},fire:{url:'sounds/fire.mp3',len:70,gain:1.4},cafe:{url:'sounds/cafe.mp3',len:55.5,gain:2}};
+const AMB_MIX=['rain','fire','cafe','thunder','hum'];
+const AMB_PRESETS=[
+  ['Rainy night',{rain:.7,fire:0,cafe:0,thunder:.55,hum:0}],
+  ['Fireside',{rain:.3,fire:.8,cafe:0,thunder:0,hum:0}],
+  ['Coffee shop',{rain:0,fire:0,cafe:.75,thunder:0,hum:0}],
+  ['Cozy café',{rain:.4,fire:.35,cafe:.55,thunder:0,hum:0}],
+  ['Deep focus',{rain:.55,fire:0,cafe:0,thunder:0,hum:.35}]];
+function ambLoad(k){
+  const S=SOUNDS[k];if(!S||!AMB.ctx)return;if(S.state==='ready'||S.state==='loading'||S.state==='error')return;
+  S.state='loading';ambPanelRefresh();
+  fetch(S.url).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer()})
+    .then(b=>new Promise((res,rej)=>{const p=AMB.ctx.decodeAudioData(b,res,rej);if(p&&p.catch)p.catch(rej)}))
+    .then(buf=>{
+      const ctx=AMB.ctx,src=ctx.createBufferSource(),g=ctx.createGain();g.gain.value=0;
+      src.buffer=buf;src.loop=true;src.loopStart=.1;src.loopEnd=Math.min(buf.duration,.1+S.len);
+      src.connect(g).connect(AMB.G.out);src.start(0,.1+Math.random()*S.len*.9);
+      S.src=src;S.g=g;S.state='ready';ambVol(true);ambPanelRefresh();
+    })
+    .catch(e=>{console.warn('sound',k,e);S.state='error';ambVol(true);ambPanelRefresh()});
+}
 function ambStart(){
   DB.settings.amb.on=true;save();
-  if(AMB.ctx){AMB.ctx.resume();AMB.on=true;ambVol();return}
-  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return toast('Your browser can’t play generated sound');
-  const ctx=new Ctx();AMB.ctx=ctx;AMB.G=ambGraph(ctx,ctx.destination);AMB.on=true;ambVol();
-  AMB.timer=setInterval(()=>{if(AMB.on&&ctx.state==='running'&&DB.settings.amb.rain>0)scheduleDrops(AMB.G,ctx.currentTime+.2,DB.settings.amb.rain)},80);
+  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return toast('Your browser can’t play sound');
+  if(!AMB.ctx){
+    const ctx=new Ctx();AMB.ctx=ctx;AMB.G=ambGraph(ctx,ctx.destination);
+    // generated drops only when the rain recording couldn't load (offline on first use)
+    AMB.timer=setInterval(()=>{const a=DB.settings.amb;if(AMB.on&&ctx.state==='running'&&a.rain>0&&SOUNDS.rain.state==='error')scheduleDrops(AMB.G,ctx.currentTime+.2,a.rain)},80);
+    // distant thunder now and then, on every theme (Midnight also adds thunder after each lightning flash)
+    AMB.rumble=setInterval(()=>{if(AMB.on&&DB.settings.amb.thunder>0&&Date.now()-(AMB.lastThunder||0)>45000&&Math.random()<.18)thunder(.45+Math.random()*.5)},10000);
+  }
+  for(const k in SOUNDS)if(SOUNDS[k].state==='error')SOUNDS[k].state='';
+  clearTimeout(AMB.stopT);AMB.on=true;AMB.ctx.resume();
+  const t=AMB.ctx.currentTime,m=AMB.G.master.gain;m.cancelScheduledValues(t);m.setValueAtTime(m.value,t);m.linearRampToValueAtTime(1,t+1.2);
+  ambVol();
 }
-function ambStop(){if(AMB.ctx)AMB.ctx.suspend();if(AMB.el)AMB.el.pause();AMB.on=false;DB.settings.amb.on=false;save();ambBtn();hideAmbHint()}
+function ambStop(){
+  if(AMB.ctx){const c=AMB.ctx,t=c.currentTime,m=AMB.G.master.gain;m.cancelScheduledValues(t);m.setValueAtTime(m.value,t);m.linearRampToValueAtTime(0,t+.6);
+    clearTimeout(AMB.stopT);AMB.stopT=setTimeout(()=>{if(!AMB.on){c.suspend();if(AMB.el)AMB.el.pause()}},700)}
+  else if(AMB.el)AMB.el.pause();
+  AMB.on=false;DB.settings.amb.on=false;save();ambBtn();hideAmbHint()}
 /* default-on sound: browsers only allow audio after the visitor's first click, tap or key press */
 /* iPhone: play as media (like music/video) so the silent switch doesn't mute it */
 function mediaSession(){try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}}
@@ -2404,9 +2444,9 @@ function ambAutostart(){
   if(AMB.ctx)AMB.ctx.onstatechange=()=>{ambBtn();ambHintText()};
 }
 function ambHintText(force){
-  const h=$('#ambHint');if(!h||h.hidden||(!force&&!h.classList.contains('show')))return;const t0=$('#hintT',h),d0=$('#hintD',h);if(!DB.settings.amb.on){if(t0){t0.textContent='Sound is off';d0.textContent='Turn on rain and thunder while you study. You can change this anytime with the headphones button.'}return}const on=AMB.ctx&&AMB.ctx.state==='running';
+  const h=$('#ambHint');if(!h||h.hidden||(!force&&!h.classList.contains('show')))return;const t0=$('#hintT',h),d0=$('#hintD',h);if(!DB.settings.amb.on){if(t0){t0.textContent='Sound is off';d0.textContent='Turn on rain, a fireplace or café sounds while you study. You can change this anytime with the headphones button.'}return}const on=AMB.ctx&&AMB.ctx.state==='running';
   const t=$('#hintT',h),d=$('#hintD',h);if(!t)return;
-  t.textContent=on?'Rain and thunder are on':'Tap anywhere to start the rain and thunder';
+  t.textContent=on?'Study sounds are on':'Tap anywhere to start your study sounds';
   d.textContent=on?'If you don’t like the sound, you can turn it off here anytime.':'Browsers wait for your first tap before playing sound. If you don’t like it, turn it off here.';
 }
 function showAmbHint(){
@@ -2425,19 +2465,43 @@ function showAmbHint(){
   clearTimeout(AMB.hintT);AMB.hintT=setTimeout(hideAmbHint,12000);
 }
 function hideAmbHint(){const h=$('#ambHint');if(!h||h.hidden)return;h.classList.remove('show');setTimeout(()=>{h.hidden=true},300)}
-function ambVol(){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime;AMB.G.rain.gain.setTargetAtTime(a.rain*.55,t,.4);AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,.4);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
-function thunder(dist){if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;thunderAt(AMB.G,AMB.ctx.currentTime+.02,1,dist)}
+function ambVol(slow){if(!AMB.ctx)return;const a=DB.settings.amb,t=AMB.ctx.currentTime,tc=slow?.8:.25;
+  for(const k in SOUNDS){const S=SOUNDS[k];if(a[k]>0&&AMB.on)ambLoad(k);if(S.g)S.g.gain.setTargetAtTime(S.gain*a[k]*a[k],t,tc)}
+  AMB.G.rain.gain.setTargetAtTime(SOUNDS.rain.state==='error'?a.rain*.55:0,t,tc);
+  AMB.G.hum.gain.setTargetAtTime(a.hum*.12,t,tc);AMB.G.thunder.gain.setTargetAtTime(a.thunder,t,.1);ambBtn()}
+function thunder(dist){if(!AMB.on||!AMB.ctx||!DB.settings.amb.thunder)return;AMB.lastThunder=Date.now();thunderAt(AMB.G,AMB.ctx.currentTime+.02,1,dist)}
 window.onLightning=()=>{const d=Math.random();setTimeout(()=>thunder(d),300+d*3500)};
 function ambBtn(){const b=$('#ambBtn');if(b){b.innerHTML=icon('head',20);b.classList.toggle('amb-on',AMB.on&&!!AMB.ctx&&AMB.ctx.state==='running');b.classList.toggle('amb-wait',AMB.on&&(!AMB.ctx||AMB.ctx.state!=='running'))}}
-function ambPanel(){
-  const p=$('#ambPanel');if(!p.hidden){p.hidden=true;return}
-  const a=DB.settings.amb;
-  p.innerHTML=`<div class="row between"><b>Ambience</b><button class="btn sm ${AMB.on?'':'primary'}" id="ambToggle">${AMB.on?'Pause':'Play'}</button></div>
-    ${[['rain','Rain'],['thunder','Thunder'],['hum','Computer hum']].map(([k,l])=>`<label class="opt"><span>${l}</span><input type="range" min="0" max="1" step="0.05" value="${a[k]}" data-amb="${k}"></label>`).join('')}
-    <p class="muted sm" style="margin:6px 0 0">Thunder follows the lightning in Midnight. All sound is generated live in your browser.</p>`;
-  p.hidden=false;
-  $('#ambToggle').onclick=()=>{if(AMB.on)ambStop();else{mediaUnlock();ambStart()}ambPanel();ambPanel()};
-  $$('[data-amb]',p).forEach(r=>{r.oninput=()=>{a[r.dataset.amb]=+r.value;save();ambVol()};r.onchange=()=>{if(r.dataset.amb==='thunder'&&AMB.on)thunder(.3)}});
+const AMB_LABEL={rain:'Rain',fire:'Fireplace',cafe:'Café',thunder:'Thunder',hum:'Computer hum'};
+const ambMatch=m=>AMB_MIX.every(k=>Math.abs((m[k]||0)-(DB.settings.amb[k]||0))<.03);
+function ambApply(mix){const a=DB.settings.amb;AMB_MIX.forEach(k=>a[k]=mix[k]||0);save();if(!AMB.on){mediaUnlock();ambStart()}else{for(const k in SOUNDS)if(SOUNDS[k].state==='error')SOUNDS[k].state='';ambVol(true)}ambPanel(true)}
+function ambPanelRefresh(){const p=$('#ambPanel');if(!p||p.hidden)return;
+  AMB_MIX.forEach(k=>{const el=$(`[data-st="${k}"]`,p),S=SOUNDS[k];if(el)el.textContent=S&&S.state==='loading'?'Loading…':S&&S.state==='error'?(k==='rain'?'Offline: using generated rain':'Couldn’t load. Check your connection.'):''});
+  $$('[data-pre]',p).forEach(b=>{const m=b.dataset.pre==='mine'?(DB.settings.amb.mine[+b.dataset.i]||{}).mix:AMB_PRESETS[+b.dataset.pre][1];b.classList.toggle('on',!!m&&ambMatch(m))})}
+function ambPanel(keep){
+  const p=$('#ambPanel');if(!keep&&!p.hidden){p.hidden=true;return}
+  const a=DB.settings.amb,mine=a.mine;
+  p.innerHTML=`<div class="row between"><b>Study sounds</b><button class="btn sm ${AMB.on?'':'primary'}" id="ambToggle">${AMB.on?'Pause':'Play'}</button></div>
+    <div class="chips amb-pre" style="margin:12px 0 4px">${AMB_PRESETS.map(([n],i)=>`<button class="chip" data-pre="${i}">${n}</button>`).join('')}${mine.map((m,i)=>`<span class="chip mine" role="button" tabindex="0" data-pre="mine" data-i="${i}">${esc(m.name)}<button class="x" data-del="${i}" aria-label="Delete ${esc(m.name)}">×</button></span>`).join('')}</div>
+    ${AMB_MIX.map(k=>`<label class="opt amb-row"><span>${AMB_LABEL[k]}<small class="muted" data-st="${k}"></small></span><input type="range" min="0" max="1" step="0.05" value="${a[k]||0}" data-amb="${k}" aria-label="${AMB_LABEL[k]} volume"></label>`).join('')}
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="ambSave">Save this mix</button></div>
+    <p class="muted sm" style="margin:8px 0 0">Real recordings, free to use (public domain, from Freesound). Thunder rolls in now and then, and follows the lightning in Midnight.</p>`;
+  p.hidden=false;ambPanelRefresh();
+  $('#ambToggle').onclick=()=>{if(AMB.on)ambStop();else{mediaUnlock();ambStart()}ambPanel(true)};
+  $$('[data-amb]',p).forEach(r=>{r.oninput=()=>{a[r.dataset.amb]=+r.value;save();if(AMB.on)ambVol();ambPanelRefresh()};r.onchange=()=>{if(r.dataset.amb==='thunder'&&AMB.on&&+r.value>0)thunder(.3)}});
+  $$('[data-pre]',p).forEach(b=>{const go=e=>{if(e.target.closest('[data-del]'))return;const m=b.dataset.pre==='mine'?mine[+b.dataset.i].mix:AMB_PRESETS[+b.dataset.pre][1];ambApply(m)};b.onclick=go;b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(e)}}});
+  $$('[data-del]',p).forEach(b=>b.onclick=e=>{e.stopPropagation();mine.splice(+b.dataset.del,1);save();ambPanel(true)});
+  $('#ambSave').onclick=()=>{
+    if(AMB_MIX.every(k=>!a[k]))return toast('Turn up at least one sound first');
+    if(mine.length>=6)return toast('You can keep up to 6 mixes. Delete one first.');
+    ambNameMix(name=>{mine.push({name,mix:Object.fromEntries(AMB_MIX.map(k=>[k,a[k]||0]))});save();ambPanel(true);toast('Mix saved')})};
+}
+function ambNameMix(done){
+  const p=$('#ambPanel'),row=$('#ambSave',p).parentElement;
+  row.innerHTML=`<input id="ambName" maxlength="24" placeholder="Name this mix" value="My mix ${DB.settings.amb.mine.length+1}" style="flex:1"><button class="btn sm primary" id="ambNameOk">Save</button>`;
+  const i=$('#ambName',p);i.focus();i.select();
+  const ok=()=>{const n=i.value.trim();if(!n)return toast('Give the mix a name');done(n)};
+  $('#ambNameOk',p).onclick=ok;i.onkeydown=e=>{if(e.key==='Enter')ok();if(e.key==='Escape')ambPanel(true)};
 }
 document.addEventListener('mousedown',e=>{const p=$('#ambPanel');if(!p.hidden&&!e.target.closest('#ambPanel,#ambBtn'))p.hidden=true});
 /* ========== training simulator ========== */
@@ -2564,7 +2628,7 @@ function viewSettings(){
     <label class="opt"><span>Name</span><input id="sName" style="max-width:200px;text-align:right" placeholder="${esc(firstName()||'Your name')}" value="${esc(DB.settings.name||'')}"></label>
     <label class="opt"><span>Theme</span><select id="sTheme" style="max-width:220px"><option value="charcoal">Charcoal</option><option value="midnight">Midnight city (animated)</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Match my device</option></select></label>
     <div class="opt"><span>Study sounds</span><button class="btn sm" id="sAmb">${DB.settings.amb.on?'On':'Off'} ›</button></div>
-  </div><div class="gnote">Your name is used in the Home greeting. Study sounds (rain, thunder and a soft hum) are off unless you turn them on.</div></div>
+  </div><div class="gnote">Your name is used in the Home greeting. Study sounds (real rain, fireplace and café recordings) are off unless you turn them on.</div></div>
   <div class="gsec"><span class="glabel">Studying</span><div class="card group">
     <label class="opt"><span>Highlight key terms</span><input type="checkbox" id="sVision"></label>
     <label class="opt"><span>Read aloud automatically</span><input type="checkbox" id="sSpeak"></label>
@@ -2798,7 +2862,7 @@ const TOUR_ALL=[
   {sel:'.nav [data-nav=library], #tabbar [data-nav=library]',t:'Library',d:'All your sets and folders. Create a set, import from Quizlet, Word or Excel, and search every term.'},
   {sel:'.nav [data-nav=progress], #tabbar [data-nav=progress]',t:'Progress',d:'Daily and weekly goals, your rank and XP, achievements, and the cards that need more work.'},
   {sel:'.nav [data-nav=profile], #tabbar [data-nav=profile]',t:'Profile',d:'Sign in with Google to sync your devices, change the theme, and back up your data.'},
-  {sel:'#ambBtn',t:'Study sounds',d:'Optional rain and thunder for focus. They’re off until you turn them on here.'},
+  {sel:'#ambBtn',t:'Study sounds',d:'Optional rain, fireplace and café sounds for focus. They’re off until you turn them on here.'},
 ];
 let TOUR=TOUR_ALL,tourI=0;
 function startTour(){

@@ -45,7 +45,7 @@ Four pages, with a bar at the top on computers and a tab bar at the bottom on ph
 - **Goals and ranks:** a daily goal of 25 correct answers, a weekly goal of 150, XP, 13 achievements, and ranks from Civilian to Master Detective.
 - **Weak spots:** a report across every set, plus a practice session for the cards you keep missing.
 - **Read-aloud** in 18 languages, **keyboard shortcuts** on computers, and **haptics** on phones.
-- **Study sounds:** optional rain, thunder and a soft hum, generated live. They're off by default; turn them on with the headphones button.
+- **Study sounds:** real recordings of rain, a fireplace and a café, plus thunder and a soft hum, each with its own slider. Five ready-made mixes (Rainy night, Fireside, Coffee shop, Cozy café, Deep focus), and you can save up to six of your own. They fade in and out, download only when first played (about 2 MB in total) and then work offline. They're off by default; turn them on with the headphones button. Recordings are public domain; see [`sounds/CREDITS.md`](sounds/CREDITS.md).
 - **Themes:** Charcoal (default), Midnight city (animated, with backgrounds you unlock by rank), Dark, Light, or Match my device.
 
 ## Getting started
