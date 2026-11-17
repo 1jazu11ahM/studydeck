@@ -106,14 +106,18 @@ async def run_suite(b, mobile):
 
     # ---------- unit: scheduling + bookkeeping ----------
     sc = await pg.evaluate("""()=>{const c=getSet('pt-main').cards[0];const k=ymd();const L0=JSON.stringify(DB.log[k]||{r:0,w:0});const d0=DB.daily.n;
-      const r=[];record(c,true);r.push([c.box,Math.round((c.due-Date.now())/DAY)]);record(c,true);r.push([c.box,Math.round((c.due-Date.now())/DAY)]);record(c,true);r.push([c.box,status(c)]);
+      const r=[];record(c,true);r.push([c.box,Math.round((c.due-Date.now())/DAY),c.s]);record(c,true);r.push([c.box,Math.round((c.due-Date.now())/DAY),c.s]);record(c,true);r.push([c.box,Math.round((c.due-Date.now())/DAY),c.s]);
       record(c,false);r.push([c.box,c.due<=Date.now(),status(c)]);
-      for(let i=0;i<10;i++)record(c,true);r.push([c.box]);
-      return{r,log:DB.log[k],L0,daily:DB.daily.n-d0}}""")
+      for(let i=0;i<10;i++)record(c,true);r.push([c.box,c.s]);
+      // FSRS over real time: simulate reviews on the day they come due
+      const f={reps:0};let t=Date.now();const gaps=[];for(let i=0;i<5;i++){Object.assign(f,fsrsNext(f,3,t));f.reps++;f.lr=t;gaps.push(Math.round((f.due-t)/DAY));t=f.due}
+      return{r,gaps,log:DB.log[k],L0,daily:DB.daily.n-d0}}""")
     r = sc["r"]
-    check(r[0] == [1, 0] and r[1] == [2, 1] and r[2] == [3, "master"], P(f"right answers climb boxes 1→2→3 with 0/1-day gaps and master at 3: {r[:3]}"))
+    check(r[0][1] == 3 and r[1][2] > r[0][2] and r[2][2] > r[1][2], P(f"FSRS: first 'right' schedules 3 days out; same-day repeats grow stability: {r[:3]}"))
     check(r[3][0] == 1 and r[3][1] is True and r[3][2] == "learn", P(f"wrong answer drops to box 1 and is due now: {r[3]}"))
-    check(r[4] == [6], P(f"box caps at 6: {r[4]}"))
+    check(1 <= r[4][0] <= 6, P(f"box stays within 1–6 after many answers: {r[4]}"))
+    g = sc["gaps"]
+    check(all(b > a for a, b in zip(g, g[1:])) and g[0] == 3 and g[-1] > 90, P(f"FSRS: reviews on time spread out (3 → 100+ days): {g}"))
     L0 = json.loads(sc["L0"])
     check(sc["log"]["r"] - L0.get("r", 0) == 13 and sc["log"]["w"] - L0.get("w", 0) == 1, P(f"daily log counts 13 right + 1 wrong: {sc['log']} (was {L0})"))
     check(sc["daily"] == 13, P(f"daily goal counts only correct answers: {sc['daily']}"))
@@ -199,8 +203,8 @@ async def run_suite(b, mobile):
         if wrong: wrongs += 1
         await pg.wait_for_timeout(1050)
     check(await pg.locator("text=learned all").count() == 1, P(f"learn: finishes with every card mastered ({steps} steps, {wrongs} deliberate mistakes)"))
-    m = await pg.evaluate("getSet('pt-main').cards.every(c=>c.box>=2&&c.right>=2&&c.due>Date.now())")
-    check(m, P("learn: every card moved up the memory boxes and is scheduled for a later review"))
+    m = await pg.evaluate("getSet('pt-main').cards.every(c=>c.box>=1&&c.s>0&&c.right>=2&&c.due>Date.now())")
+    check(m, P("learn: every card has a memory strength and is scheduled for a later review"))
 
     # ---------- learn: rapid double tap records once ----------
     await pg.evaluate("getSet('pt-two').cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));getSet('pt-main').cards.forEach(c=>Object.assign(c,{box:0,due:0,right:0,wrong:0}));saveNow()")
