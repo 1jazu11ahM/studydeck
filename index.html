@@ -796,6 +796,11 @@ main{overflow-x:clip}
 @media (pointer:coarse){.btn kbd,.choice kbd,.rates kbd{display:none}}
 #fctl>span:first-child:empty{display:none}
 @media (max-width:760px){#fctl{gap:12px}#bReveal{flex:1}}
+.viz{gap:var(--s2) var(--s3);padding:var(--s3) var(--s3)}
+.viz svg{width:132px;height:132px}
+.legend{flex:1;min-width:0}
+.legend b{padding-left:12px}
+@media (max-width:980px) and (min-width:761px){.vizrow{grid-template-columns:1fr}}
 @media print{
   .top,.noprint,#toast,#tabbar{display:none!important}
   body{background:#fff;color:#000}
@@ -846,19 +851,23 @@ const KEY='studydeck.v1';
 function blank(){return{v:1,sets:[],folders:[],settings:{theme:'charcoal',themeV2:1,themeV3:1,themeV4:1,autoSpeak:false,rate:1,vocab:true,vision:true,env:'city',amb:{rain:.5,thunder:.6,hum:.15,on:false},ambV2:1},streak:{last:'',count:0},best:{},xp:0,rank:0,ach:{},daily:{d:'',n:0,done:0},weekly:{w:'',n:0,done:0},refl:{},stats:{answers:0,missions:0,perfect:0,owl:0},log:{}}}
 function newCard(term='',def='',img=''){return{id:uid(),term,def,img,starred:false,box:0,due:0,right:0,wrong:0}}
 function newSet(o={}){const t=Date.now();return Object.assign({id:uid(),title:'',desc:'',folder:'',termLang:'en-US',defLang:'en-US',created:t,updated:t,studied:0,cards:[],opts:{answer:'term',starred:false,front:'term',written:true,track:false}},o)}
-function sampleSet(){
-  const s=newSet({id:'sample-osi',sample:true,title:'IT: OSI Model & Common Ports',desc:'Starter set: the seven OSI layers and common ports. Edit or delete it anytime.'});
-  [['Layer 7 – Application','Network services used directly by apps (HTTP, DNS, SMTP)'],['Layer 6 – Presentation','Formats, encrypts and compresses data'],['Layer 5 – Session','Opens, manages and closes conversations between hosts'],['Layer 4 – Transport','End-to-end delivery using ports (TCP / UDP)'],['Layer 3 – Network','Logical addressing (IP) and routing between networks'],['Layer 2 – Data Link','MAC addresses, frames and switches'],['Layer 1 – Physical','Raw bits over cables, fiber or radio'],['Port 22','SSH'],['Port 53','DNS'],['Port 443','HTTPS']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
-  return s;
-}
-function nursingSet(){
-  const s=newSet({id:'sample-nursing',sample:true,title:'Nursing: Vital Signs & Abbreviations',desc:'Starter set: normal adult vital signs and common charting abbreviations. Always follow your program and facility guidelines.'});
-  [['Normal adult heart rate','60–100 beats per minute'],['Normal adult respiratory rate','12–20 breaths per minute'],['Normal adult blood pressure','Below 120/80 mmHg'],['Normal oral body temperature','About 36.5–37.5 °C (97.7–99.5 °F)'],['Normal oxygen saturation (SpO2)','95–100%'],['Tachycardia','Adult heart rate above 100 beats per minute'],['Bradycardia','Adult heart rate below 60 beats per minute'],['Hypotension','Blood pressure below 90/60 mmHg'],['The 5 rights of medication administration','Right patient, right drug, right dose, right route, right time'],['PRN','As needed (pro re nata)'],['NPO','Nothing by mouth (nil per os)'],['STAT','Immediately']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
+function starterSet(){
+  const s=newSet({id:'sample-memory',sample:true,title:'How memory works',desc:'Starter set: the science behind studying well, and behind how QuizCraft schedules your reviews. Edit or delete it anytime.'});
+  [['Active recall','Testing yourself from memory instead of re-reading your notes'],
+   ['Spaced repetition','Reviewing at growing intervals, just before you would forget'],
+   ['Forgetting curve','How quickly memories fade when you don’t review them'],
+   ['Testing effect','Being quizzed strengthens memory more than studying the same material again'],
+   ['Interleaving','Mixing different topics or problem types in one study session'],
+   ['Elaboration','Explaining an idea in your own words and linking it to what you already know'],
+   ['Chunking','Grouping information into small, meaningful pieces, like a phone number in 3–3–4'],
+   ['Mnemonic','A memory aid such as an acronym, a rhyme or a vivid image'],
+   ['Cramming','Studying everything in one long session right before a test: it fades fast'],
+   ['Sleep consolidation','The brain strengthens and stores the day’s learning while you sleep']].forEach(([t,d])=>s.cards.push(newCard(t,d)));
   return s;
 }
 function load(){
   try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);const b=blank();return Object.assign(b,d,{settings:Object.assign(b.settings,d.settings||{}),streak:d.streak||b.streak,best:d.best||{},stats:Object.assign(b.stats,d.stats||{})})}}catch(e){}
-  const d=blank(),n=nursingSet(),it=sampleSet();it.created=it.updated=n.updated-1000;d.sets.push(n,it);d.settings.newUser=1;return d;
+  const d=blank();d.sets.push(starterSet());d.settings.newUser=1;return d;
 }
 let DB=load();
 if(!DB.settings.themeV2){DB.settings.theme='midnight';DB.settings.themeV2=1}
@@ -1268,7 +1277,7 @@ function masteryDonut(){
 function goalRings(){
   const d=Math.min(1,DB.daily.n/MISSION.daily),w=Math.min(1,DB.weekly.n/MISSION.weekly);
   return `<div class="viz"><svg width="150" height="150" viewBox="-75 -75 150 150" class="rings" role="img" aria-label="Daily goal ${DB.daily.n} of ${MISSION.daily}, weekly goal ${DB.weekly.n} of ${MISSION.weekly}"><g transform="rotate(-90)"><circle r="60" fill="none" stroke-width="13" class="t1"/>${arc(60,d,'r1',13)}<circle r="43" fill="none" stroke-width="13" class="t2"/>${arc(43,w,'r2',13)}</g></svg>
-    <ul class="legend"><li><i class="r1"></i>Today <b>${Math.min(DB.daily.n,MISSION.daily)}/${MISSION.daily}</b>${DB.daily.done?' ✓':''}</li><li><i class="r2"></i>This week <b>${Math.min(DB.weekly.n,MISSION.weekly)}/${MISSION.weekly}</b>${DB.weekly.done?' ✓':''}</li><li class="muted">+${MISSION.dailyXP} and +${MISSION.weeklyXP} XP</li></ul></div>`;
+    <ul class="legend"><li><i class="r1"></i>Today <b class="lv">${Math.min(DB.daily.n,MISSION.daily)}/${MISSION.daily}</b>${DB.daily.done?' ✓':''}</li><li><i class="r2"></i>Week <b class="lv">${Math.min(DB.weekly.n,MISSION.weekly)}/${MISSION.weekly}</b>${DB.weekly.done?' ✓':''}</li></ul></div>`;
 }
 function rankTrack(){
   const r=rankIndex(),mastered=masteredTotal(),nxt=RANKS[r+1],prevT=r>=2?RANKS[r][1]:0,f=nxt?Math.max(0,Math.min(1,(mastered-prevT)/Math.max(1,nxt[1]-prevT))):0,N=RANKS.length-1;
@@ -1282,13 +1291,13 @@ function viewHome(){
   const due=dueSet().cards.length,st=streakNow(),go=trainTarget(),ci=continueItem(),dn=DB.daily.n;
   const wk=pastDays(7).reduce((n,x)=>n+logDay(x.k).r,0);
   const brief=!DB.sets.length?'Create a set to get started.':due?`${due} card${due>1?'s are':' is'} waiting for review.`:DB.daily.done?'Today’s goal is done. Nice work.':'You’re all caught up on reviews.';
-  const recent=recentSets().slice(0,3);
+  const recent=recentSets().slice(0,3),studied=DB.sets.some(x=>x.cards.some(c=>c.right+c.wrong>0))||Object.values(DB.log||{}).some(e=>e.r+e.w>0||e.s);
   app.innerHTML=`<div class="wrap home">
   <div class="hello"><div><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello" data-lt="Home">${esc(greeting())}</h1><p class="briefing">${brief}</p></div>${DB.sets.length?ringHtml(Math.min(dn,MISSION.daily),MISSION.daily,DB.daily.done):''}</div>
   <a class="start" href="${go.href}"><span class="start-t"><span class="start-l">${esc(go.label)}</span><span class="start-s">${esc(go.sub)}</span></span><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  ${DB.sets.length?`<section class="sec week"><div class="sec-h"><h2>This week</h2></div><p class="chart-h">${weekHeadline(st,wk)}</p>${weekBars()}</section>`:''}
+  ${DB.sets.length&&studied?`<section class="sec week"><div class="sec-h"><h2>This week</h2></div><p class="chart-h">${weekHeadline(st,wk)}</p>${weekBars()}</section>`:''}
   ${ci&&ci.href!==go.href?`<a class="resume" href="${ci.href}"><span class="mic">${icon('play',16)}</span><div class="lmain"><div class="lt">Continue ${esc(ci.title)}</div><div class="lm">${esc(ci.meta)}</div></div>${chev}</a>`:''}
-  <section class="sec recent"><div class="sec-h"><h2>Recent sets</h2>${DB.sets.length>3?'<a href="#/library">See all</a>':''}</div>
+  <section class="sec recent"><div class="sec-h"><h2>${studied?'Recent sets':'Try a starter set'}</h2>${DB.sets.length>3?'<a href="#/library">See all</a>':''}</div>
   ${recent.length?`<div class="list">${recent.map(setRow).join('')}</div>`:`<p class="muted">No sets yet. <a href="#/new" style="color:var(--accent)">Create one</a> or <a href="#/import" style="color:var(--accent)">import from Quizlet</a>.</p>`}</section>
   </div>`;
   animateArcs();
@@ -1323,7 +1332,7 @@ function viewProgress(){
   app.innerHTML=`<div class="wrap">
   <div class="page-h"><div><h1 data-lt="Progress">Progress</h1><p class="lede">${mastered} of ${total} cards mastered${streakNow()?` · ${streakNow()}-day streak`:''}</p></div></div>
   <div class="vizrow">${masteryDonut()}${goalRings()}</div>
-  <section class="sec"><div class="sec-h"><h2>Activity</h2></div><p class="chart-h">${act?`${act} study day${act===1?'':'s'} in the last ${innerWidth>760?'7':'4'} months${ans?`, ${Math.round(cor/ans*100)}% answered correctly`:''}.`:'Your study days will fill in here.'}</p>${heatmap()}</section>
+  <section class="sec"><div class="sec-h"><h2>Activity</h2></div><p class="chart-h">${act?`${act} study day${act===1?'':'s'} in the last ${innerWidth>760?'7':'4'} months${ans?`, ${Math.round(cor/ans*100)}% answered correctly`:''}.`:'Your study days will show up here after your first session.'}</p>${act?heatmap():''}</section>
   <section class="sec"><div class="sec-h"><h2>Rank</h2><a href="#/achievements">${(DB.xp||0).toLocaleString()} XP · ${Object.keys(DB.ach).length}/${ACH.length} achievements</a></div>${rankTrack()}</section>
   ${rows.length?`<section class="sec needs"><div class="sec-h"><h2>Needs attention</h2><a href="#/detective">Weak spots</a></div><div class="list">${rows.slice(0,3).map(([t,b,h])=>`<div class="lrow"><div class="lmain"><div class="lt">${t}</div></div><a class="btn sm" href="${h}">${b}</a></div>`).join('')}</div></section>`:''}
   </div>`;
@@ -2277,7 +2286,7 @@ function viewSettings(){
   </div><div class="gnote">${user?'Saved in this browser and synced to your account':'Saved in this browser only'} (${(size/1024).toFixed(1)} KB). A backup file is an extra safety net.</div></div>
   <div class="gsec"><span class="glabel">Help</span><div class="card group">
     <div class="opt"><span>Take the tour again</span><button class="btn sm" id="sTour">Start</button></div>
-    <div class="opt"><span>Add the IT and Nursing starter sets</span><button class="btn sm" id="sStarter">Add</button></div>
+    <div class="opt"><span>Add the “How memory works” starter set</span><button class="btn sm" id="sStarter">Add</button></div>
     ${window.QC_IOS?'':'<div class="opt"><span>Install on your phone</span><button class="btn sm" id="sInstall">How</button></div>'}
   </div>
   <details class="more" style="margin:10px 0 0 18px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
@@ -2286,7 +2295,7 @@ function viewSettings(){
   <p style="margin:30px 0 0 18px"><a class="classic" href="archive/v4/">Previous design</a> · <a class="classic" href="archive/v3/">v3</a> · <a class="classic" href="archive/v1/">Classic design</a></p></div>
   </div>`;
   if($('#sInstall'))$('#sInstall').onclick=()=>modal(`<h3>Install QuizCraft</h3><p><b>iPhone:</b> open this site in Safari, tap the Share button, then <b>Add to Home Screen</b>.</p><p><b>Android:</b> in Chrome, tap ⋮ then <b>Install app</b>.</p><p class="muted sm">It opens full screen with its own icon and keeps working offline.</p><div class="row end"><button class="btn primary" id="mC">Done</button></div>`)||($('#mC').onclick=()=>closeModal());
-  if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{const add=[['sample-osi',sampleSet],['sample-nursing',nursingSet]].filter(([id])=>!getSet(id)).map(([,f])=>f());if(!add.length)return toast('You already have both starter sets');add.forEach(x=>{delete x.sample;DB.sets.push(x)});saveNow();toast(`Added ${add.length} starter set${add.length>1?'s':''}`)};
+  if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{if(getSet('sample-memory'))return toast('You already have the starter set');const x=starterSet();delete x.sample;DB.sets.push(x);saveNow();toast('Starter set added')};
   bindEnvPicker(app);
   $('#sAmb').onclick=e=>{e.stopPropagation();hideAmbHint();ambPanel()};
   $('#sName').onchange=e=>{DB.settings.name=e.target.value.trim();save();toast(DB.settings.name?'Name saved':'Name cleared')};
@@ -2476,21 +2485,21 @@ const closeMMenu=()=>{};
 
 /* ========== first-visit tour ========== */
 const vis=sel=>{const el=[...document.querySelectorAll(sel)].find(e=>e.offsetParent!==null&&e.getBoundingClientRect().width>0);return el||null};
-const TOUR=[
+const TOUR_ALL=[
   {t:'Welcome to QuizCraft',d:'A quiet place to study. Here’s a one-minute tour of how it works.'},
   {sel:'.start',t:'Start training',d:'This button always picks what to study next: due reviews first, then the set you’re learning. One tap and you’re in.'},
   {sel:'.ringg',t:'Today’s goal',d:'The ring fills as you answer correctly. Close it every day to build your streak.'},
-  {sel:'.week',t:'Your week',d:'Each bar is a day of studying. The faint line is your daily goal.'},
-  {sel:'.recent',t:'Your sets',d:'Two starter sets, Nursing and IT, are ready to try. Open a set to use Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam.'},
+  {sel:'.week',opt:1,t:'Your week',d:'Each bar is a day of studying. The faint line is your daily goal.'},
+  {sel:'.recent',t:'Your first set',d:'“How memory works” is ready to try. It explains how QuizCraft schedules reviews. Open a set to use Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam.'},
   {sel:'.nav [data-nav=library], #tabbar [data-nav=library]',t:'Library',d:'All your sets and folders. Create a set, import from Quizlet, Word or Excel, and search every term.'},
   {sel:'.nav [data-nav=progress], #tabbar [data-nav=progress]',t:'Progress',d:'Daily and weekly goals, your rank and XP, achievements, and the cards that need more work.'},
   {sel:'.nav [data-nav=profile], #tabbar [data-nav=profile]',t:'Profile',d:'Sign in with Google to sync your devices, change the theme, and back up your data.'},
   {sel:'#ambBtn',t:'Study sounds',d:'Optional rain and thunder for focus. They’re off until you turn them on here.'},
 ];
-let tourI=0;
+let TOUR=TOUR_ALL,tourI=0;
 function startTour(){
   if(!location.hash.match(/^#?\/?$/)){location.hash='#/';setTimeout(startTour,350);return}
-  tourI=0;hideAmbHint();closeMMenu&&closeMMenu();
+  TOUR=TOUR_ALL.filter(st=>!st.opt||document.querySelector(st.sel));tourI=0;hideAmbHint();closeMMenu&&closeMMenu();
   if(!$('#tour')){const t=document.createElement('div');t.id='tour';t.innerHTML='<div class="tour-hole"></div><div class="tour-card card" role="dialog" aria-live="polite"></div>';document.body.appendChild(t);addEventListener('resize',()=>{if($('#tour').classList.contains('on'))tourStep()});addEventListener('scroll',()=>{if($('#tour').classList.contains('on')&&window.tourPlace)tourPlace()},{passive:true})}
   $('#tour').classList.add('on');tourStep();
 }
