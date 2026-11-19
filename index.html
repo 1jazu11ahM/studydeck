@@ -74,6 +74,7 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .bar i{display:block;height:100%;transition:width .3s}
 .b-new{background:var(--line)} .b-learn{background:var(--warn)} .b-master{background:var(--ok)}
 .legend{gap:18px;font-size:14px;color:var(--muted);margin-top:8px}
+.legend.lp-legend{flex-direction:row;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:6px 16px;font-size:13px;margin-top:10px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .dot.b-new{background:#b8bfd3}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -1995,7 +1996,7 @@ function viewLearn(s){
   let order=shuffle(cards),roundN=0,queue=[],results=[];
   shell(s,'Learn',{written:true},`<div class="card" style="margin-top:12px" id="lp"></div><div id="stage"></div>`);
   const stage=$('#stage');
-  function prog(){const n=[0,0,0];cards.forEach(c=>n[lvl.get(c.id)]++);const p={new:n[0],learn:n[1],master:n[2]};$('#lp').innerHTML=`<div class="row between sm"><b>Round ${roundN||1}</b><span class="muted">${n[2]} / ${cards.length} learned</span></div>${barHtml(p,true)}`}
+  function prog(){const n=[0,0,0];cards.forEach(c=>n[lvl.get(c.id)]++);const p={new:n[0],learn:n[1],master:n[2]};$('#lp').innerHTML=`<div class="row between sm"><b>Round ${roundN||1}</b><span class="muted">${n[2]} / ${cards.length} learned</span></div>${barHtml(p,true)}<div class="row legend lp-legend"><span><i class="dot b-new"></i>New ${n[0]}</span><span><i class="dot b-learn"></i>Learning ${n[1]}</span><span><i class="dot b-master"></i>Learned ${n[2]}</span></div>`}
   function nextRound(){
     const left=order.filter(c=>lvl.get(c.id)<2);if(!left.length)return finish();
     left.sort((a,b)=>lvl.get(b.id)-lvl.get(a.id));
