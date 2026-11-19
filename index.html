@@ -2047,8 +2047,7 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
       ${prevMiss?(ai.verdict==='correct'?`<p class="lastmiss fixed">✓ You fixed last time’s mistake.</p>`:lastMissHtml(prevMiss)):''}
       ${mixCard?`<div class="mixup"><b>Mix-up:</b> you described <b>${esc(mixCard.term)}</b>, another card in this set.<div class="muted sm">${esc(mixCard.term)}: ${nl(mixCard.def)}</div></div>`:''}
       <div class="aifb">${ai.right?`<p><b>What you got right</b>${esc(ai.right)}</p>`:''}${ai.missing?`<p><b>${ai.verdict==='wrong'?'What went wrong':'What’s missing'}</b>${esc(ai.missing)}</p>`:''}</div>
-      <div class="reveal">${ai.better?`<div class="aifb"><p><b>A full answer</b>${esc(ai.better)}</p></div>`:''}
-      <div class="ans"><small>The card says</small><div class="okc">${nl(q.answer)}</div></div></div>
+      <div class="reveal"><div class="ans"><small>The card says</small><div class="okc">${nl(q.answer)}</div></div></div>
       <div class="retryhost"></div>
       <div class="row aitools">${ai.verdict!=='correct'?'<button class="btn sm tryb">↻ Try again</button>':''}${canExplain(c)?'<button class="btn ghost sm xpl">'+icon('spark',15)+' Explain more</button>':''}</div>
       <p class="muted sm aiwho">${icon('spark',14)} Checked by AI. It can be wrong, so trust the card if they disagree.</p>
@@ -2056,7 +2055,7 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
     $('.cont',fb).onclick=go;wireExplain(fb,s,c,given,ai.verdict,mixCard);
     const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;if(c.miss)delete c.miss;save();go()};
     const tb=$('.tryb',fb);if(tb)tb.onclick=()=>tryAgain(tb);
-    if(!ok&&DB.settings.autoSpeak)speak(ai.better||q.answer,langOf(s,q.aSide));
+    if(!ok&&DB.settings.autoSpeak)speak(q.answer,langOf(s,q.aSide));
   }
   // one more go from memory: the answers are hidden while you rewrite it, and it doesn't change the schedule
   function tryAgain(tb){

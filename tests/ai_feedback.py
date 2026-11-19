@@ -40,7 +40,7 @@ async def main():
         check("Checking your answer" in wait, f"shows a checking message while the AI thinks: {wait!r}")
         await pg.wait_for_selector(".aifb")
         txt=await pg.inner_text(".fb")
-        check("✓ Correct" in txt and "9/10" in txt and "What you got right" in txt and "A full answer" in txt and "The card says" in txt, "correct: verdict, score, what was right, full answer and card answer shown")
+        check("✓ Correct" in txt and "9/10" in txt and "What you got right" in txt and "The card says" in txt and "A full answer" not in txt, "correct: verdict, score, what was right and the card answer shown (no repeated full answer)")
         check(await pg.locator(".ovr").count()==0, "correct: no override button")
         c=await pg.evaluate(f"(()=>{{const c=DB.sets[0].cards.find(x=>x.id==='{card['id']}');return{{reps:c.reps,lastG:c.lastG}}}})()")
         check(c["reps"]==card["reps"]+1 and c["lastG"]==3, f"correct counts as Good for the schedule: {c}")

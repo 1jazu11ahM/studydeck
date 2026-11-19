@@ -49,9 +49,8 @@ How to write feedback:
 - right: what the student got right, in one short sentence. Only count ideas that match the reference.
   If nothing matches, leave it empty. Never give general praise like "you're thinking about learning".
 - missing: what is missing or wrong and why it matters, in at most two short sentences. Don't restate the card's
-  definition here; that goes in "better".
+  definition here; the student sees the card's answer right below your feedback.
   If the answer describes another card (confused_with), use ONE sentence that names it and says how the two differ.
-- better: a complete, clear model answer in one or two sentences that keeps the card's meaning. Don't add facts you aren't sure of.
 - score: 0 to 10.`;
 
 const TOOL = {
@@ -64,10 +63,9 @@ const TOOL = {
       score: { type: "integer", minimum: 0, maximum: 10 },
       right: { type: "string" },
       missing: { type: "string" },
-      better: { type: "string" },
       confused_with: { type: "string", description: "Exact term of another card in the set that the answer describes, or empty." },
     },
-    required: ["verdict", "score", "right", "missing", "better", "confused_with"],
+    required: ["verdict", "score", "right", "missing", "confused_with"],
   },
 };
 
@@ -180,7 +178,7 @@ Deno.serve(async (req) => {
   const mix = clip(g.confused_with, 120);
   return json({
     verdict: g.verdict, score: Math.max(0, Math.min(10, Math.round(+g.score || 0))),
-    right: clip(g.right, 400), missing: clip(g.missing, 500), better: clip(g.better, 600),
+    right: clip(g.right, 400), missing: clip(g.missing, 500),
     confused_with: others.some((o) => o[0] === mix) ? mix : "",
   }, 200, origin);
 });

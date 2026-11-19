@@ -87,12 +87,11 @@ async def main():
         await open_card(); await pg.click(".dk"); await pg.wait_for_selector(".fb .xpl")
         await pg.click(".fb .xpl"); await pg.wait_for_selector(".aix")
         check(True, "Explain more also works after 'Don’t know' on any card")
-        # explanation cached: no new call second time without an answer
-        n0=await pg.evaluate("__calls.length")
-        tt=(await pg.inner_text(".qtxt")).strip()
-        await open_card(tt)
-        await pg.click(".dk"); await pg.click(".fb .xpl"); await pg.wait_for_selector(".aix")
-        check(await pg.evaluate("__calls.length")==n0, "a saved explanation is reused for free")
+        # explanation cached: asking twice for the same card only calls the AI once
+        n=await pg.evaluate("""(async()=>{const s=DB.sets[0],c=s.cards[3];delete c.ax;const n0=__calls.length;await aiExplain(s,c,'','');await aiExplain(s,c,'','');return __calls.length-n0})()""")
+        check(n==1, f"a saved explanation is reused for free ({n} AI call for two requests)")
+        n=await pg.evaluate("""(async()=>{const s=DB.sets[0],c=s.cards[3];c.def=c.def+' (edited)';const n0=__calls.length;await aiExplain(s,c,'','');return __calls.length-n0})()""")
+        check(n==1, "editing the card makes a fresh explanation")
         check(not errs, f"no JS errors {errs[:2]}")
         await b.close()
     print("\nALL AI TUTOR CHECKS PASSED" if not FAILS else f"\n{len(FAILS)} FAILED")
