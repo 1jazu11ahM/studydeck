@@ -136,6 +136,13 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .saved{margin:8px 2px 0}.saved .g{font-weight:600}.saved .g1{color:var(--bad)}.saved .g2{color:var(--warn)}.saved .g3,.saved .g4{color:var(--ok)}
 .aifb{margin-top:12px;display:grid;gap:10px}.aifb p{margin:0;line-height:1.45}.aifb b{display:block;font-size:var(--t-c);color:var(--muted);font-weight:600;margin-bottom:2px}
 .aiwho{display:flex;align-items:center;gap:6px;margin:10px 0 0}
+.aitools{gap:8px;margin-top:12px;flex-wrap:wrap}.aitools:empty{display:none}
+.xpl{gap:6px}.xpl .spin{width:14px;height:14px}
+.aix{margin-top:12px;padding:14px 16px;border-radius:12px;background:color-mix(in srgb,var(--accent) 8%,transparent);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);display:grid;gap:10px}
+.aix p{margin:0;line-height:1.45}.aix b{display:block;font-size:var(--t-c);color:var(--muted);font-weight:600;margin-bottom:2px}.aix .hook{font-weight:600}
+.mixup{margin-top:12px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--warn) 12%,transparent)}.mixup>b:first-child{color:var(--warn)}
+.lastmiss{margin:10px 2px 0;font-size:var(--t-s);line-height:1.45}.lastmiss.fixed{color:var(--ok);font-weight:600}
+.retryhost:empty{display:none}.retryhost{margin-top:12px}.fbx.sm2{margin-top:10px;padding:8px 12px;font-size:var(--t-s)}
 .spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
 .ans{margin-top:12px}.ans small{display:block;color:var(--muted);font-weight:600}
@@ -1139,6 +1146,7 @@ function fsrsNext(c,g,now=Date.now()){
 }
 // "Again · now   Hard · 1d   Good · 3d   Easy · 2w" for the rating buttons
 function fmtIvl(days){if(days<=0)return'now';if(days<14)return days+'d';if(days<60)return Math.round(days/7)+'w';if(days<365)return Math.round(days/30)+'mo';return(Math.round(days/36.5)/10)+'y'}
+function lastMissHtml(m){return`<p class="lastmiss"><b>Last time you said:</b> “${esc(m.g)}”${m.w?` <span class="muted">${esc(m.w)}</span>`:''}</p>`}
 function savedAs(c){ // "Saved as Hard · back in 2 days" after an answer
   const G={1:'Again',2:'Hard',3:'Good',4:'Easy'}[c.lastG]||'';if(!G||!c.due)return'';
   const ms=c.due-Date.now(),d=Math.round(ms/DAY),h=Math.round(ms/36e5);
@@ -1967,12 +1975,32 @@ async function aiCall(body,ms=15000){
     if(status===404||code==='not_configured'||code==='not_allowed')AI.state='missing';throw new Error(code||error.message||'error')}
   return data;
 }
-async function aiGrade(s,q,given){
-  const r=await aiCall({set:s.title,shownSide:q.pSide==='def'?'definition':'term',prompt:q.prompt,reference:q.answer,given});
+async function aiGrade(s,c,q,given){
+  const others=s.cards.filter(x=>x.id!==c.id&&!x.kind&&x.term.trim()).slice(0,40).map(x=>[x.term,x.def]);
+  const r=await aiCall({set:s.title,shownSide:q.pSide==='def'?'definition':'term',prompt:q.prompt,reference:q.answer,given,others,strictness:DB.settings.aiStrict||'normal'});
   if(!r||!['correct','partial','wrong'].includes(r.verdict))throw new Error('bad reply');AI.state='ready';return r;
 }
+// "Explain more": analogy, example, why it matters and a memory hook. Saved on the card so it's free the next time.
+async function aiExplain(s,c,given,verdict){
+  const h=hashStr(c.term+'\u0001'+c.def);
+  if(c.ax&&c.ax.h===h&&!given)return c.ax;
+  const r=await aiCall({mode:'explain',set:s.title,term:c.term,definition:c.def,given:given||'',verdict:verdict||''},20000);
+  if(!r||!r.simple)throw new Error('bad reply');AI.state='ready';
+  c.ax={h,simple:r.simple,analogy:r.analogy,example:r.example,why:r.why,hook:r.hook};save();
+  return{...c.ax,mistake:r.mistake||''};
+}
+function explainHtml(x){
+  const row=(t,v)=>v?`<p><b>${t}</b>${esc(v)}</p>`:'';
+  return`<div class="aix">${row('Your mix-up',x.mistake)}${row('In simple words',x.simple)}${row('Think of it like',x.analogy)}${row('Example',x.example)}${row('Why it matters',x.why)}${x.hook?`<p class="hook"><b>Remember it</b>${esc(x.hook)}</p>`:''}</div>`}
+// wire an "Explain more" button inside a feedback box
+function wireExplain(box,s,c,given,verdict){
+  const b=$('.xpl',box);if(!b)return;
+  b.onclick=async()=>{b.disabled=true;b.innerHTML='<span class="spin"></span> Explaining…';
+    try{const x=await aiExplain(s,c,given,verdict);const row=b.closest('.aitools');if(row){row.insertAdjacentHTML('afterend',explainHtml(x));b.remove()}else b.outerHTML=explainHtml(x)}
+    catch(e){b.disabled=false;b.textContent='Explain more';toast('Couldn’t get an explanation right now')}}}
+const canExplain=c=>aiOn()&&!c.kind&&!!c.term.trim()&&!!c.def.trim();
 function presentQ(stage,s,c,q,type,next,label='',onAnswer){
-  let st='ask',finalOk=false,undo=null,opts=null,busy=false;
+  let st='ask',finalOk=false,undo=null,opts=null,busy=false;const prevMiss=c.miss?{...c.miss}:null;
   if(type==='mc'){opts=mcOptions(s,c,q);if(opts.length<2){type='written';opts=null}}
   stage.innerHTML=`<div class="card qcard">
     <div class="row between"><span class="muted sm">${qHead(q)||sideName(q.pSide)+' '+sayBtn(q.prompt,langOf(s,q.pSide))}</span>${label?`<span class="pill">${label}</span>`:''}</div>
@@ -1999,22 +2027,56 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
       ${given?`<div class="ans"><small>You said</small><div class="${ok?'okc':'strike'}">${nl(given)}</div></div>`:''}
       ${ok&&given?'':`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`}
       ${ok&&given?`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`:''}
+      ${!ok&&prevMiss?lastMissHtml(prevMiss):''}
+      ${!ok&&canExplain(c)?'<button class="btn ghost sm xpl">'+icon('spark',15)+' Explain more</button>':''}
       <div class="row end" style="margin-top:14px">${!ok&&given?'<button class="btn ghost sm ovr">Override: I was correct</button>':''}<button class="btn primary cont">Continue <kbd>Enter</kbd></button></div>`;
-    $('.cont',fb).onclick=go;
+    $('.cont',fb).onclick=go;wireExplain(fb,s,c,'','');
     const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;go()};
     if(!ok&&DB.settings.autoSpeak)speak(q.answer,langOf(s,q.aSide));
   }
   function aiFeedback(ok,given,ai){
     const V={correct:['ok','✓ Correct'],partial:['part','◐ Partly right'],wrong:['bad','✗ Not quite']}[ai.verdict];
+    const mixCard=ai.confused_with?s.cards.find(x=>x.id!==c.id&&x.term===ai.confused_with):null;
+    // mistake memory and mix-up tracking
+    if(ai.verdict==='correct'){if(c.miss)delete c.miss}
+    else c.miss={g:String(given).slice(0,200),w:String(ai.missing||'').slice(0,240),t:Date.now()};
+    if(mixCard){c.mix=c.mix||{};c.mix[mixCard.id]=(c.mix[mixCard.id]||0)+1}
+    save();
     fb.innerHTML=`<div class="fbx ${V[0]}">${V[1]} <span class="aiscore">${ai.score}/10</span>${ok&&lastGain?` <span class="xpg">+${lastGain} XP</span>`:''}</div>
       ${savedAs(c)}
-      <div class="aifb">${ai.right?`<p><b>What you got right</b>${esc(ai.right)}</p>`:''}${ai.missing?`<p><b>${ai.verdict==='wrong'?'What went wrong':'What’s missing'}</b>${esc(ai.missing)}</p>`:''}${ai.better?`<p><b>A full answer</b>${esc(ai.better)}</p>`:''}</div>
-      <div class="ans"><small>The card says</small><div class="okc">${nl(q.answer)}</div></div>
+      ${prevMiss?(ai.verdict==='correct'?`<p class="lastmiss fixed">✓ You fixed last time’s mistake.</p>`:lastMissHtml(prevMiss)):''}
+      ${mixCard?`<div class="mixup"><b>Mix-up:</b> you described <b>${esc(mixCard.term)}</b>, another card in this set.<div class="muted sm">${esc(mixCard.term)}: ${nl(mixCard.def)}</div></div>`:''}
+      <div class="aifb">${ai.right?`<p><b>What you got right</b>${esc(ai.right)}</p>`:''}${ai.missing?`<p><b>${ai.verdict==='wrong'?'What went wrong':'What’s missing'}</b>${esc(ai.missing)}</p>`:''}</div>
+      <div class="reveal">${ai.better?`<div class="aifb"><p><b>A full answer</b>${esc(ai.better)}</p></div>`:''}
+      <div class="ans"><small>The card says</small><div class="okc">${nl(q.answer)}</div></div></div>
+      <div class="retryhost"></div>
+      <div class="row aitools">${ai.verdict!=='correct'?'<button class="btn sm tryb">↻ Try again</button>':''}${canExplain(c)?'<button class="btn ghost sm xpl">'+icon('spark',15)+' Explain more</button>':''}</div>
       <p class="muted sm aiwho">${icon('spark',14)} Checked by AI. It can be wrong, so trust the card if they disagree.</p>
       <div class="row end" style="margin-top:10px">${ai.verdict!=='correct'?`<button class="btn ghost sm ovr">${ai.verdict==='partial'?'Count it as fully right':'I disagree: I was right'}</button>`:''}<button class="btn primary cont">Continue <kbd>Enter</kbd></button></div>`;
-    $('.cont',fb).onclick=go;
-    const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;go()};
+    $('.cont',fb).onclick=go;wireExplain(fb,s,c,given,ai.verdict);
+    const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;if(c.miss)delete c.miss;save();go()};
+    const tb=$('.tryb',fb);if(tb)tb.onclick=()=>tryAgain(tb);
     if(!ok&&DB.settings.autoSpeak)speak(ai.better||q.answer,langOf(s,q.aSide));
+  }
+  // one more go from memory: the answers are hidden while you rewrite it, and it doesn't change the schedule
+  function tryAgain(tb){
+    tb.remove();const rv=$('.reveal',fb);rv.hidden=true;
+    const host=$('.retryhost',fb);
+    host.innerHTML=`<form class="row wform retry"><input class="wa2" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Write it again from memory"><button class="btn primary">Check</button></form><p class="muted sm" style="margin:6px 2px 0">The answer is hidden while you try. This is practice only, so it won’t change the schedule.</p>`;
+    const i2=$('.wa2',host);i2.focus();
+    $('.retry',host).onsubmit=async e=>{e.preventDefault();const v=i2.value;if(!v.trim())return;
+      i2.readOnly=true;const b=$('.retry button',host);b.disabled=true;
+      let r=null;const g=grade(v,q.answer);
+      if(g!=='wrong')r={verdict:'correct',score:10,right:'That matches the card.',missing:''};
+      else{host.insertAdjacentHTML('beforeend','<div class="fbx aiwait"><span class="spin"></span> Checking…</div>');
+        try{r=await aiGrade(s,c,q,v)}catch(err){r=null}$('.aiwait',host)?.remove()}
+      rv.hidden=false;
+      if(!r){host.insertAdjacentHTML('beforeend','<p class="muted sm">Couldn’t check that one. Compare it with the answer below.</p>');return}
+      const V2={correct:['ok','✓ Got it now'],partial:['part','◐ Closer'],wrong:['bad','✗ Still not quite']}[r.verdict];
+      if(r.verdict==='correct'&&c.miss){delete c.miss;save()}
+      host.insertAdjacentHTML('beforeend',`<div class="fbx ${V2[0]} sm2">${V2[1]} <span class="aiscore">${r.score}/10</span></div>${r.verdict!=='correct'&&r.missing?`<p class="sm" style="margin:6px 2px 0">${esc(r.missing)}</p>`:''}`);
+      $('.cont',fb).focus();
+    };
   }
   if(opts)$$('.choice',stage).forEach(b=>b.onclick=()=>{if(st!=='ask')return;const ok=opts[+b.dataset.k]===q.answer;if(!ok)b.classList.add('bad');answer(ok)});
   else $('.wform',stage).onsubmit=async e=>{e.preventDefault();if(st!=='ask'||busy)return;const v=inp.value;if(!v.trim())return;let g=grade(v,q.answer);
@@ -2023,14 +2085,14 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
     if(g==='wrong'&&aiOn()&&aiWants(c,q)){
       busy=true;inp.readOnly=true;const btn=$('.wform button',stage);btn.disabled=true;
       fb.innerHTML=`<div class="fbx aiwait" role="status"><span class="spin"></span> Checking your answer…</div>`;
-      try{const r=await aiGrade(s,q,v);if(st!=='ask')return;fb.innerHTML='';busy=false;return answer(r.verdict!=='wrong',{close:r.verdict==='partial',given:v,ai:r})}
+      try{const r=await aiGrade(s,c,q,v);if(st!=='ask')return;fb.innerHTML='';busy=false;return answer(r.verdict!=='wrong',{close:r.verdict==='partial',given:v,ai:r})}
       catch(err){console.warn('AI grading unavailable:',err.message);if(st!=='ask')return;fb.innerHTML='';busy=false;inp.readOnly=false;btn.disabled=false;
         if(err.message!=='not_configured'&&AI.state!=='missing')toast('AI check didn’t work this time, so the normal check was used')}
     }
     answer(g!=='wrong',{close:g==='close',given:v})};
   $('.dk',stage).onclick=()=>{if(!busy)answer(false)};
   setKeys(e=>{
-    if(st==='fb'&&e.key==='Enter'){e.preventDefault();go();return}
+    if(st==='fb'&&e.key==='Enter'){if(isTyping(e))return;e.preventDefault();go();return}
     if(st==='ask'&&opts&&/^[1-9]$/.test(e.key)&&!isTyping(e)){$$('.choice',stage)[+e.key-1]?.click()}
   });
   return{timeout:()=>answer(false),get state(){return st}};
@@ -2613,6 +2675,8 @@ function viewDetective(){
   const unres=all.filter(o=>isUnresolved(o.c));
   const report=answered.filter(o=>o.c.wrong>0).sort((a,b)=>(b.c.wrong-b.c.right*.5)-(a.c.wrong-a.c.right*.5)).slice(0,20);
   const weak=weakest();
+  const mixes=[];DB.sets.forEach(x=>x.cards.forEach(c=>{if(c.mix)for(const id in c.mix){const o=x.cards.find(y=>y.id===id);if(o)mixes.push({a:c,b:o,n:c.mix[id],s:x})}}));
+  mixes.sort((p,q)=>q.n-p.n);
   app.innerHTML=`<a class="btn ghost sm" href="#/progress">← Progress</a>
   <h1 style="margin-top:8px">${V('Detective Mode','Weak spots')}</h1>
   <p class="muted">${V('Every mistake is evidence. This report finds the cards you keep missing so you can close them out.','The cards you miss most, across every set.')}</p>
@@ -2624,6 +2688,7 @@ function viewDetective(){
   </div>
   <div class="row">${unres.length?`<a class="btn primary big" href="#/learn/unresolved">${V('Study unresolved evidence','Study weak cards')}</a><a class="btn big" href="#/flash/unresolved">Flashcards (rate 1–4)</a><a class="btn big" href="#/test/unresolved">Test me on them</a>`:`<span class="muted">Nothing unresolved right now. Miss a card in any mode and it shows up here.</span>`}</div>
   ${weak.length?`<h2>${V('Weakest cases','Weakest sets')}</h2><div class="card terms" style="padding:0">${weak.map(w=>`<div class="t"><div class="tt">${esc(w.s.title)}</div><div>${Math.round(w.acc*100)}% accuracy · ${w.open} ${V('in progress','still learning')}</div><a class="pill" href="#/learn/${w.s.id}">Train</a></div>`).join('')}</div>`:''}
+  ${mixes.length?`<h2>Mixed-up terms</h2><p class="muted sm" style="margin-top:-6px">You described one of these when you were asked about the other.</p><div class="card terms" style="padding:0">${mixes.slice(0,12).map(m=>`<div class="t"><div class="tt">${nl(m.a.term)} <span class="muted">↔</span> ${nl(m.b.term)}</div><div><span class="muted sm">${esc(m.a.term)}:</span> ${nl(m.a.def)}<br><span class="muted sm">${esc(m.b.term)}:</span> ${nl(m.b.def)}<div class="muted sm"><a href="#/set/${m.s.id}">${esc(m.s.title)}</a></div></div><div class="sm nowrap"><b>${m.n}×</b></div></div>`).join('')}</div>`:''}
   <h2>${V('Weakness report','Most-missed cards')}</h2>
   ${report.length?`<div class="card terms" style="padding:0">${report.map(o=>`<div class="t"><div class="tt">${nl(o.c.term)}</div><div>${nl(o.c.def)}<div class="muted sm"><a href="#/set/${o.s.id}">${esc(o.s.title)}</a></div></div><div class="sm nowrap"><b style="color:var(--bad)">✗ ${o.c.wrong}</b> · <span style="color:var(--ok)">✓ ${o.c.right}</span></div></div>`).join('')}</div>`:'<div class="card empty muted">No misses recorded yet.</div>'}`;
 }
@@ -2684,10 +2749,11 @@ function viewSettings(){
     <label class="opt"><span>Read aloud automatically</span><input type="checkbox" id="sSpeak"></label>
     <label class="opt"><span>Haptic feedback</span><input type="checkbox" id="sHap"></label>
     <label class="opt"><span>AI feedback on typed answers <span class="muted sm" id="sAiV" style="display:block"></span></span><input type="checkbox" id="sAi"></label>
+    <label class="opt"><span>AI strictness</span><select id="sAiS"><option value="lenient">Lenient: main idea is enough</option><option value="normal">Normal</option><option value="strict">Strict: exam standard</option></select></label>
     <label class="opt"><span>Memory target <span class="muted" id="sRetV"></span></span><input type="range" id="sRet" min="0.8" max="0.95" step="0.01" style="width:150px"></label>
     <label class="opt"><span>Speech speed <span class="muted" id="sRateV"></span></span><input type="range" id="sRate" min="0.5" max="1.5" step="0.05" style="width:150px"></label>
     <div class="opt"><span>Test the voice</span><button class="btn sm" data-say="Hello! This is how I sound." data-lang="en-US">${icon('sound',16)} Play</button></div>
-  </div><div class="gnote">AI feedback checks answers you write in your own words, tells you what was right or missing, and shows a full answer. It needs you to be signed in. Memory target is how much you want to remember when a card comes back. Higher means more frequent reviews; 90% is a good balance. Highlighting underlines other terms from the same set inside definitions. Haptics work in the iPhone app and on Android phones.</div></div>
+  </div><div class="gnote">AI feedback checks answers you write in your own words, tells you what was right or missing, spots mix-ups with other cards, and can explain a card with an analogy and a memory trick. It needs you to be signed in. Lenient suits early learning; Strict suits exam week. Memory target is how much you want to remember when a card comes back. Higher means more frequent reviews; 90% is a good balance. Highlighting underlines other terms from the same set inside definitions. Haptics work in the iPhone app and on Android phones.</div></div>
   <div class="gsec"><span class="glabel">Progress</span><div class="card group">
     <a class="opt" href="#/achievements"><span>Ranks & achievements</span>${chev}</a>
     <a class="opt" href="#/detective"><span>Weak spots report</span>${chev}</a>
@@ -2721,7 +2787,8 @@ function viewSettings(){
   {const c=$('#sAi'),v=$('#sAiV');c.checked=DB.settings.ai!==false;
     const show=async()=>{if(!c.checked){v.textContent='Off';return}if(!sb||!user){v.textContent='Sign in to use it';return}
       v.textContent='Checking…';try{const r=await aiCall({ping:true},8000);AI.state=r&&r.configured?'ready':'missing';v.textContent=AI.state==='ready'?'Ready':'Not set up yet'}catch(e){v.textContent=AI.state==='missing'?'Not set up yet':'Can’t reach the AI right now'}};
-    c.onchange=()=>{DB.settings.ai=c.checked;save();show()};show()}
+    c.onchange=()=>{DB.settings.ai=c.checked;save();show()};show();
+    const st=$('#sAiS');st.value=DB.settings.aiStrict||'normal';st.onchange=()=>{DB.settings.aiStrict=st.value;save()}}
   {const r=$('#sRet'),v=$('#sRetV'),show=()=>v.textContent=Math.round((DB.settings.retention||.9)*100)+'%';r.value=DB.settings.retention||.9;show();r.oninput=()=>{DB.settings.retention=+r.value;show();save()}}
   $('#sHap').checked=DB.settings.haptics!==false;$('#sHap').onchange=e=>{DB.settings.haptics=e.target.checked;save();if(e.target.checked)haptic('success')};
   $('#sVision').onchange=e=>{DB.settings.vision=e.target.checked;save()};
