@@ -858,6 +858,103 @@ mark.czA{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(-
   .card{box-shadow:none;border:1px solid #ccc}
   .terms .t{break-inside:avoid}
 }
+/* ===================== v7: sidebar + dashboard ===================== */
+/* light theme: indigo on soft grey and white */
+html[data-theme=light],html:not([data-theme]){--bg:#f4f5f7;--card:#fff;--text:#141a2b;--muted:#667085;--line:#e4e7ec;--accent:#4b4bd8;--accent-2:#3d3dc2;--accent-soft:#ececfd;--shadow:0 1px 2px rgba(20,26,43,.05),0 8px 24px -16px rgba(20,26,43,.25)}
+#side{display:none}
+.lu{display:block;flex:none}
+#themeBtn .lu,#ambBtn svg{margin:auto}
+@media (min-width:761px){
+  :root{--sidew:72px}
+  .top{display:none!important}
+  #side{display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;width:var(--sidew);z-index:30;padding:18px 12px;background:var(--bg);border-right:1px solid var(--line)}
+  body{padding-left:var(--sidew)}
+  .slogo{display:flex;align-items:center;gap:10px;height:40px;padding:0 6px;margin-bottom:22px;color:var(--text);overflow:hidden}
+  .slogo .word{display:none}
+  .slogo svg{flex:none;color:var(--accent)}
+  .snav{display:flex;flex-direction:column;gap:2px}
+  .snav a{position:relative;display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:10px;color:var(--muted);font-size:15px;font-weight:500;transition:background .15s,color .15s}
+  .snav a span:not(.navdot){display:none}
+  .snav a:hover{color:var(--text);background:color-mix(in srgb,var(--text) 5%,transparent)}
+  .snav a[aria-current=page]{color:var(--text);background:color-mix(in srgb,var(--text) 7%,transparent)}
+  .snav a[aria-current=page] .lu{color:var(--accent)}
+  .snav a:focus-visible,.sfoot .ico:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .snav .navdot{top:8px;left:28px;right:auto}
+  .sfoot{margin-top:auto;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .sfoot .ico{width:40px;height:40px;border-radius:10px;color:var(--muted)}
+  .sfoot .ico:hover{color:var(--text);background:color-mix(in srgb,var(--text) 5%,transparent)}
+  #ambPanel{top:auto;bottom:16px;left:calc(var(--sidew) + 12px);right:auto}
+  #ambHint.side::before{display:none}
+  main:has(>.dash){max-width:none}
+}
+@media (min-width:1280px){
+  :root{--sidew:224px}
+  .slogo .word{display:inline;font-size:18px;font-weight:650;letter-spacing:-.01em}
+  .snav a span:not(.navdot){display:inline}
+  .snav .navdot{left:auto;right:12px;top:17px}
+  .sfoot{flex-direction:row}
+}
+/* dashboard */
+.dash{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 56px}
+.dmain,.dside{min-width:0}
+.dside{display:flex;flex-direction:column;gap:16px}
+.hello{display:block}
+.hello h1{margin:4px 0 6px}
+.start{position:relative}
+.start-go{display:grid;place-items:center;flex:none;transition:transform .2s}
+.start:hover .start-go{transform:translateX(3px)}
+.start-n{flex:none;min-width:34px;height:28px;padding:0 10px;border-radius:99px;display:grid;place-items:center;font-size:15px;font-weight:650;font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--on-accent) 16%,transparent)}
+.start:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wstats{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin:-2px 0 6px}
+.wstats b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.wb{position:relative;outline:none}
+.wb[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translate(-50%,4px);white-space:nowrap;padding:5px 9px;border-radius:7px;font-size:12px;background:var(--text);color:var(--bg);opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:2}
+.wb:hover::after,.wb:focus-visible::after{opacity:1;transform:translate(-50%,0)}
+.wb:focus-visible i{outline:2px solid var(--accent);outline-offset:2px}
+.wb.today .wd{color:var(--accent)}
+.recent .lpct{min-width:34px}
+.resume-tag{color:var(--accent);font-weight:600}
+/* side cards */
+.dside .card{padding:18px 20px;margin:0}
+.goal-h,.ins-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.goal-h h2{margin:0;font-size:15px;font-weight:600}
+.goal-b{display:flex;align-items:center;gap:16px;margin-top:12px}
+.goal-b .ringg{width:72px;height:72px}.goal-b .ringg svg{width:72px;height:72px}
+.goal-t{display:flex;flex-direction:column;gap:2px}
+.goal-t b{font-size:17px;font-variant-numeric:tabular-nums}.goal-t span{color:var(--muted);font-size:13px}
+.goal-t .goal-ok{color:var(--ok);font-weight:600}
+.ins-ai{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.ins-ai .lu{color:var(--accent)}
+.ins-cat{font-size:12px;color:var(--muted)}
+.ins-t{margin:12px 0 6px;font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.ins-x{margin:0;line-height:1.5;font-size:15px}
+.ins-r{margin:8px 0 0;font-size:13px;color:var(--muted)}.ins-r a{color:var(--accent)}.ins-r a:hover{text-decoration:underline}
+.ins-f{display:flex;align-items:center;gap:2px;margin:12px -8px -8px}
+.ins-f .ico{width:36px;height:36px;border-radius:9px;color:var(--muted)}
+.ins-f .ico:hover{color:var(--text);background:color-mix(in srgb,var(--text) 6%,transparent)}
+.ins-f .ico[aria-pressed=true]{color:var(--accent)}
+.ins-all{margin-left:auto;border:0;background:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;padding:6px 8px;border-radius:8px}.ins-all:hover{color:var(--text)}
+.ins-sk{display:grid;gap:8px;margin-top:14px}.ins-sk i{display:block;height:12px;border-radius:6px;background:color-mix(in srgb,var(--muted) 16%,transparent);animation:skp 1.4s ease-in-out infinite}
+.ins-sk i:first-child{height:16px;width:60%}.ins-sk i:last-child{width:80%}
+@keyframes skp{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.ins-sk i{animation:none}.start-go{transition:none}}
+.ins-list{display:grid;gap:10px;max-height:60vh;overflow:auto}
+.ins-item{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.ins-item p{margin:4px 0;font-size:14px;line-height:1.45}.ins-item>div{flex:1}
+/* two columns once there's room */
+@media (min-width:1024px){
+  .dash{grid-template-columns:minmax(0,1fr) 300px}
+  .dside{padding-top:30px}
+}
+@media (min-width:1280px){.dash{grid-template-columns:minmax(0,1fr) 340px}}
+/* single column: goal after the start button, insight after the study content */
+@media (max-width:1023px){
+  .dash{max-width:720px}
+  .dmain,.dside{display:contents}
+  .dash{display:flex;flex-direction:column}
+  .hello{order:1}.start{order:2}.goal{order:3;margin-top:20px!important}.week{order:4}.recent{order:5}.insight{order:6;margin-top:36px!important}
+}
+@media (max-width:760px){.goal-b .ringg,.goal-b .ringg svg{width:64px;height:64px}}
 </style>
 </head>
 <body>
@@ -866,8 +963,9 @@ mark.czA{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(-
   <a href="#/" class="logo" aria-label="QuizCraft home"><svg class="logo-bat" width="40" height="26" viewBox="0 0 64 40" aria-hidden="true"><path d="M29 20 L14 4 L4 9 L9 14 L12 13 L15 19 L19 18 L22 24 L28 27.5 Q32 31 36 27.5 L42 25 L45 20 L49 21 L52 15 L55 16 L61 12 L51 6 L35 20 Q35.5 17.5 34.4 15.6 L35.2 10.6 L32.9 14.2 Q32 13.9 31.1 14.2 L28.8 10.6 L29.6 15.6 Q28.5 17.5 29 20 Z" fill="currentColor"/></svg><span class="word">QuizCraft</span></a>
   <nav class="nav" aria-label="Main"><a href="#/" data-nav="home">Home</a><a href="#/library" data-nav="library">Library</a><a href="#/progress" data-nav="progress">Progress</a><a href="#/profile" data-nav="profile">Profile<span class=navdot></span></a></nav>
   <div id="barTitle" aria-hidden="true"></div>
-  <div class="tools"><button class="ico" id="ambBtn" title="Study sounds" aria-label="Study sounds"></button></div>
+  <div class="tools"><button class="ico" id="themeBtn"></button><button class="ico" id="ambBtn" title="Study sounds" aria-label="Study sounds"></button></div>
 </header>
+<aside id="side"><a href="#/" class="slogo" aria-label="QuizCraft home"></a><nav class="snav" aria-label="Main"></nav><div class="sfoot" id="sideTools"></div></aside>
 <main id="app"></main>
 <nav id="tabbar" aria-label="Main"><a href="#/" data-nav="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="#/library" data-nav="library"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="16" rx="1.2"/><rect x="12" y="4" width="4" height="16" rx="1"/><path d="M18 5.2l2.6.7-3.6 13.9-2.6-.7"/></svg><span>Library</span></a><a href="#/progress" data-nav="progress"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Progress</span></a><a href="#/profile" data-nav="profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5c1.2-3.6 4.1-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profile</span><span class=navdot></span></a></nav>
 <div id="modal" hidden></div>
@@ -878,6 +976,35 @@ mark.czA{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(-
 <script>
 'use strict';
 /* ========== helpers ========== */
+/* Lucide icons (ISC licence, lucide.dev), used for navigation and the dashboard */
+const LU={
+  home:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  library:'<rect width="8" height="18" x="3" y="3" rx="1"/><path d="M7 3v18"/><path d="M20.4 18.9c.2.5-.1 1.1-.6 1.3l-1.9.7c-.5.2-1.1-.1-1.3-.6L11.1 5.1c-.2-.5.1-1.1.6-1.3l1.9-.7c.5-.2 1.1.1 1.3.6Z"/>',
+  chart:'<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  moon:'<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
+  sparkles:'<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+  bookmark:'<path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/>',
+  bookmarked:'<path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/><path d="m9 10 2 2 4-4"/>',
+  refresh:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  arrow:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  play:'<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>',
+};
+const lu=(n,sz=20,sw=1.75)=>`<svg class="lu" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${LU[n]}</svg>`;
+const NAV_ITEMS=[['home','#/','Home','home'],['library','#/library','Library','library'],['progress','#/progress','Progress','chart'],['profile','#/profile','Profile','user']];
+function buildNav(){
+  const link=(k,h,l,i,cls='')=>`<a href="${h}" data-nav="${k}" class="${cls}">${lu(i,20)}<span>${l}</span>${k==='profile'?'<span class="navdot"></span>':''}</a>`;
+  document.querySelector('#side .snav').innerHTML=NAV_ITEMS.map(x=>link(...x)).join('');
+  document.querySelector('#tabbar').innerHTML=NAV_ITEMS.map(x=>link(...x)).join('');
+  const lg=document.querySelector('.top .logo');if(lg)document.querySelector('#side .slogo').innerHTML=lg.innerHTML;
+}
+buildNav();
+// one set of tool buttons (theme + sound): in the sidebar on wider screens, in the top bar on phones
+const SIDE_MQ=matchMedia('(min-width:761px)');
+function placeTools(){const host=SIDE_MQ.matches?document.getElementById('sideTools'):document.querySelector('.top .tools');
+  ['themeBtn','ambBtn'].forEach(id=>{const b=document.getElementById(id);if(b&&b.parentElement!==host)host.appendChild(b)})}
+placeTools();SIDE_MQ.addEventListener?SIDE_MQ.addEventListener('change',placeTools):SIDE_MQ.addListener(placeTools);
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const app=$('#app');
 const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
@@ -1522,7 +1649,9 @@ const chev='<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="n
 function firstName(){const n=(DB.settings.name||(typeof user!=='undefined'&&user&&(user.user_metadata?.full_name||user.user_metadata?.name))||'').trim();return n.split(/\s+/)[0]||''}
 function greeting(){const h=new Date().getHours(),g=h<5?'Good evening':h<12?'Good morning':h<18?'Good afternoon':'Good evening',n=firstName();return n?`${g}, ${n}`:g}
 const pctOf=s=>s.cards.length?Math.round(s.cards.filter(c=>status(c)==='master').length/s.cards.length*100):0;
-function setRow(s){const f=DB.folders.find(f=>f.id===s.folder),p=pctOf(s),st=s.cards.some(c=>c.right+c.wrong>0);return `<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(s.title||'Untitled')}</div><div class="lm">${s.cards.length} term${s.cards.length===1?'':'s'}${f?' · '+esc(f.name):''}${!st?' · not started':isClosed(s)?' · mastered':''}</div></div>${st?miniRing(p):''}${chev}</a>`}
+// the set you studied last reopens the mode you were in
+function resumeRow(s,ci,L){return setRow(s).replace(`class="lrow" href="#/set/${s.id}"`,`class="lrow resume-row" href="${ci.href}" title="Resume ${STUDY_MODES[L.v]||'studying'}"`).replace(/(<div class="lm">)/,`$1<span class="resume-tag">Resume ${esc(STUDY_MODES[L.v]||'')}</span> · `)}
+function setRow(s){const f=DB.folders.find(f=>f.id===s.folder),p=pctOf(s),st=s.cards.some(c=>c.right+c.wrong>0);return `<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(s.title||'Untitled')}</div><div class="lm">${s.cards.length} term${s.cards.length===1?'':'s'}${f?' · '+esc(f.name):''}${!st?' · not started':isClosed(s)?' · mastered':''}</div></div>${st?`<span class="lpct">${p}%</span>${miniRing(p)}`:''}${chev}</a>`}
 const recentSets=()=>[...DB.sets].sort((a,b)=>Math.max(b.studied||0,b.updated||0)-Math.max(a.studied||0,a.updated||0));
 function trainTarget(){
   const ds=dueSet(),n=ds.cards.length;
@@ -1548,7 +1677,8 @@ function miniRing(p){const r=8,C=2*Math.PI*r;return `<svg class="mring" width="2
 function weekBars(){
   const days=pastDays(7),vals=days.map(x=>logDay(x.k).r),max=Math.max(MISSION.daily,...vals),H=96;
   return `<div class="wbars" role="img" aria-label="Correct answers over the last 7 days: ${vals.join(', ')}">${days.map((x,i)=>{const v=vals[i],h=v?Math.max(6,v/max*H):3,today=i===6,st=logDay(x.k).s&&!v;
-    return `<div class="wb ${today?'today':''}" title="${x.d.toLocaleDateString([],{weekday:'long'})}: ${v} correct"><i style="height:${st?6:h}px" class="${v?'on':st?'st':''}"></i><span class="wd">${x.d.toLocaleDateString([],{weekday:'narrow'})}</span></div>`}).join('')}
+    const tip=`${today?'Today':x.d.toLocaleDateString([],{weekday:'long'})}: ${v?`${v} correct`:st?'studied':'no study'}`;
+    return `<div class="wb ${today?'today':''}" tabindex="0" data-tip="${tip}" aria-label="${tip}"><i style="height:${st?6:h}px" class="${v?'on':st?'st':''}"></i><span class="wd">${x.d.toLocaleDateString([],{weekday:'narrow'})}</span></div>`}).join('')}
     <div class="wgoal" style="bottom:${MISSION.daily/max*H+24}px" title="Daily goal: ${MISSION.daily}"><span>Goal</span></div></div>`;
 }
 function heatmap(){
@@ -1580,19 +1710,99 @@ function animateArcs(){requestAnimationFrame(()=>requestAnimationFrame(()=>$$('[
 function weekHeadline(st,wk){const n=pastDays(7).filter(x=>{const e=logDay(x.k);return e.r+e.w||e.s}).length;return !n?'No study yet this week. A few minutes today starts a streak.':`You studied ${n} of the last 7 days${wk?`, with ${wk} correct answers`:''}.${st>1?` ${st}-day streak.`:''}`}
 function viewHome(){
   rollMissions();
-  const due=dueSet().cards.length,st=streakNow(),go=trainTarget(),ci=continueItem(),dn=DB.daily.n;
-  const wk=pastDays(7).reduce((n,x)=>n+logDay(x.k).r,0);
-  const brief=!DB.sets.length?'Create a set to get started.':due?`${due} card${due>1?'s are':' is'} waiting for review.`:DB.daily.done?'Today’s goal is done. Nice work.':'You’re all caught up on reviews.';
-  const recent=recentSets().slice(0,3),studied=DB.sets.some(x=>x.cards.some(c=>c.right+c.wrong>0))||Object.values(DB.log||{}).some(e=>e.r+e.w>0||e.s);
-  app.innerHTML=`<div class="wrap home">
-  <div class="hello"><div><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello" data-lt="Home">${esc(greeting())}</h1><p class="briefing">${brief}</p></div>${DB.sets.length?ringHtml(Math.min(dn,MISSION.daily),MISSION.daily,DB.daily.done):''}</div>
-  <a class="start" href="${go.href}"><span class="start-t"><span class="start-l">${esc(go.label)}</span><span class="start-s">${esc(go.sub)}</span></span><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  ${DB.sets.length&&studied?`<section class="sec week"><div class="sec-h"><h2>This week</h2></div><p class="chart-h">${weekHeadline(st,wk)}</p>${weekBars()}</section>`:''}
-  ${ci&&ci.href!==go.href?`<a class="resume" href="${ci.href}"><span class="mic">${icon('play',16)}</span><div class="lmain"><div class="lt">Continue ${esc(ci.title)}</div><div class="lm">${esc(ci.meta)}</div></div>${chev}</a>`:''}
-  <section class="sec recent"><div class="sec-h"><h2>${studied?'Recent sets':'Try a starter set'}</h2>${DB.sets.length>3?'<a href="#/library">See all</a>':''}</div>
-  ${recent.length?`<div class="list">${recent.map(setRow).join('')}</div>`:`<p class="muted">No sets yet. <a href="#/new" style="color:var(--accent)">Create one</a> or <a href="#/import" style="color:var(--accent)">import from Quizlet</a>.</p>`}</section>
+  const due=dueSet().cards.length,st=streakNow(),go=trainTarget(),dn=DB.daily.n,L=DB.lastStudy,ci=continueItem();
+  const days=pastDays(7),wk=days.reduce((n,x)=>n+logDay(x.k).r,0),wd=days.filter(x=>{const e=logDay(x.k);return e.r+e.w||e.s}).length;
+  const brief=!DB.sets.length?'Create a set to get started.':due?`${due} card${due>1?'s are':' is'} waiting for review.`:DB.daily.done?'Today’s goal is done. Nice work.':st>1?'Let’s keep the momentum going.':'You’re all caught up on reviews.';
+  const recent=recentSets().slice(0,4),studied=DB.sets.some(x=>x.cards.some(c=>c.right+c.wrong>0))||Object.values(DB.log||{}).some(e=>e.r+e.w>0||e.s);
+  const pct=Math.min(100,Math.round(dn/MISSION.daily*100));
+  app.innerHTML=`<div class="dash">
+  <div class="dmain">
+    <div class="hello"><div class="eyebrow">${new Date().toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})}</div><h1 id="hello" data-lt="Home">${esc(greeting())}.</h1><p class="briefing">${brief}</p></div>
+    <a class="start" href="${go.href}"><span class="start-t"><span class="start-l">${esc(go.label)}</span><span class="start-s">${esc(go.sub)}</span></span>${due?`<span class="start-n" aria-label="${due} due">${due}</span>`:''}<span class="start-go">${lu('arrow',22,2)}</span></a>
+    ${DB.sets.length&&studied?`<section class="sec week"><div class="sec-h"><h2>This week</h2><a href="#/progress">Progress</a></div>
+      <div class="wstats"><span><b>${wd}</b> of 7 days</span><span><b>${wk}</b> correct</span>${st?`<span><b>${st}</b>-day streak</span>`:''}</div>${weekBars()}</section>`:''}
+    <section class="sec recent"><div class="sec-h"><h2>${studied?'Continue learning':'Try a starter set'}</h2>${DB.sets.length>4?'<a href="#/library">See all</a>':''}</div>
+    ${recent.length?`<div class="list">${recent.map(x=>L&&ci&&x.id===L.id&&ci.href!==go.href?resumeRow(x,ci,L):setRow(x)).join('')}</div>`:`<p class="muted">No sets yet. <a href="#/new" style="color:var(--accent)">Create one</a> or <a href="#/import" style="color:var(--accent)">import from Quizlet or Anki</a>.</p>`}</section>
+  </div>
+  <aside class="dside">
+    ${DB.sets.length?`<section class="goal card"><div class="goal-h"><h2>Daily goal</h2><span class="muted sm">${DB.daily.done?'Done':pct+'%'}</span></div>
+      <div class="goal-b">${ringHtml(Math.min(dn,MISSION.daily),MISSION.daily,DB.daily.done)}<div class="goal-t"><b>${Math.min(dn,MISSION.daily)} of ${MISSION.daily}</b><span>correct answers today</span>${DB.daily.done?'<span class="goal-ok">Goal reached</span>':''}</div></div></section>`:''}
+    <section class="insight card" id="insight" aria-live="polite"></section>
+  </aside>
   </div>`;
-  animateArcs();
+  animateArcs();renderInsight();
+}
+/* ========== Learning Insight ==========
+   Short insights from the AI (supabase function "grade", mode "insight"), grounded in your own cards.
+   They're fetched three at a time and kept on this device, so the dashboard doesn't call the AI on every visit.
+   Without the AI (signed out, offline, or not set up) it shows study tips that are built in. */
+const INS_TIPS=[
+  ['Testing beats rereading','Trying to recall an answer strengthens memory more than reading it again. Rereading makes material feel familiar, but recalling it is what makes it stick.'],
+  ['Spread it out','Studying the same material over several days leads to better long-term memory than one long session. The short gaps make each review count more.'],
+  ['Sleep locks it in','Sleep after studying helps the brain stabilise what you learned that day. A good night’s sleep before an exam often helps more than an extra late hour.'],
+  ['Mix your practice','Mixing different kinds of problems in one session feels harder than practising one kind at a time. It teaches you to recognise which method each problem needs.'],
+  ['Ask why it’s true','Explaining why or how something works, in your own words, links it to what you already know. Connected ideas are easier to recall later.'],
+  ['Struggle is a good sign','When recall feels effortful, learning is usually happening. Easy, smooth review can be an illusion of knowing.'],
+  ['Guess before you learn','Trying to answer a question before you’ve studied it, even if you get it wrong, helps you learn the answer better afterwards.'],
+  ['Words plus pictures','Pairing a definition with a simple sketch or diagram gives your memory two ways to find it.'],
+  ['Familiar is not known','Recognising a term when you see it is easier than producing it from memory. Test yourself on recall, not recognition.'],
+  ['One thing at a time','Switching between tasks costs focus each time you switch. A short session with notifications off often beats a long distracted one.'],
+].map(([title,text])=>({category:'science',title,text,terms:[],tip:1}));
+const INS_LABEL={cards:'From your cards',science:'Learning science',general:'Did you know'};
+function insState(){if(!DB.ins||typeof DB.ins!=='object')DB.ins={cur:null,queue:[],seen:[],n:0};const I=DB.ins;I.queue=I.queue||[];I.seen=I.seen||[];if(!Array.isArray(DB.settings.insSaved))DB.settings.insSaved=[];return I}
+function insCards(){ // a sample of your own cards, most recently studied sets first
+  const sets=recentSets().filter(x=>!x.virtual&&x.cards.length).slice(0,5),out=[];
+  sets.forEach(x=>shuffle(x.cards.filter(c=>!c.kind&&c.term.trim()&&c.def.trim())).slice(0,12).forEach(c=>out.push([c.term,c.def,x.title])));
+  return shuffle(out).slice(0,36);
+}
+async function insFetch(){
+  const I=insState(),cards=insCards(),own=cards.length>=2;
+  const want=own?(I.n%3===2?['cards','science','general']:['cards','science','cards']):['science','general','science'];
+  const r=await aiCall({mode:'insight',cards,want,avoid:I.seen.slice(-25)},25000);
+  if(!r||!Array.isArray(r.items)||!r.items.length)throw new Error('bad reply');
+  AI.state='ready';I.n++;r.items.forEach(x=>{x.t=Date.now()});I.queue.push(...r.items);save();
+}
+function insTip(){const I=insState(),k=(Math.floor(Date.now()/DAY)+I.n)%INS_TIPS.length;return INS_TIPS[k]}
+let insBusy=false;
+async function renderInsight(next){
+  const box=$('#insight');if(!box)return;const I=insState();
+  const fresh=I.cur&&!I.cur.tip&&Date.now()-(I.cur.t||0)<12*36e5;
+  if(next||!fresh){
+    if(I.queue.length){I.cur=I.queue.shift();I.cur.t=Date.now();save()}
+    else if(aiOn()&&!insBusy){
+      insBusy=true;box.innerHTML=insHtml(null,true);
+      try{await insFetch();I.cur=I.queue.shift();I.cur.t=Date.now();save()}
+      catch(e){console.warn('insight',e.message);if(next||!I.cur)I.cur={...insTip(),t:Date.now()}}
+      finally{insBusy=false}
+      if(!$('#insight'))return;
+    }else if(!I.cur||next||I.cur.tip){I.cur={...insTip(),t:Date.now()};if(next)I.n++;save()}
+  }
+  const x=I.cur;if(x&&!x.tip){I.seen.push(x.title);I.seen=[...new Set(I.seen)].slice(-40)}
+  $('#insight').innerHTML=insHtml(x,false);bindInsight();
+}
+function insHtml(x,loading){
+  const saved=insState()&&DB.settings.insSaved.length;
+  if(loading)return`<div class="ins-h"><span class="ins-ai">${lu('sparkles',14)} Learning Insight</span></div><div class="ins-sk"><i></i><i></i><i></i></div>`;
+  if(!x)return'';
+  const on=DB.settings.insSaved.some(y=>y.title===x.title);
+  const where=(x.terms||[]).map(t=>{const st=DB.sets.find(z=>z.cards.some(c=>c.term===t));return st?`<a href="#/set/${st.id}">${esc(t)}</a>`:esc(t)}).join(', ');
+  return`<div class="ins-h"><span class="ins-ai">${x.tip?'':lu('sparkles',14)}${x.tip?'Study tip':'Learning Insight'}</span><span class="ins-cat">${INS_LABEL[x.category]||''}</span></div>
+    <h3 class="ins-t">${esc(x.title)}</h3><p class="ins-x">${esc(x.text)}</p>${where?`<p class="ins-r">About ${where}</p>`:''}
+    <div class="ins-f"><button class="ico" id="insSave" aria-pressed="${on}" aria-label="${on?'Remove from saved':'Save insight'}" title="${on?'Saved':'Save'}">${lu(on?'bookmarked':'bookmark',18)}</button><button class="ico" id="insNext" aria-label="Show another insight" title="Another one">${lu('refresh',18)}</button>${saved?`<button class="ins-all" id="insAll">Saved (${saved})</button>`:''}</div>`;
+}
+function bindInsight(){
+  const b=$('#insSave'),n=$('#insNext'),a=$('#insAll'),I=insState();
+  if(b)b.onclick=()=>{const x=I.cur,L=DB.settings.insSaved,k=L.findIndex(y=>y.title===x.title);
+    if(k>=0)L.splice(k,1);else{L.unshift({title:x.title,text:x.text,category:x.category,terms:x.terms||[],t:Date.now()});L.splice(50)}
+    save();$('#insight').innerHTML=insHtml(x,false);bindInsight();toast(k>=0?'Removed from saved':'Insight saved')};
+  if(n)n.onclick=()=>{if(!insBusy)renderInsight(true)};
+  if(a)a.onclick=savedInsights;
+}
+function savedInsights(){
+  const L=DB.settings.insSaved;
+  modal(`<h3>Saved insights</h3>${L.length?`<div class="ins-list">${L.map((x,i)=>`<div class="ins-item"><div><b>${esc(x.title)}</b><p>${esc(x.text)}</p><span class="muted sm">${INS_LABEL[x.category]||''}</span></div><button class="ico" data-rm="${i}" aria-label="Remove ${esc(x.title)}" title="Remove">${icon('trash',16)}</button></div>`).join('')}</div>`:'<p class="muted">Nothing saved yet.</p>'}<div class="row end" style="margin-top:12px"><button class="btn primary" id="mC">Done</button></div>`);
+  $('#mC').onclick=()=>{closeModal();if($('#insight'))renderInsight()};
+  $$('[data-rm]').forEach(b=>b.onclick=()=>{L.splice(+b.dataset.rm,1);save();savedInsights()});
 }
 function viewLibrary(q=''){
   const sets=recentSets();
@@ -2564,7 +2774,9 @@ function showAmbHint(){
   const h=$('#ambHint'),b=$('#ambBtn');if(!h||!b)return;
   const on=DB.settings.amb.on;
   h.innerHTML=`<div class="row" style="gap:10px;align-items:flex-start">${icon('head',22)}<div><b id="hintT"></b><div class="sm muted" id="hintD"></div></div></div><div class="row end" style="margin-top:10px">${on?'<button class="btn sm" id="hintOff">Turn sound off</button><button class="btn sm primary" id="hintOk">Keep it</button>':'<button class="btn sm" id="hintKeepOff">Keep it off</button><button class="btn sm primary" id="hintOn">Turn sound on</button>'}</div>`;
-  const place=()=>{const r=b.getBoundingClientRect(),w=h.offsetWidth||330,left=Math.max(8,Math.min(r.right+14-w,innerWidth-w-8));h.style.top=(r.bottom+12)+'px';h.style.left=left+'px';h.style.right='auto';h.style.setProperty('--ax',(r.left+r.width/2-left-7)+'px')};
+  const place=()=>{const r=b.getBoundingClientRect(),w=h.offsetWidth||330;
+    if(b.closest('#side')){h.classList.add('side');h.style.left=(r.right+14)+'px';h.style.right='auto';h.style.top=Math.max(8,r.bottom-(h.offsetHeight||120))+'px';return}
+    h.classList.remove('side');const left=Math.max(8,Math.min(r.right+14-w,innerWidth-w-8));h.style.top=(r.bottom+12)+'px';h.style.left=left+'px';h.style.right='auto';h.style.setProperty('--ax',(r.left+r.width/2-left-7)+'px')};
   h.hidden=false;place();ambHintText(true);requestAnimationFrame(()=>h.classList.add('show'));addEventListener('resize',place);
   if(on){
     $('#hintOff').onclick=()=>{if(AMB.unarm)AMB.unarm();ambStop();hideAmbHint();toast('Sound off. Turn it back on with the headphones button.')};
@@ -2772,7 +2984,7 @@ function viewSettings(){
   <details class="more" style="margin:10px 0 0 18px"><summary>Keyboard shortcuts</summary><div class="kbd-list" style="margin-top:10px">
     <kbd>Space</kbd><span>Flip flashcard</span><kbd>← →</kbd><span>Previous / next card (or Still learning / Know)</span><kbd>S</kbd><span>Star the current flashcard</span><kbd>1–4</kbd><span>Pick an answer or rate a card</span><kbd>Enter</kbd><span>Submit / continue</span><kbd>Ctrl+S</kbd><span>Save while editing a set</span><kbd>Esc</kbd><span>Close a dialog</span>
   </div></details>
-  <p style="margin:30px 0 0 18px"><a class="classic" href="archive/v5/">Previous version</a> · <a class="classic" href="archive/v4/">v4</a> · <a class="classic" href="archive/v1/">Classic design</a></p></div>
+  <p style="margin:30px 0 0 18px"><a class="classic" href="archive/v6/">Previous version</a> · <a class="classic" href="archive/v5/">v5</a> · <a class="classic" href="archive/v1/">Classic design</a></p></div>
   </div>`;
   if($('#sInstall'))$('#sInstall').onclick=()=>modal(`<h3>Install QuizCraft</h3><p><b>iPhone:</b> open this site in Safari, tap the Share button, then <b>Add to Home Screen</b>.</p><p><b>Android:</b> in Chrome, tap ⋮ then <b>Install app</b>.</p><p class="muted sm">It opens full screen with its own icon and keeps working offline.</p><div class="row end"><button class="btn primary" id="mC">Done</button></div>`)||($('#mC').onclick=()=>closeModal());
   if($('#acctBtn'))$('#acctBtn').onclick=authModal;$('#sTour').onclick=()=>startTour();$('#sStarter').onclick=()=>{if(getSet('sample-memory'))return toast('You already have the starter set');const x=starterSet();delete x.sample;DB.sets.push(x);saveNow();toast('Starter set added')};
@@ -2933,7 +3145,8 @@ function initSync(){
     const was=user?.id;user=session?.user||null;
     setSync(user?(syncState==='off'?'busy':syncState):'off');
     if(ev==='PASSWORD_RECOVERY')setTimeout(newPasswordModal,80);
-    if(user&&user.id!==was){setTimeout(sync,0);const h=$('#hello');if(h)h.textContent=greeting()}
+    if(user&&user.id!==was){setTimeout(sync,0);const h=$('#hello');if(h)h.textContent=greeting()+'.'}
+    if((user?.id||null)!==(was||null)&&$('#insight'))setTimeout(renderInsight,0);
     if((user?.id||null)!==(was||null)&&/^#\/(profile|settings)/.test(location.hash)&&$('#modal').hidden)viewSettings();
     if(!user)clearTimeout(syncT);
   });
@@ -2977,12 +3190,14 @@ const vis=sel=>{const el=[...document.querySelectorAll(sel)].find(e=>e.offsetPar
 const TOUR_ALL=[
   {t:'Welcome to QuizCraft',d:'A quiet place to study. Here’s a one-minute tour of how it works.'},
   {sel:'.start',t:'Start training',d:'This button always picks what to study next: due reviews first, then the set you’re learning. One tap and you’re in.'},
-  {sel:'.ringg',t:'Today’s goal',d:'The ring fills as you answer correctly. Close it every day to build your streak.'},
+  {sel:'.goal',t:'Daily goal',d:'The ring fills as you answer correctly. Close it every day to build your streak.'},
   {sel:'.week',opt:1,t:'Your week',d:'Each bar is a day of studying. The faint line is your daily goal.'},
+  {sel:'.insight',opt:1,t:'Learning Insight',d:'A short idea about what you’re studying, learning science or the world. Save the ones you like, or tap the arrows for another.'},
   {sel:'.recent',t:'Your first set',d:'“How memory works” is ready to try. It explains how QuizCraft schedules reviews. Open a set to use Flashcards, Learn, Write, Spell, Test, Match, Gravity or a timed exam.'},
-  {sel:'.nav [data-nav=library], #tabbar [data-nav=library]',t:'Library',d:'All your sets and folders. Create a set, import from Quizlet, Word or Excel, and search every term.'},
-  {sel:'.nav [data-nav=progress], #tabbar [data-nav=progress]',t:'Progress',d:'Daily and weekly goals, your rank and XP, achievements, and the cards that need more work.'},
-  {sel:'.nav [data-nav=profile], #tabbar [data-nav=profile]',t:'Profile',d:'Sign in with Google to sync your devices, change the theme, and back up your data.'},
+  {sel:'#side [data-nav=library], #tabbar [data-nav=library]',t:'Library',d:'All your sets and folders. Create a set, import from Quizlet, Word or Excel, and search every term.'},
+  {sel:'#side [data-nav=progress], #tabbar [data-nav=progress]',t:'Progress',d:'Daily and weekly goals, your rank and XP, achievements, and the cards that need more work.'},
+  {sel:'#side [data-nav=profile], #tabbar [data-nav=profile]',t:'Profile',d:'Sign in with Google to sync your devices, change the theme, and back up your data.'},
+  {sel:'#themeBtn',t:'Light and dark',d:'Switch between the light and dark look at any time.'},
   {sel:'#ambBtn',t:'Study sounds',d:'Optional rain, fireplace and café sounds for focus. They’re off until you turn them on here.'},
 ];
 let TOUR=TOUR_ALL,tourI=0;
@@ -3013,10 +3228,18 @@ function tourStep(){
 }
 /* ========== theme & boot ========== */
 const mq=matchMedia('(prefers-color-scheme: dark)');
-function applyTheme(){const t=DB.settings.theme||'charcoal';document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t}
+function applyTheme(){const t=DB.settings.theme||'charcoal';document.documentElement.dataset.theme=t==='system'?(mq.matches?'dark':'light'):t;themeBtnUpdate()}
+const isLight=()=>document.documentElement.dataset.theme==='light';
+function themeBtnUpdate(){const b=document.getElementById('themeBtn');if(!b)return;const l=isLight();b.innerHTML=lu(l?'moon':'sun',19);
+  b.title=b.ariaLabel=l?'Switch to dark mode':'Switch to light mode';b.setAttribute('aria-label',b.title)}
+function toggleTheme(){
+  if(isLight())DB.settings.theme=DB.settings.darkTheme||'charcoal';
+  else{const t=DB.settings.theme;DB.settings.darkTheme=(t&&t!=='light'&&t!=='system')?t:'charcoal';DB.settings.theme='light'}
+  save();applyTheme();const sel=document.getElementById('sTheme');if(sel)sel.value=DB.settings.theme;
+}
 mq.addEventListener?.('change',applyTheme);
 buildCity();
-applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};
+applyTheme();applyEnv();ambBtn();$('#ambBtn').onclick=()=>{hideAmbHint();ambPanel()};$('#themeBtn').onclick=toggleTheme;
 const firstVisit=!DB.settings.tourDone&&DB.settings.newUser;ambAutostart();if(firstVisit)setTimeout(startTour,700);
 route();
 setTimeout(checkProgress,1200);

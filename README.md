@@ -6,9 +6,11 @@ A free flashcard and study app, a Quizlet alternative, built as a single HTML fi
 
 ## How it's organised
 
-Four pages, with a bar at the top on computers and a tab bar at the bottom on phones:
+Four pages. On computers and tablets there's a slim sidebar on the left (labels on wide screens, icons only on narrower ones), with the light/dark switch and study sounds at the bottom. On phones there's a compact bar at the top and a tab bar at the bottom.
 
-- **Home:** a greeting, today's goal ring, one **Start training** button that picks what to study next (due reviews first, then the set you're learning), a 7-day chart and your recent sets.
+- **Home (dashboard):** two columns on wide screens, one on phones.
+  - **Main:** the date and a greeting; one **Start training** button that picks what to study next (due reviews first, then the set you're learning) and shows how many cards are due; **This week** (days studied, correct answers, streak, and a 7-day chart where hovering or focusing a day shows its numbers); **Continue learning**, your recent sets with their mastery percentage. The set you studied last reopens the mode you were in.
+  - **Side:** **Daily goal** (correct answers today out of 25) and **Learning Insight**, a short idea drawn from your own cards first, then learning science, then general knowledge. Save the ones you like (they sync) or tap for another. Insights come from Claude three at a time and are kept on the device, so opening the dashboard doesn't call the AI each time. When you're signed out or the AI isn't available, it shows built-in study tips instead.
 - **Library:** all sets and folders, search across every term, **New set** and **Import**.
 - **Progress:** a mastery donut, daily and weekly goal rings, an activity grid, your rank, and anything that needs attention.
 - **Profile:** sign-in and sync, theme, study sounds, voice, haptics, backup and restore, and help.
@@ -120,7 +122,8 @@ Every earlier design is kept, and all of them read the same saved data, so you c
 
 | Version | Where | What it was |
 |---|---|---|
-| Current | `/` | FSRS scheduling, fill-in-the-blank cards, image tapes and Anki import |
+| Current | `/` | Sidebar navigation, two-column dashboard with Learning Insight and Daily goal, light indigo theme, AI tutor |
+| v6 | [`archive/v6/`](archive/v6/) | FSRS scheduling, fill-in-the-blank cards, image tapes, Anki import and AI feedback, with the top navigation bar |
 | v5 | [`archive/v5/`](archive/v5/) | Calm layout with charts, standard fonts and touch-friendly study screens (before FSRS and the new card types) |
 | v4 | [`archive/v4/`](archive/v4/) | First chart layout (before the font, sound and button changes) |
 | v3 | [`archive/v3/`](archive/v3/) | Apple-style pass: system font, swipe-to-rate, bottom sheets, goal ring, installable app |
