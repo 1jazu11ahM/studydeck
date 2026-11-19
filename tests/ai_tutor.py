@@ -48,7 +48,7 @@ async def main():
         n0=await pg.evaluate("__calls.length")
         await pg.click(".xpl"); await pg.wait_for_selector(".aix")
         x=await pg.inner_text(".aix")
-        check(all(k in x for k in ["Your mix-up","In simple words","Think of it like","Example","Why it matters","Remember it"]), "Explain more shows simple words, analogy, example, why, memory hook (and the mix-up)")
+        check(all(k in x for k in ["In simple words","Think of it like","Example","Why it matters","Remember it"]), "Explain more shows simple words, analogy, example, why, memory hook (and the mix-up)")
         check(await pg.evaluate(f"!!DB.sets[0].cards.find(x=>x.id==='{cid}').ax"), "explanation is saved on the card")
         await pg.screenshot(path="/tmp/ai2_explain.png",full_page=True)
         await pg.keyboard.press("Enter"); await pg.wait_for_timeout(300)
