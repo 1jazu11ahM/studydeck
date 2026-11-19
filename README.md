@@ -55,6 +55,7 @@ When you write a definition in your own words (Write or Learn, *Answer with: Def
 
 - **Sets:** terms, definitions, images, stars, folders, duplicate, print, and links between related cards in other sets.
 - **Import:** paste text (tab, comma, dash or custom separators), a Quizlet export, or a .txt/.csv file.
+- **Make cards with AI:** [`docs/flashcard-prompt.md`](docs/flashcard-prompt.md) is a ready-made prompt that makes an AI chat write cards in QuizCraft's import format (basic and fill-in-the-blank, with confusable pairs and scenarios), plus add-ons for networking, cloud, security, law & ethics and stats.
 - **Anki decks:** import an `.apkg` file (Anki → File → Export → Anki Deck Package). Each deck becomes a set, and subdecks are grouped in a folder. Basic cards, reversed cards, cloze, image occlusion and pictures come across, and so does your review progress, including Anki's own FSRS memory data when it's there. Newer (2.1.50+) and older package formats both work. Sounds and custom card templates aren't imported. The Anki reader (about 1 MB) only downloads when you import a deck.
 - **Share:** a link that contains the whole set. Export to TXT, CSV or JSON, and back up or restore everything.
 - **Exam plan:** set an exam date (in the set's ⋯ menu) to get a daily mastery target.
