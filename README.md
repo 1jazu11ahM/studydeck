@@ -45,6 +45,16 @@ When you write a definition in your own words (Write or Learn, *Answer with: Def
 - Exact answers and one-word answers are still checked instantly, without the AI.
 - If the function isn't set up or can't be reached, the normal check is used.
 
+## Harder multiple choice (AI-checked sets)
+
+Multiple-choice and true/false questions (Learn, Test, Timed exam) use wrong options that look like the right answer, so you can't guess by spotting the odd one out.
+
+- **Without AI:** wrong options are other answers in the set of the same kind: a number for a number, an IP address for an IP address, a short phrase for a short phrase, preferring ones of similar length and topic. When a set doesn't have enough, believable numbers or addresses are made up (for example 4 or 1 next to 2, or 172.31.255.0 next to 172.31.255.255).
+- **With AI (signed in, AI switched on):** the first time you open a set, Claude reads every card once and writes 3 wrong options for each, based on real student mistakes (forgetting to subtract 2 hosts, mixing up TCP and UDP, the right idea at the wrong layer). It writes wrong definitions, wrong terms and wrong fill-ins, and checks they are all definitely wrong. They're saved on the card (they sync), so it costs one AI call per set, and after an edit only the changed cards are checked again.
+- **Cards to review:** the same check flags cards that look factually wrong, have more than one right answer for the blank, or give the term away. They show on the set page with **Edit set** and **Ignore**.
+- The set page shows **✓ AI-checked** with a **Re-check** link. If the AI can't be reached, the smart options without AI are used.
+- This uses the `distract` mode of the same Edge Function, so redeploy `supabase/functions/grade` after updating.
+
 ## Card types
 
 - **Basic:** a term and a definition, with an optional picture.
@@ -55,7 +65,7 @@ When you write a definition in your own words (Write or Learn, *Answer with: Def
 
 - **Sets:** terms, definitions, images, stars, folders, duplicate, print, and links between related cards in other sets.
 - **Import:** paste text (tab, comma, dash or custom separators), a Quizlet export, or a .txt/.csv file.
-- **Make cards with AI:** [`docs/flashcard-prompt.md`](docs/flashcard-prompt.md) is a ready-made prompt that makes an AI chat write cards in QuizCraft's import format (basic and fill-in-the-blank, with confusable pairs and scenarios), plus add-ons for networking, cloud, security, law & ethics and stats.
+- **Make cards with AI:** [`docs/flashcard-prompt.md`](docs/flashcard-prompt.md) is a ready-made prompt that makes an AI chat write cards in QuizCraft's import format (basic and fill-in-the-blank, with confusable pairs and scenarios). Paste it with your notes and nothing else: the AI detects the subject (networking, cloud, security, law & ethics, stats or other), applies its rules and decides how many cards to make.
 - **Anki decks:** import an `.apkg` file (Anki → File → Export → Anki Deck Package). Each deck becomes a set, and subdecks are grouped in a folder. Basic cards, reversed cards, cloze, image occlusion and pictures come across, and so does your review progress, including Anki's own FSRS memory data when it's there. Newer (2.1.50+) and older package formats both work. Sounds and custom card templates aren't imported. The Anki reader (about 1 MB) only downloads when you import a deck.
 - **Share:** a link that contains the whole set. Export to TXT, CSV or JSON, and back up or restore everything.
 - **Exam plan:** set an exam date (in the set's ⋯ menu) to get a daily mastery target.
