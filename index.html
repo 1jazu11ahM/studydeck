@@ -133,6 +133,7 @@ h1{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;overflow
 .fbx.ok{color:var(--ok);background:var(--ok-soft)} .fbx.bad{color:var(--bad);background:var(--bad-soft)}
 .fbx.part{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)} .fbx.aiwait{color:var(--muted);background:color-mix(in srgb,var(--muted) 10%,transparent);display:flex;align-items:center;gap:10px;font-weight:600}
 .aiscore{float:right;font-weight:600;opacity:.8}
+.saved{margin:8px 2px 0}.saved .g{font-weight:600}.saved .g1{color:var(--bad)}.saved .g2{color:var(--warn)}.saved .g3,.saved .g4{color:var(--ok)}
 .aifb{margin-top:12px;display:grid;gap:10px}.aifb p{margin:0;line-height:1.45}.aifb b{display:block;font-size:var(--t-c);color:var(--muted);font-weight:600;margin-bottom:2px}
 .aiwho{display:flex;align-items:center;gap:6px;margin:10px 0 0}
 .spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite;flex:none}
@@ -1138,6 +1139,11 @@ function fsrsNext(c,g,now=Date.now()){
 }
 // "Again · now   Hard · 1d   Good · 3d   Easy · 2w" for the rating buttons
 function fmtIvl(days){if(days<=0)return'now';if(days<14)return days+'d';if(days<60)return Math.round(days/7)+'w';if(days<365)return Math.round(days/30)+'mo';return(Math.round(days/36.5)/10)+'y'}
+function savedAs(c){ // "Saved as Hard · back in 2 days" after an answer
+  const G={1:'Again',2:'Hard',3:'Good',4:'Easy'}[c.lastG]||'';if(!G||!c.due)return'';
+  const ms=c.due-Date.now(),d=Math.round(ms/DAY),h=Math.round(ms/36e5);
+  const when=ms<=6e4?'due again now':ms<DAY*.75?`back in ${Math.max(1,h)} hour${h>1?'s':''}`:d<=1?'back tomorrow':d<14?`back in ${d} days`:d<60?`back in ${Math.round(d/7)} weeks`:`back in ${Math.round(d/30)} months`;
+  return`<p class="muted sm saved"><span class="g g${c.lastG}">Saved as ${G}</span> · ${when}</p>`}
 function fsrsPreview(c){return[1,2,3,4].map(g=>fmtIvl(fsrsNext(c,g).ivl))}
 // cards studied before FSRS: estimate stability from their old box so nothing is lost
 function migrateFSRS(c){
@@ -1988,8 +1994,8 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
     $('.qcard',stage).classList.add(ok?'pop':'miss');
     if(q.occ){const o=$('.occ',stage);if(o)o.outerHTML=occHtml(c,true)}
     if(ai)return aiFeedback(ok,given,ai);
-    if(ok&&!close){fb.innerHTML=`<div class="fbx ok">✓ ${pick(PRAISE)} ${lastGain?`<span class="xpg">+${lastGain} XP</span>`:''}</div>`;qTimer=setTimeout(go,950);return}
-    fb.innerHTML=`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct — just check your spelling':given?'✗ Not quite, you’re still learning!':'Let’s look at the answer'}</div>
+    if(ok&&!close){fb.innerHTML=`<div class="fbx ok">✓ ${pick(PRAISE)} ${lastGain?`<span class="xpg">+${lastGain} XP</span>`:''}</div>${savedAs(c)}`;qTimer=setTimeout(go,950);return}
+    fb.innerHTML=`<div class="fbx ${ok?'ok':'bad'}">${ok?'✓ Correct — just check your spelling':given?'✗ Not quite, you’re still learning!':'Let’s look at the answer'}</div>${savedAs(c)}
       ${given?`<div class="ans"><small>You said</small><div class="${ok?'okc':'strike'}">${nl(given)}</div></div>`:''}
       ${ok&&given?'':`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`}
       ${ok&&given?`<div class="ans"><small>Correct answer</small><div class="okc">${nl(q.answer)}</div></div>`:''}
@@ -2001,6 +2007,7 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
   function aiFeedback(ok,given,ai){
     const V={correct:['ok','✓ Correct'],partial:['part','◐ Partly right'],wrong:['bad','✗ Not quite']}[ai.verdict];
     fb.innerHTML=`<div class="fbx ${V[0]}">${V[1]} <span class="aiscore">${ai.score}/10</span>${ok&&lastGain?` <span class="xpg">+${lastGain} XP</span>`:''}</div>
+      ${savedAs(c)}
       <div class="aifb">${ai.right?`<p><b>What you got right</b>${esc(ai.right)}</p>`:''}${ai.missing?`<p><b>${ai.verdict==='wrong'?'What went wrong':'What’s missing'}</b>${esc(ai.missing)}</p>`:''}${ai.better?`<p><b>A full answer</b>${esc(ai.better)}</p>`:''}</div>
       <div class="ans"><small>The card says</small><div class="okc">${nl(q.answer)}</div></div>
       <p class="muted sm aiwho">${icon('spark',14)} Checked by AI. It can be wrong, so trust the card if they disagree.</p>
