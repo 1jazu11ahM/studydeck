@@ -2916,7 +2916,7 @@ function viewImport(){
   <div class="card col" style="margin-top:16px"><h3 style="margin:0">Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
   const b=bindBulk($('#bulkHost'));
   $('#iFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const t=await f.text();$('#bText').value=t;if(/\.csv$/i.test(f.name))$('input[name=tsep][value=comma]').checked=true;if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.\w+$/,'');b.upd()};
-  $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});s.cards=r;DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
+  $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});s.cards=r.flatMap(c=>isCloze(c.term)?buildCloze(c.term,c.def):[c]);DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
   $('#iLinkGo').onclick=()=>{const v=$('#iLink').value.trim(),i=v.indexOf('#share=');if(i<0)return toast('That doesn’t look like a share link');location.hash=v.slice(i+1)};
   $('#iJson').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
   $('#iApkg').onchange=e=>{const f=e.target.files[0];if(f)ankiImport(f);e.target.value=''};
