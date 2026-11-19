@@ -29,6 +29,15 @@ Four pages, with a bar at the top on computers and a tab bar at the bottom on ph
 
 **How scheduling works:** QuizCraft uses **FSRS**, the same scheduler modern Anki uses. For every card it tracks how strong the memory is (stability) and how hard the card is for you (difficulty), then schedules the next review for the day you'd have about a 90% chance of still remembering it. Getting a card right on time spreads reviews out (roughly 3, 11, 35, 100 and 270 days). Missing one brings it back the same day. You can change the 90% target in Profile → Memory target: higher means more reviews and less forgetting. The set page still shows the simple diagram (New → Learning → Reviewing → Long-term), worked out from each card's memory strength.
 
+## AI feedback on typed answers
+
+When you write a definition in your own words (Write or Learn, *Answer with: Definition*) and it doesn't match the card exactly, QuizCraft can ask Claude to check the **meaning**. You get a verdict (correct, partly right or wrong) with a score, what you got right, what was missing, and a full model answer. Correct counts as Good, partly right as Hard and wrong as Again. **I disagree** overrules the AI.
+
+- It only runs when you're signed in, and it can be switched off in Profile → AI feedback on typed answers.
+- The Claude key never touches the website. It lives in a Supabase Edge Function ([`supabase/functions/grade`](supabase/functions/grade/index.ts)) as the secret `ANTHROPIC_API_KEY`. The function checks that you're signed in, optionally only allows the emails in `ALLOWED_EMAILS`, and limits use to `DAILY_LIMIT` checks a day (200 by default).
+- Exact answers and one-word answers are still checked instantly, without the AI.
+- If the function isn't set up or can't be reached, the normal check is used.
+
 ## Card types
 
 - **Basic:** a term and a definition, with an optional picture.
