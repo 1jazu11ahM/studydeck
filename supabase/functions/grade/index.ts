@@ -86,7 +86,10 @@ Examples must use everyday situations or the set's own topic. Never invent numbe
 - analogy: an everyday comparison that makes it click ("It's like…").
 - example: one concrete, real-life example.
 - why: why this idea matters or when you'd use it, in one sentence.
-- hook: a very short memory trick (a phrase, picture or play on the word) to recall it.
+- hook: one short memory trick that makes the TERM bring back the MEANING. Build it from the analogy, the literal
+  meaning of the word, or one vivid picture. It must make sense on its own and point to the definition.
+  No puns, rhymes or wordplay that don't carry the meaning. Good: "Chunking: cut information into chunks, like
+  folding clothes into bundles." Bad: "Chunk it, don't chunk-a-lot." 
 - mistake: only if the student's answer is given and was wrong. One sentence on their mix-up. If <mixed_up_with> is given,
   name that card and say how it differs. Otherwise leave it empty.`;
 

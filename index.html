@@ -1982,7 +1982,7 @@ async function aiGrade(s,c,q,given){
 }
 // "Explain more": analogy, example, why it matters and a memory hook. Saved on the card so it's free the next time.
 async function aiExplain(s,c,given,verdict,mix){
-  const h=hashStr(c.term+'\u0001'+c.def);
+  const h=hashStr('v2\u0001'+c.term+'\u0001'+c.def); // v2: better memory tricks, so older saved explanations are refreshed
   if(c.ax&&c.ax.h===h&&!given)return c.ax;
   const r=await aiCall({mode:'explain',set:s.title,term:c.term,definition:c.def,given:given||'',verdict:verdict||'',mix:mix?[mix.term,mix.def]:null},20000);
   if(!r||!r.simple)throw new Error('bad reply');AI.state='ready';
