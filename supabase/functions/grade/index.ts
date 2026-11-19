@@ -43,8 +43,10 @@ How to judge:
 
 How to write feedback:
 - Talk to the student as "you". Plain, simple English. Short sentences. No jargon unless the card uses it.
-- right: what the student got right (one short sentence, empty if nothing).
-- missing: what is missing or wrong and why it matters (one or two short sentences, empty if nothing).
+- right: what the student got right, in one short sentence. Only count ideas that match the reference.
+  If nothing matches, leave it empty. Never give general praise like "you're thinking about learning".
+- missing: what is missing or wrong and why it matters, in at most two short sentences. If the answer describes a
+  different concept, name that concept. Don't repeat the full answer here; that goes in "better".
 - better: a complete, clear model answer in one or two sentences that keeps the card's meaning. Don't add facts you aren't sure of.
 - score: 0 to 10.`;
 
