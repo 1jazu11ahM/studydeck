@@ -1981,10 +1981,10 @@ async function aiGrade(s,c,q,given){
   if(!r||!['correct','partial','wrong'].includes(r.verdict))throw new Error('bad reply');AI.state='ready';return r;
 }
 // "Explain more": analogy, example, why it matters and a memory hook. Saved on the card so it's free the next time.
-async function aiExplain(s,c,given,verdict){
+async function aiExplain(s,c,given,verdict,mix){
   const h=hashStr(c.term+'\u0001'+c.def);
   if(c.ax&&c.ax.h===h&&!given)return c.ax;
-  const r=await aiCall({mode:'explain',set:s.title,term:c.term,definition:c.def,given:given||'',verdict:verdict||''},20000);
+  const r=await aiCall({mode:'explain',set:s.title,term:c.term,definition:c.def,given:given||'',verdict:verdict||'',mix:mix?[mix.term,mix.def]:null},20000);
   if(!r||!r.simple)throw new Error('bad reply');AI.state='ready';
   c.ax={h,simple:r.simple,analogy:r.analogy,example:r.example,why:r.why,hook:r.hook};save();
   return{...c.ax,mistake:r.mistake||''};
@@ -1993,10 +1993,10 @@ function explainHtml(x){
   const row=(t,v)=>v?`<p><b>${t}</b>${esc(v)}</p>`:'';
   return`<div class="aix">${row('Your mix-up',x.mistake)}${row('In simple words',x.simple)}${row('Think of it like',x.analogy)}${row('Example',x.example)}${row('Why it matters',x.why)}${x.hook?`<p class="hook"><b>Remember it</b>${esc(x.hook)}</p>`:''}</div>`}
 // wire an "Explain more" button inside a feedback box
-function wireExplain(box,s,c,given,verdict){
+function wireExplain(box,s,c,given,verdict,mix){
   const b=$('.xpl',box);if(!b)return;
   b.onclick=async()=>{b.disabled=true;b.innerHTML='<span class="spin"></span> Explaining…';
-    try{const x=await aiExplain(s,c,given,verdict);const row=b.closest('.aitools');if(row){row.insertAdjacentHTML('afterend',explainHtml(x));b.remove()}else b.outerHTML=explainHtml(x)}
+    try{const x=await aiExplain(s,c,given,verdict,mix);const row=b.closest('.aitools');if(row){row.insertAdjacentHTML('afterend',explainHtml(x));b.remove()}else b.outerHTML=explainHtml(x)}
     catch(e){b.disabled=false;b.textContent='Explain more';toast('Couldn’t get an explanation right now')}}}
 const canExplain=c=>aiOn()&&!c.kind&&!!c.term.trim()&&!!c.def.trim();
 function presentQ(stage,s,c,q,type,next,label='',onAnswer){
@@ -2053,7 +2053,7 @@ function presentQ(stage,s,c,q,type,next,label='',onAnswer){
       <div class="row aitools">${ai.verdict!=='correct'?'<button class="btn sm tryb">↻ Try again</button>':''}${canExplain(c)?'<button class="btn ghost sm xpl">'+icon('spark',15)+' Explain more</button>':''}</div>
       <p class="muted sm aiwho">${icon('spark',14)} Checked by AI. It can be wrong, so trust the card if they disagree.</p>
       <div class="row end" style="margin-top:10px">${ai.verdict!=='correct'?`<button class="btn ghost sm ovr">${ai.verdict==='partial'?'Count it as fully right':'I disagree: I was right'}</button>`:''}<button class="btn primary cont">Continue <kbd>Enter</kbd></button></div>`;
-    $('.cont',fb).onclick=go;wireExplain(fb,s,c,given,ai.verdict);
+    $('.cont',fb).onclick=go;wireExplain(fb,s,c,given,ai.verdict,mixCard);
     const ov=$('.ovr',fb);if(ov)ov.onclick=()=>{undo();record(c,true);finalOk=true;if(c.miss)delete c.miss;save();go()};
     const tb=$('.tryb',fb);if(tb)tb.onclick=()=>tryAgain(tb);
     if(!ok&&DB.settings.autoSpeak)speak(ai.better||q.answer,langOf(s,q.aSide));
