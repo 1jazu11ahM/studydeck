@@ -1391,9 +1391,14 @@ function touch(s){
   s.studied=Date.now();
   const t=ymd(),y=ymd(new Date(Date.now()-DAY)),st=DB.streak;
   if(st.last!==t){st.count=st.last===y?st.count+1:1;st.last=t}
+  {const e=DB.log[t]||(DB.log[t]={r:0,w:0});e.s=1}  // studying without answering (flashcards, games) still marks the day
   save();
 }
-const streakNow=()=>{const s=DB.streak;return(s.last===ymd()||s.last===ymd(new Date(Date.now()-DAY)))?s.count:0};
+/* Streak = days in a row with study activity in the log (the same days the week chart and Progress count).
+   Today doesn't break it until it's over, so it counts back from yesterday when you haven't studied yet today. */
+const activeDay=k=>{const e=DB.log[k];return!!e&&!!(e.r||e.w||e.s)};
+const streakNow=()=>{const d=new Date();d.setHours(12,0,0,0);if(!activeDay(ymd(d)))d.setDate(d.getDate()-1);
+  let n=0;while(n<3650&&activeDay(ymd(d))){n++;d.setDate(d.getDate()-1)}return n};
 
 /* ========== answers ========== */
 const sideText=(c,side)=>side==='term'?c.term:c.def;
