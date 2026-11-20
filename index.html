@@ -1468,7 +1468,7 @@ function smartOthers(s,c,q){
     return[...same,...ranked.filter(t=>ansShape(t)!==sh)]}
   return ranked;
 }
-const wrKey=c=>hashStr('w1\u0001'+c.term+'\u0001'+c.def);
+const wrKey=c=>hashStr('w2\u0001'+c.term+'\u0001'+c.def);
 const aiWrong=(c,q)=>c.wr&&c.wr.h===wrKey(c)?(q.aSide==='term'?c.wr.t:c.wr.d)||[]:[];
 function wrongOptions(s,c,q,n=3){const out=[],an=norm(q.answer);
   for(const t of[...aiWrong(c,q),...smartOthers(s,c,q)]){const k=norm(t);if(t&&k&&k!==an&&!out.some(o=>norm(o)===k))out.push(t);if(out.length>=n)break}
@@ -1613,8 +1613,8 @@ async function aiCheckSet(s,force){
   AIC.busy.add(s.id);AIC.failed.delete(s.id);aiChkRender(s);let ok=true;
   const terms=[...new Set(s.cards.filter(c=>!c.kind&&c.term.trim()).map(c=>c.term.trim()))].slice(0,80);
   try{
-    for(let i=0;i<todo.length;i+=25){
-      const batch=todo.slice(i,i+25);
+    for(let i=0;i<todo.length;i+=15){
+      const batch=todo.slice(i,i+15);
       const r=await aiCall({mode:'distract',set:s.title,terms,cards:batch.map(wrPayload)},120000);
       if(!r||!Array.isArray(r.items))throw new Error('bad reply');AI.state='ready';
       r.items.forEach(it=>{const c=batch[it.i];if(!c)return;
