@@ -1776,7 +1776,7 @@ function trainTarget(){
   const ds=dueSet(),n=ds.cards.length;
   if(n){const k=new Set(DB.sets.filter(x=>dueCards(x).length).map(x=>x.id)).size;return{href:'#/review/due',label:'Start training',sub:`Review ${n} due card${n>1?'s':''}${k>1?` from ${k} sets`:''}`}}
   const open=recentSets().filter(x=>x.cards.some(c=>status(c)!=='master'));
-  if(open.length)return{href:'#/learn/'+open[0].id,label:open[0].studied?'Start training':'Start your first session',sub:`Learn · ${open[0].title}`};
+  if(open.length)return{href:'#/learn/'+open[0].id,label:open[0].studied?'Start training':'Start a new set',sub:`Learn · ${open[0].title}`};
   if(DB.sets.length)return{href:'#/test/'+recentSets()[0].id,label:'Start training',sub:'Everything is mastered. Take a practice test.'};
   return{href:'#/new',label:'Create your first set',sub:'Add terms, then start training'};
 }
