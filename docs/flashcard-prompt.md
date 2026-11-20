@@ -82,7 +82,7 @@ MY MATERIAL:
 ## How to import
 1. In QuizCraft, go to Library → **Import**.
 2. Paste the lines from the code block and give the set a title.
-3. Under **Between term and definition**, choose **Custom** and type `|`. Leave **Between cards** as **New line**.
+3. **Between term and definition** is already set to **Bar ( | )** and **Between cards** to **New line**, so leave them.
 4. Check that the preview count matches the AI's number of **lines** (the preview counts lines; fill-in-the-blank lines with several blanks become more cards after import), then tap **Create set**.
 
 ## Best way to study these cards

@@ -1566,15 +1566,15 @@ function pickImage(){return new Promise(res=>{
 })}
 
 /* ========== bulk import ========== */
-const SEPS={tab:'\t',comma:',',dash:' - ',colon:':',nl:'\n',semi:';',blank:'\n\n'};
+const SEPS={pipe:'|',tab:'\t',comma:',',dash:' - ',colon:':',nl:'\n',semi:';',blank:'\n\n'};
 function parseBulk(text,ts,cs){
   ts=ts||'\t';cs=cs||'\n';
   const parts=cs==='\n'?text.split(/\r?\n/):cs==='\n\n'?text.split(/\r?\n\s*\r?\n/):text.split(cs);
   return parts.map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf(ts);return i<0?newCard(l,''):newCard(l.slice(0,i).trim(),l.slice(i+ts.length).trim())});
 }
-function bulkUI(){return `<textarea id="bText" rows="8" placeholder="Word 1&#9;Definition 1&#10;Word 2&#9;Definition 2&#10;Word 3&#9;Definition 3"></textarea>
+function bulkUI(){return `<textarea id="bText" rows="8" placeholder="Word 1 | Definition 1&#10;Word 2 | Definition 2&#10;Word 3 | Definition 3"></textarea>
   <div class="row" style="align-items:flex-start;gap:30px;margin-top:10px">
-   <div><b class="sm">Between term and definition</b><div class="radios">${[['tab','Tab'],['comma','Comma'],['dash','Dash ( - )'],['colon','Colon ( : )'],['custom','Custom']].map(([v,l],i)=>`<label><input type="radio" name="tsep" value="${v}" ${i?'':'checked'}>${l}</label>`).join('')}</div><input id="tsepC" placeholder="Custom separator" style="max-width:180px;padding:5px 8px"></div>
+   <div><b class="sm">Between term and definition</b><div class="radios">${[['pipe','Bar ( | )'],['tab','Tab'],['comma','Comma'],['dash','Dash ( - )'],['colon','Colon ( : )'],['custom','Custom']].map(([v,l],i)=>`<label><input type="radio" name="tsep" value="${v}" ${i?'':'checked'}>${l}</label>`).join('')}</div><input id="tsepC" placeholder="Custom separator" style="max-width:180px;padding:5px 8px"></div>
    <div><b class="sm">Between cards</b><div class="radios">${[['nl','New line'],['semi','Semicolon'],['blank','Blank line'],['custom','Custom']].map(([v,l],i)=>`<label><input type="radio" name="csep" value="${v}" ${i?'':'checked'}>${l}</label>`).join('')}</div><input id="csepC" placeholder="Custom separator" style="max-width:180px;padding:5px 8px"></div>
   </div>
   <p class="sm" style="margin-bottom:6px"><b id="bCount">0</b> cards detected <span class="muted">(preview)</span></p><div id="bPrev" class="bprev"></div>`}
@@ -1583,7 +1583,7 @@ function bindBulk(root){
   const get=()=>{const tv=$('input[name=tsep]:checked',root).value,cv=$('input[name=csep]:checked',root).value;return parseBulk($('#bText',root).value,tv==='custom'?$('#tsepC',root).value:SEPS[tv],cv==='custom'?$('#csepC',root).value:SEPS[cv])};
   const upd=()=>{
     const txt=$('#bText',root).value;
-    if(!touched&&txt){const g=v=>{$(`input[name=tsep][value=${v}]`,root).checked=true};if(txt.includes('\t'))g('tab');else if(txt.includes(' - '))g('dash');else if(/^[^,\n]+,/m.test(txt))g('comma')}
+    if(!touched&&txt){const g=v=>{$(`input[name=tsep][value=${v}]`,root).checked=true};if(txt.includes('|'))g('pipe');else if(txt.includes('\t'))g('tab');else if(txt.includes(' - '))g('dash');else if(/^[^,\n]+,/m.test(txt))g('comma')}
     const r=get();$('#bCount',root).textContent=r.length;$('#bPrev',root).innerHTML=r.slice(0,6).map(c=>`<div><b>${esc(c.term)}</b> — ${esc(c.def)||'<i class="muted">no definition</i>'}</div>`).join('')+(r.length>6?`<div class="muted">…and ${r.length-6} more</div>`:'')};
   root.addEventListener('input',e=>{if(e.target.name==='tsep'||e.target.name==='csep')touched=true;upd()});
   root.addEventListener('change',upd);
