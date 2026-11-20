@@ -1669,7 +1669,20 @@ document.addEventListener('click',e=>{
   const st=e.target.closest('[data-star]');
   if(st){e.preventDefault();const s=getSet(st.dataset.set),c=s&&s.cards.find(c=>c.id===st.dataset.star);if(c){c.starred=!c.starred;save();$$(`[data-star="${c.id}"]`).forEach(b=>{b.classList.toggle('on',c.starred);b.textContent=c.starred?'★':'☆'})}}
 });
+/* Where "back" on a set page goes: the page you opened the set from (Home, Library, a folder, search, Progress).
+   Coming from the editor, import or a study mode keeps the earlier origin; with none, it's the set's folder or the Library. */
+const SET_FROM={};let prevRoute='';
+function setBack(s){
+  const o=SET_FROM[s.id],f=DB.folders.find(x=>x.id===s.folder);
+  if(o){const v=o.replace(/^#?\/?/,'').split(/[\/?]/)[0];
+    if(v==='folder'){const ff=DB.folders.find(x=>'#/folder/'+x.id===o);if(ff)return{h:o,l:ff.name}}
+    else if(v==='')return{h:'#/',l:'Home'};else if(v==='search')return{h:o,l:'Search'};else if(v==='progress')return{h:o,l:'Progress'};else if(v==='library')return{h:'#/library',l:'Library'}}
+  return f?{h:'#/folder/'+f.id,l:f.name}:{h:'#/library',l:'Library'};
+}
 function route(){
+  {const raw=location.hash.slice(1),[pv]=prevRoute.replace(/^#\/?/,'').split(/[\/?]/),[cv,cid]=raw.replace(/^\//,'').split('/');
+   if(prevRoute&&cv==='set'&&cid&&['','library','folder','search','progress'].includes(pv))SET_FROM[cid]=prevRoute;
+   prevRoute='#'+raw}
   cleanups.forEach(f=>{try{f()}catch(e){}});cleanups=[];keyFn=null;clearTimeout(qTimer);
   if(tts)speechSynthesis.cancel();
   closeModal();
@@ -1977,7 +1990,7 @@ function viewSet(s){
   const contHref=due?`#/review/${s.id}`:cl?`#/test/${s.id}`:`#/learn/${s.id}`;
   const pl=examPlan(s);
   app.innerHTML=`<div class="wrap">
-  <div class="settop noprint"><a class="btn ghost sm" href="#/library">‹ Library</a><button class="ico" id="moreBtn" title="More" aria-label="More actions">${icon('more',24)}</button></div>
+  <div class="settop noprint"><a class="btn ghost sm" href="${setBack(s).h}">‹ ${esc(setBack(s).l)}</a><button class="ico" id="moreBtn" title="More" aria-label="More actions">${icon('more',24)}</button></div>
   <div class="sethead"><div class="setmeta">${f?`<a href="#/folder/${f.id}">${esc(f.name)}</a> · `:''}${s.cards.length} term${s.cards.length===1?'':'s'}</div>
     <h1>${esc(s.title)}</h1>${s.desc?`<p class="muted" style="margin:2px 0 0">${nl(s.desc)}</p>`:''}
     </div>
