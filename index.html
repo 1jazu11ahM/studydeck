@@ -1692,7 +1692,7 @@ function route(){
     case '':return viewHome();
     case 'new':return viewEdit(null,id);
     case 'folder':return viewFolder(id);
-    case 'import':return viewImport();
+    case 'import':return viewImport(id);
     case 'library':return viewLibrary();
     case 'progress':return viewProgress();
     case 'profile':case 'settings':return viewSettings();
@@ -1947,7 +1947,7 @@ function viewFolder(id){
   const f=DB.folders.find(f=>f.id===id);if(!f)return notFound();
   const sets=DB.sets.filter(s=>s.folder===id);
   app.innerHTML=`<a class="btn ghost sm" href="#/library">← Library</a>
-  <div class="row between" style="margin-top:8px"><h1>${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
+  <div class="row between" style="margin-top:8px"><h1>${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><a class="btn" href="#/import/${f.id}">Import here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
   <p class="muted">${sets.length} sets · ${sets.reduce((n,s)=>n+s.cards.length,0)} terms</p>
   ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<div class="card empty muted">This folder is empty.</div>'}`;
   $('#ren').onclick=async()=>{const n=await askText('Rename folder',f.name);if(n){f.name=n;save();viewFolder(id)}};
@@ -2999,8 +2999,9 @@ function viewDetective(){
   ${report.length?`<div class="card terms" style="padding:0">${report.map(o=>`<div class="t"><div class="tt">${nl(o.c.term)}</div><div>${nl(o.c.def)}<div class="muted sm"><a href="#/set/${o.s.id}">${esc(o.s.title)}</a></div></div><div class="sm nowrap"><b style="color:var(--bad)">✗ ${o.c.wrong}</b> · <span style="color:var(--ok)">✓ ${o.c.right}</span></div></div>`).join('')}</div>`:'<div class="card empty muted">No misses recorded yet.</div>'}`;
 }
 /* ========== import page ========== */
-function viewImport(){
-  app.innerHTML=`<h1>Import</h1>
+function viewImport(fid){
+  const fold=DB.folders.find(f=>f.id===fid);
+  app.innerHTML=`${fold?`<a class="muted" href="#/folder/${fold.id}">← ${esc(fold.name)}</a>`:''}<h1>Import${fold?` into ${esc(fold.name)}`:''}</h1>
   <div class="card col"><h3 style="margin:0">Paste text to create a set</h3><p class="muted sm" style="margin:0">Works with Quizlet exports (in Quizlet: ⋯ → Export → copy), Word, Excel and Google Sheets.</p>
     <input id="iTitle" placeholder="Set title">
     <div id="bulkHost">${bulkUI()}</div>
@@ -3011,7 +3012,7 @@ function viewImport(){
   <div class="card col" style="margin-top:16px"><h3 style="margin:0">Restore a backup</h3><p class="muted sm" style="margin:0">Import a .json backup made with “Export everything” in Settings or a single-set backup.</p><label class="btn" style="align-self:flex-start">Choose backup file<input type="file" id="iJson" accept=".json,application/json" hidden></label></div>`;
   const b=bindBulk($('#bulkHost'));
   $('#iFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const t=await f.text();$('#bText').value=t;if(/\.csv$/i.test(f.name))$('input[name=tsep][value=comma]').checked=true;if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.\w+$/,'');b.upd()};
-  $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});s.cards=r.flatMap(c=>isCloze(c.term)?buildCloze(c.term,c.def):[c]);DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
+  $('#iGo').onclick=()=>{const r=b.get();if(!r.length)return toast('Paste some cards first');const s=newSet({title:$('#iTitle').value.trim()||'Imported set'});if(fold)s.folder=fold.id;s.cards=r.flatMap(c=>isCloze(c.term)?buildCloze(c.term,c.def):[c]);DB.sets.push(s);saveNow();location.hash='#/set/'+s.id;toast(`Created a set with ${r.length} cards`)};
   $('#iLinkGo').onclick=()=>{const v=$('#iLink').value.trim(),i=v.indexOf('#share=');if(i<0)return toast('That doesn’t look like a share link');location.hash=v.slice(i+1)};
   $('#iJson').onchange=async e=>{const f=e.target.files[0];if(f)importBackup(await f.text())};
   $('#iApkg').onchange=e=>{const f=e.target.files[0];if(f)ankiImport(f);e.target.value=''};
