@@ -500,6 +500,7 @@ mark.dv{background:transparent;color:inherit;border-bottom:2px solid var(--accen
 .lgt{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:4px 0;color:var(--text);font:inherit;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
 .lgt svg{transition:transform .2s;color:var(--muted)}.lgroup.shut .lgt svg{transform:rotate(-90deg)}
 .lgt .muted{font-weight:500;letter-spacing:0;text-transform:none}
+.ftools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 14px}.ftools>span{margin-right:auto}
 .lgo{color:var(--muted);font-size:13px;text-decoration:none}.lgo:hover{color:var(--accent)}
 .lrow{display:flex;align-items:center;gap:14px;padding:14px 2px;border-bottom:1px solid var(--line);min-width:0}
 a.lrow:hover .lt{color:var(--accent)}
@@ -1685,6 +1686,7 @@ function setBack(s){
     else if(v==='')return{h:'#/',l:'Home'};else if(v==='search')return{h:o,l:'Search'};else if(v==='progress')return{h:o,l:'Progress'};else if(v==='library')return{h:'#/library',l:'Library'}}
   return f?{h:'#/folder/'+f.id,l:f.name}:{h:'#/library',l:'Library'};
 }
+let lastView='';
 function route(){
   {const raw=location.hash.slice(1),[pv]=prevRoute.replace(/^#\/?/,'').split(/[\/?]/),[cv,cid]=raw.replace(/^\//,'').split('/');
    if(prevRoute&&cv==='set'&&cid&&['','library','folder','search','progress'].includes(pv))SET_FROM[cid]=prevRoute;
@@ -1697,8 +1699,8 @@ function route(){
   if(/access_token=|refresh_token=/.test(raw)){app.innerHTML='<div class="card empty muted">Signing you in…</div>';return}
   if(raw.startsWith('share='))return viewShare(raw.slice(6));
   const [v,id]=raw.replace(/^\//,'').split('/');
-  scrollTo(0,0);
-  {const d=depthOf(v||''),cls=d>lastDepth?'push':d<lastDepth?'pop':'enter';lastDepth=d;app.classList.remove('enter','push','pop');void app.offsetWidth;app.classList.add(cls)}
+  if(!(['library','folder','search'].includes(v)&&['library','folder','search'].includes(lastView)))scrollTo(0,0);
+  {const LIB=['library','folder','search'],same=LIB.includes(v)&&LIB.includes(lastView);lastView=v;const d=depthOf(v||''),cls=d>lastDepth?'push':d<lastDepth?'pop':'enter';lastDepth=d;app.classList.remove('enter','push','pop');if(!same){void app.offsetWidth;app.classList.add(cls)}}
   const needSet={sim:viewSim,set:viewSet,edit:viewEdit,flash:viewFlash,review:s=>viewFlash(s,true),learn:viewLearn,write:viewWrite,spell:viewSpell,test:viewTest,match:viewMatch,gravity:viewGravity};
   if(id==='unresolved'&&(v==='set'||v==='edit')){location.replace('#/detective');return}
   if(id==='due'&&(v==='set'||v==='edit')){location.replace('#/');return}
@@ -1723,7 +1725,7 @@ function route(){
 }
 addEventListener('hashchange',route);
 let lastDepth=0;
-function depthOf(v){if(['','library','progress','profile','settings'].includes(v))return 0;if(['set','folder','achievements','detective','import','search','share'].includes(v))return 1;return 2}
+function depthOf(v){if(['','library','folder','progress','profile','settings'].includes(v))return 0;if(['set','achievements','detective','import','search','share'].includes(v))return 1;return 2}
 /* collapsing large title: when the page's h1 scrolls under the bar, show it small in the bar */
 let ltObs=null;
 function bindLargeTitle(){
@@ -1916,25 +1918,50 @@ function savedInsights(){
   $('#mC').onclick=()=>{closeModal();if($('#insight'))renderInsight()};
   $$('[data-rm]').forEach(b=>b.onclick=()=>{L.splice(+b.dataset.rm,1);save();savedInsights()});
 }
-function viewLibrary(q=''){
-  const sets=recentSets();
+function viewLibrary(q='',fid=''){
+  const fold=fid?DB.folders.find(f=>f.id===fid):null;if(fid&&!fold)return notFound();
+  const sets=recentSets(),inF=fold?sets.filter(x=>x.folder===fold.id):sets;
+  const lede=fold?`${esc(fold.name)} · ${inF.length} set${inF.length===1?'':'s'} · ${(k=>k+' term'+(k===1?'':'s'))(inF.reduce((n,x)=>n+x.cards.length,0))}`:`${sets.length} set${sets.length===1?'':'s'} · ${DB.sets.reduce((n,x)=>n+x.cards.length,0)} terms`;
   app.innerHTML=`<div class="wrap">
-  <div class="page-h"><div><h1 data-lt="Library">Library</h1><p class="lede">${sets.length} set${sets.length===1?'':'s'} · ${DB.sets.reduce((n,s)=>n+s.cards.length,0)} terms</p></div><div class="row"><a class="btn" href="#/import">Import</a><a class="btn primary" href="#/new">New set</a></div></div>
-  <div class="lsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="libQ" type="search" placeholder="Search sets and terms" aria-label="Search sets and terms" value="${esc(q)}"></div>
-  <div class="chips" id="libChips"><button class="chip on" data-f="">All</button>${DB.folders.map(f=>`<a class="chip" href="#/folder/${f.id}">${esc(f.name)} <span class="muted">${DB.sets.filter(s=>s.folder===f.id).length}</span></a>`).join('')}<button class="chip" id="newFolder">+ Folder</button></div>
+  <div class="page-h"><div><h1 data-lt="Library">Library</h1><p class="lede">${lede}</p></div><div class="row"><a class="btn" href="#/import${fold?'/'+fold.id:''}">Import</a><a class="btn primary" href="#/new${fold?'/'+fold.id:''}">New set</a></div></div>
+  <div class="lsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="libQ" type="search" placeholder="${fold?`Search in ${esc(fold.name)}`:'Search sets and terms'}" aria-label="Search sets and terms" value="${esc(q)}"></div>
+  <div class="chips" id="libChips"><a class="chip${fold?'':' on'}" href="#/library">All</a>${DB.folders.map(f=>`<a class="chip${fold&&f.id===fold.id?' on':''}" href="#/folder/${f.id}">${esc(f.name)} <span class="muted">${DB.sets.filter(x=>x.folder===f.id).length}</span></a>`).join('')}<button class="chip" id="newFolder">+ Folder</button></div>
+  ${fold?`<div class="ftools"><span class="muted sm">New sets and imports go into this folder.</span><button class="btn sm" id="addTo">Add existing set</button><button class="ico" id="fMore" title="Folder options" aria-label="Folder options">${icon('more',22)}</button></div>`:''}
   <div id="libOut"></div></div>`;
   const out=$('#libOut'),inp=$('#libQ');
+  const byName=(a,b)=>(a.title||'').localeCompare(b.title||'',undefined,{numeric:true,sensitivity:'base'});
   const render=()=>{
     const n=norm(inp.value);
-    if(!n){out.innerHTML=sets.length?libGroups(sets):`<div class="card empty"><h3 style="margin-top:0">Your library is empty</h3><p class="muted">Create a set, or <a href="#/import" style="color:var(--accent)">import one</a> from Quizlet, Word or Excel.</p><a class="btn primary" href="#/new">New set</a></div>`;return}
-    const ss=sets.filter(s=>norm(s.title+' '+s.desc).includes(n)),hits=[];DB.sets.forEach(s=>s.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([s,c])}));
-    out.innerHTML=`<div class="sec-h" style="margin-top:8px"><h2>Sets</h2><span class="muted sm">${ss.length}</span></div>${ss.length?`<div class="list">${ss.map(setRow).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
-      <div class="sec-h" style="margin-top:28px"><h2>Terms</h2><span class="muted sm">${hits.length}</span></div>${hits.length?`<div class="list">${hits.slice(0,200).map(([s,c])=>`<a class="lrow" href="#/set/${s.id}"><div class="lmain"><div class="lt">${esc(c.term)}</div><div class="lm">${esc(c.def)}</div></div><span class="lm" style="max-width:35%">${esc(s.title)}</span></a>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
+    if(!n){
+      if(fold)out.innerHTML=inF.length?`<div class="list">${[...inF].sort(byName).map(x=>setRow(x,true)).join('')}</div>`:`<div class="card empty"><p class="muted" style="margin-top:0">This folder is empty.</p><div class="row" style="justify-content:center"><a class="btn primary" href="#/new/${fold.id}">+ New set here</a><a class="btn" href="#/import/${fold.id}">Import here</a></div></div>`;
+      else out.innerHTML=sets.length?libGroups(sets):`<div class="card empty"><h3 style="margin-top:0">Your library is empty</h3><p class="muted">Create a set, or <a href="#/import" style="color:var(--accent)">import one</a> from Quizlet, Word or Excel.</p><a class="btn primary" href="#/new">New set</a></div>`;
+      return}
+    const pool=fold?DB.sets.filter(x=>x.folder===fold.id):DB.sets;
+    const ss=inF.filter(x=>norm(x.title+' '+x.desc).includes(n)),hits=[];pool.forEach(x=>x.cards.forEach(c=>{if(norm(c.term+' '+c.def).includes(n))hits.push([x,c])}));
+    out.innerHTML=`<div class="sec-h" style="margin-top:8px"><h2>Sets</h2><span class="muted sm">${ss.length}</span></div>${ss.length?`<div class="list">${ss.map(x=>setRow(x,!!fold)).join('')}</div>`:'<p class="muted">No matching sets.</p>'}
+      <div class="sec-h" style="margin-top:28px"><h2>Terms</h2><span class="muted sm">${hits.length}</span></div>${hits.length?`<div class="list">${hits.slice(0,200).map(([x,c])=>`<a class="lrow" href="#/set/${x.id}"><div class="lmain"><div class="lt">${esc(c.term)}</div><div class="lm">${esc(c.def)}</div></div><span class="lm" style="max-width:35%">${esc(x.title)}</span></a>`).join('')}</div>`:'<p class="muted">No matching terms.</p>'}`;
   };
   out.onclick=e=>{const b=e.target.closest('[data-fold]');if(!b)return;e.preventDefault();const k=b.dataset.fold,c=libCollapsed();c[k]=!c[k];try{localStorage.setItem('qc_libCollapsed',JSON.stringify(c))}catch(_){}render()};
-  let t;inp.oninput=()=>{clearTimeout(t);t=setTimeout(()=>{render();history.replaceState(null,'',inp.value.trim()?'#/search/'+encodeURIComponent(inp.value.trim()):'#/library')},150)};
+  let t;inp.oninput=()=>{clearTimeout(t);t=setTimeout(()=>{render();if(!fold)history.replaceState(null,'',inp.value.trim()?'#/search/'+encodeURIComponent(inp.value.trim()):'#/library')},150)};
   render();if(q){inp.focus();inp.setSelectionRange(q.length,q.length)}
-  $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){DB.folders.push({id:uid(),name:n});save();viewLibrary()}};
+  $('#newFolder').onclick=async()=>{const n=await askText('New folder','','e.g. INFR 2411U');if(n){const f={id:uid(),name:n};DB.folders.push(f);save();location.hash='#/folder/'+f.id}};
+  if(fold)bindFolderTools(fold);
+}
+function bindFolderTools(f){
+  const id=f.id;
+  $('#fMore').onclick=()=>{
+    modal(`<h3>${esc(f.name)}</h3><div class="menu-list"><button class="btn" data-m="ren">${icon('pencil',18)} Rename folder</button><button class="btn danger" data-m="del">${icon('trash',18)} Delete folder</button></div>`);
+    $('.menu-list').onclick=async e=>{const m=e.target.closest('[data-m]')?.dataset.m;if(!m)return;closeModal(true);
+      if(m==='ren'){const n=await askText('Rename folder',f.name);if(n){f.name=n;save();viewLibrary('',id)}}
+      if(m==='del'&&await confirmBox(`Delete the folder “${esc(f.name)}”? The sets inside will be kept.`)){DB.sets.forEach(x=>{if(x.folder===id)x.folder=''});DB.folders=DB.folders.filter(x=>x.id!==id);save();location.hash='#/library'}};
+  };
+  $('#addTo').onclick=()=>{
+    const others=DB.sets.filter(x=>x.folder!==id);
+    if(!others.length)return toast('All your sets are already in this folder');
+    modal(`<h3>Add sets to “${esc(f.name)}”</h3><div class="col">${others.map(x=>`<label class="opt"><span>${esc(x.title)} <span class="muted sm">(${x.cards.length})</span></span><input type="checkbox" value="${x.id}"></label>`).join('')}</div><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Add</button></div>`);
+    $('#mC').onclick=()=>closeModal();
+    $('#mO').onclick=()=>{$$('.modal-card input:checked').forEach(i=>{getSet(i.value).folder=id});save();closeModal(true);viewLibrary('',id)};
+  };
 }
 /* Library "All": sets grouped by folder. The folder studied most recently comes first; sets inside are sorted by
    name (numbers in order, so N2 comes before N10); sets with no folder go last. Folders can be collapsed (per device). */
@@ -1947,7 +1974,7 @@ function libGroups(sets){
   if(!groups.length)return`<div class="list">${[...loose].sort(byName).map(x=>setRow(x)).join('')}</div>`;
   const col=libCollapsed();
   const block=(key,title,href,list)=>{const shut=!!col[key];return`<section class="lgroup${shut?' shut':''}">
-    <div class="lgh"><button class="lgt" data-fold="${key}" aria-expanded="${!shut}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>${esc(title)}<span class="muted"> · ${list.length} set${list.length===1?'':'s'}</span></button>${href?`<a class="lgo" href="${href}" aria-label="Open folder ${esc(title)}">Open ›</a>`:''}</div>
+    <div class="lgh"><button class="lgt" data-fold="${key}" aria-expanded="${!shut}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>${esc(title)}<span class="muted"> · ${list.length} set${list.length===1?'':'s'}</span></button>${href?`<a class="lgo" href="${href}" aria-label="Show only ${esc(title)}">Show only ›</a>`:''}</div>
     ${shut?'':`<div class="list">${[...list].sort(byName).map(x=>setRow(x,!!href)).join('')}</div>`}</section>`};
   return groups.map(g=>block(g.f.id,g.f.name,'#/folder/'+g.f.id,g.sets)).join('')+(loose.length?block('_none','No folder','',loose):'');
 }
@@ -1978,23 +2005,7 @@ function viewAchievements(){setTimeout(()=>bindEnvPicker(app),0);
   <h2>How XP works</h2><div class="card sm"><p style="margin-top:0">+15 XP for a correct answer on the first try (+10 if you missed it in the last 10 minutes) · +25 when a card becomes mastered · +${MISSION.dailyXP} for the daily goal · +${MISSION.weeklyXP} for the weekly goal · +50 for each achievement.</p><p class="muted" style="margin-bottom:0">Flipping through cards without answering earns nothing, so XP tracks what you actually remember.</p></div>`;
 }
 /* ========== folder ========== */
-function viewFolder(id){
-  const f=DB.folders.find(f=>f.id===id);if(!f)return notFound();
-  const sets=DB.sets.filter(s=>s.folder===id);
-  app.innerHTML=`<a class="btn ghost sm" href="#/library">← Library</a>
-  <div class="row between" style="margin-top:8px"><h1>${esc(f.name)}</h1><div class="row"><a class="btn primary" href="#/new/${f.id}">+ New set here</a><a class="btn" href="#/import/${f.id}">Import here</a><button class="btn" id="addTo">Add existing set</button><button class="btn" id="ren">Rename</button><button class="btn danger" id="del">Delete folder</button></div></div>
-  <p class="muted">${sets.length} sets · ${sets.reduce((n,s)=>n+s.cards.length,0)} terms</p>
-  ${sets.length?`<div class="grid">${sets.map(setCardHtml).join('')}</div>`:'<div class="card empty muted">This folder is empty.</div>'}`;
-  $('#ren').onclick=async()=>{const n=await askText('Rename folder',f.name);if(n){f.name=n;save();viewFolder(id)}};
-  $('#del').onclick=async()=>{if(await confirmBox(`Delete the folder “${esc(f.name)}”? The sets inside will be kept.`)){DB.sets.forEach(s=>{if(s.folder===id)s.folder=''});DB.folders=DB.folders.filter(x=>x.id!==id);save();location.hash='#/library'}};
-  $('#addTo').onclick=()=>{
-    const others=DB.sets.filter(s=>s.folder!==id);
-    if(!others.length)return toast('All your sets are already in this folder');
-    modal(`<h3>Add sets to “${esc(f.name)}”</h3><div class="col">${others.map(s=>`<label class="opt"><span>${esc(s.title)} <span class="muted sm">(${s.cards.length})</span></span><input type="checkbox" value="${s.id}"></label>`).join('')}</div><div class="row end" style="margin-top:14px"><button class="btn" id="mC">Cancel</button><button class="btn primary" id="mO">Add</button></div>`);
-    $('#mC').onclick=()=>closeModal();
-    $('#mO').onclick=()=>{$$('.modal-card input:checked').forEach(i=>{getSet(i.value).folder=id});save();closeModal(true);viewFolder(id)};
-  };
-}
+function viewFolder(id){return viewLibrary('',id)}
 
 /* ========== set page ========== */
 let setSeg='learn';
